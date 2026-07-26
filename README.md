@@ -29,7 +29,7 @@
 
 Before the lab starts, ensure you have:
 
-- **JDK 21+**
+- **JDK 25**
 - **Maven 3.9+** (or use the workshop wrapper `./mvnw`)
 - **IBM Enterprise Build of Quarkus** (or community Quarkus 3.x compatible with the lab branch)
 - **IBM Bob** installed and signed in ([bob.ibm.com](https://bob.ibm.com/))
