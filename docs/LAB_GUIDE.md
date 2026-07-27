@@ -35,7 +35,7 @@ Before the lab starts, confirm:
 
 | Requirement | Check |
 |-------------|-------|
-| **JDK 25** (`java -version`) | ✓ |
+| **Java 25+** (`java -version`) | ✓ |
 | **Maven 3.9+** (or use included `./mvnw`) | ✓ |
 | **IBM Enterprise Build of Quarkus** / Quarkus **3.37.4** | ✓ |
 | **IBM Bob** installed and signed in ([bob.ibm.com](https://bob.ibm.com/)) | ✓ |
