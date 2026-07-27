@@ -9,47 +9,60 @@ Build an agentic fleet-management system with **IBM Enterprise Build of Quarkus*
 
 ## Lab at a glance
 
-| Block | Duration | Focus |
-|-------|----------|--------|
+| Block | Time | Focus |
+|-------|------|--------|
 | [Intro presentation](00-intro/SPEAKER_NOTES.md) | 10 min | Story, architecture, what you will build |
-| [Exercise 1](01-first-agents/START_HERE.md) | ~10 min | Your first AI agents |
-| [Exercise 2](02-workflow-patterns/START_HERE.md) | ~10 min | Sequence, parallel, routing & loop workflows |
-| [Exercise 3](03-supervisor/START_HERE.md) | ~10 min | Supervisor pattern |
-| [Exercise 4](04-ibm-bob/START_HERE.md) | ~12 min | Pro-coding with IBM Bob |
-| [Exercise 5](05-mcp/START_HERE.md) | ~10 min | MCP — remote tools for agents |
-| [Exercise 6](06-hitl-observability/START_HERE.md) | ~10 min | Human-in-the-loop + observability |
-| [Exercise 7](07-a2a/START_HERE.md) | ~10 min | A2A — distributed agents |
+| [Exercise 1](01-first-agents/START_HERE.md) | 10 min | First AI agents — `@Agent`, `@ToolBox`, tool-call loop |
+| [Exercise 2](02-workflow-patterns/START_HERE.md) | 10 min | Workflow patterns — sequence, parallel, routing, loop |
+| [Exercise 3](03-supervisor/START_HERE.md) | 10 min | Supervisor pattern — `@SupervisorAgent` + `@SupervisorRequest` |
+| [Exercise 4](04-ibm-bob/START_HERE.md) | 12 min | Pro-coding with IBM Bob + **AGENTS.md** token efficiency |
+| [Exercise 5](05-mcp/START_HERE.md) | 10 min | MCP — remote tools via Model Context Protocol |
+| [Exercise 6](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry observability |
+| [Exercise 7](07-a2a/START_HERE.md) | 10 min | A2A — distributed agent-to-agent communication |
 
-Read the full narrative and timing sheet in the **[Full lab guide](LAB_GUIDE.md)**.
+Read the full narrative, timing sheet, and troubleshooting guide in the **[Full lab guide](LAB_GUIDE.md)**.
 
 ## Prerequisites
 
-- **JDK 25**
-- Maven 3.9+ (or use `./mvnw` in each exercise)
-- Quarkus **3.37.4** (Java 25)
-- [IBM Bob](https://bob.ibm.com/)
-- LLM API key (provided in the room)
-- Free ports **8080**, **8081**, **8888**
+| Requirement | Notes |
+|-------------|-------|
+| **JDK 25** | `java -version` |
+| Maven 3.9+ | or use `./mvnw` in each exercise |
+| Quarkus **3.37.4** (IBM Enterprise Build) | Java 25 target |
+| [IBM Bob](https://bob.ibm.com/) | Sign in before the lab starts |
+| LLM API key | Provided in the room (`OPENAI_API_KEY`) |
+| Free ports **8080**, **8081**, **8888** | One process per exercise set |
+| Docker or Podman | For Quarkus Dev Services (PostgreSQL, LGTM) |
 
 ## Get the code
 
 ```bash
 git clone https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab.git
 cd techxchange-2026-quarkus-bob-lab
-export OPENAI_API_KEY=sk-your-key-here
+export OPENAI_API_KEY=sk-your-lab-key-here
 
+# Start Exercise 1
 cd exercises/01-first-agents/solution
 ./mvnw quarkus:dev
 ```
 
 Open http://localhost:8080
 
-Completed Quarkus solutions live in the repo under [`exercises/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises).
+## AGENTS.md — project context for IBM Bob
+
+The [`AGENTS.md`](../AGENTS.md) file in the repository root is a **token-efficient context file** for IBM Bob. Before any coding session, load it into Bob's context:
+
+```text
+Read AGENTS.md before answering anything about this project.
+```
+
+It contains: the `@Agent` declarative model, all 7 existing agents and their `outputKey` values, domain types (`CarInfo`, `CarStatus`, `FeedbackAnalysisResults`), API endpoints, and 10 project rules. This eliminates redundant codebase scans — estimated savings: **2,000–5,000 tokens per complex request**.
 
 ## Repository layout
 
 | Path | Purpose |
 |------|---------|
+| `AGENTS.md` | IBM Bob project context (token efficiency) |
 | `docs/` | These lab instructions (this site) |
 | `exercises/` | Completed Quarkus solution projects |
 
