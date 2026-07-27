@@ -2,7 +2,7 @@
 
 **Timebox:** 10 minutes  
 **Story:** Maya (rental desk) needs automatic cleaning decisions from free-text return notes.  
-**Solution project:** [`exercises/01-first-agents/solution`](../../exercises/01-first-agents/solution)  
+**Solution project:** [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution)  
 **Upstream:** [section-2/step-01](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-01/)
 
 ![Fleet UI](../images/agentic-UI-fleet-status.png)

@@ -3,8 +3,8 @@
 **Timebox:** 10 minutes  
 **Story:** Alex requires approval for dispositions on cars worth more than $15,000 — and an audit trail.  
 **Projects:**
-- HITL solution: [`exercises/06-hitl-observability/solution`](../../exercises/06-hitl-observability/solution) ← [upstream section-2/step-05](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-05/)
-- Observability reference (chatbot + LGTM): [`exercises/06-hitl-observability/observability-reference`](../../exercises/06-hitl-observability/observability-reference) ← [upstream section-1/step-10](https://quarkus.io/quarkus-workshop-langchain4j/section-1/step-10/)
+- HITL solution: [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution) ← [upstream section-2/step-05](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-05/)
+- Observability reference (chatbot + LGTM): [`exercises/06-hitl-observability/observability-reference`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/observability-reference) ← [upstream section-1/step-10](https://quarkus.io/quarkus-workshop-langchain4j/section-1/step-10/)
 
 ![Observability Dev UI](../images/dev-ui-observability.png)
 

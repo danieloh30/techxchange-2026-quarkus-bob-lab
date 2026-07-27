@@ -10,3 +10,6 @@ target/
 *.orig
 *.rej
 .flattened-pom.xml
+
+# MkDocs build output
+site/

@@ -1,0 +1,88 @@
+site_name: TechXchange 2026 — Quarkus & Bob Lab
+site_description: Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
+site_author: IBM TechXchange Lab
+site_url: https://danieloh30.github.io/techxchange-2026-quarkus-bob-lab/
+
+repo_name: danieloh30/techxchange-2026-quarkus-bob-lab
+repo_url: https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+
+exclude_docs: |
+  README.md
+
+theme:
+  name: material
+  logo: images/logo.png
+  favicon: images/logo.png
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: index.md
+  - Full lab guide: LAB_GUIDE.md
+  - Intro (10 min): 00-intro/SPEAKER_NOTES.md
+  - Exercises:
+      - "1. First AI agents": 01-first-agents/START_HERE.md
+      - "2. Workflow patterns": 02-workflow-patterns/START_HERE.md
+      - "3. Supervisor": 03-supervisor/START_HERE.md
+      - "4. IBM Bob":
+          - Start here: 04-ibm-bob/START_HERE.md
+          - Bob vs copilots: 04-ibm-bob/BOB_VS_COPILOTS.md
+          - Fallback card: 04-ibm-bob/FALLBACK.md
+      - "5. MCP": 05-mcp/START_HERE.md
+      - "6. HITL + observability": 06-hitl-observability/START_HERE.md
+      - "7. A2A": 07-a2a/START_HERE.md
+  - Attribution: ATTRIBUTION.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab
