@@ -12,17 +12,17 @@
 | Block | Time | Cumulative | Focus |
 |-------|------|------------|-------|
 | Intro presentation | 10 min | :10 | Story, architecture, what you will build |
-| Exercise 1 | 12 min | :22 | **IBM Bob setup + author `lab/AGENTS.md`** (governed context first) |
-| Exercise 2 | 10 min | :32 | First agent — `CleaningAgent` + `CleaningTool` with Bob |
-| Exercise 3 | 10 min | :42 | `MaintenanceAgent` + `@SystemMessage` tuning |
-| Exercise 4 | 10 min | :52 | Parallel workflow — `@ParallelMapperAgent` + `AgenticScope` |
-| Exercise 5 | 15 min | :67 | Full multi-agent: supervisor, pricing, disposition, sequence |
+| Exercise 1 | 12 min | :22 | **IBM Bob setup + author `lab/AGENTS.md`** (Bob used here) |
+| Exercise 2 | 10 min | :32 | **Code-along** — `CleaningAgent` + `CleaningTool` (write Java directly) |
+| Exercise 3 | 10 min | :42 | **Code-along** — `MaintenanceAgent` + live `@SystemMessage` tuning |
+| Exercise 4 | 10 min | :52 | **Code-along** — `@ParallelMapperAgent` + `@Output` + `AgenticScope` |
+| Exercise 5 | 15 min | :67 | **Code-along** — full supervisor pipeline: pricing, disposition, sequence |
 | Exercise 6 | 10 min | :77 | Human-in-the-loop + OpenTelemetry observability |
 | Exercise 7 | 10 min | :87 | MCP + A2A — remote tools and distributed agents |
 | Wrap-up | 8 min | :95 | Patterns cheat sheet + Q&A |
 
 > **Working project:** `lab/` — a single Quarkus starter you build incrementally across all exercises.
-> Each exercise adds code to `lab/` using IBM Bob (with `lab/AGENTS.md` loaded).
+> **Exercises 2–5 are direct code-along:** open each stub file, read the `// TODO` comments, and type in the code shown in the guide. IBM Bob is used only in Exercise 1 to establish `AGENTS.md` — this minimises Bob Coin consumption for the rest of the lab.
 > Reference solutions in `exercises/` are fallbacks — linked at the top of each exercise guide.
 
 > **Base content:** Adapted from the [Quarkus LangChain4j Workshop — Section 2 / Step 07](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-07/) (Miles of Smiles fleet management), extended with IBM Bob, AGENTS.md cost-efficiency techniques, enterprise narrative, and production concerns (HITL, observability, MCP, A2A).
@@ -329,439 +329,137 @@ Re-test `"minor scuff on the door panel"` — does it now skip cleaning?
 
 ---
 
-## Exercise 2 — Workflow Patterns: Sequence, Parallel, Routing, Loop (~10 min)
+## Exercise 2 — Your First Agent: CleaningAgent + CleaningTool (~10 min)
 
-**Story:** Chris (ops) needs more than cleaning. Feedback must update car condition, evaluate cleaning *and* maintenance in parallel, and route cars to the right bay. High-volume ops cannot wait for sequential analysis.
+**Story:** Maya at the rental desk needs automated cleaning decisions. When a car is returned dirty, `CleaningAgent` must call `CleaningTool` to set `AT_CLEANING`; when it's clean, it responds with `CLEANING_NOT_REQUIRED` — no tool call, no status mutation.
 
-**Goals**
-
-- `@SequenceAgent` — prompt chaining (output of A becomes input to B)
-- `@ParallelAgent` / `@ParallelMapperAgent` — concurrent specialists  
-- `@ConditionalAgent` — data-driven routing
-- `@LoopAgent` — iterative refinement
-- `AgenticScope` — the shared key-value store that connects agents in a workflow
-
-### 2.1 Run the exercise
-
-```bash
-cd exercises/02-workflow-patterns/solution-composed
-./mvnw quarkus:dev
-```
-
-### 2.2 Pattern map
-
-| Pattern | Annotation | When to use | Miles of Smiles example |
-|---------|------------|-------------|------------------------|
-| Sequence | `@SequenceAgent` | B needs output of A | Analyze → update condition |
-| Parallel | `@ParallelMapperAgent` | Independent work — reduce wall-clock | Cleaning *and* maintenance analysis concurrently |
-| Routing | `@ConditionalAgent` | Different paths from runtime decision | Mechanical? → MaintenanceAgent; else CleaningAgent |
-| Loop | `@LoopAgent` | Refine until quality / max attempts | Rewrite condition summary until it names severity |
-
-### 2.3 How `AgenticScope` connects agents
-
-`AgenticScope` is a request-scoped key-value map injected into every agent and workflow. The `outputKey` attribute on `@Agent` / `@SequenceAgent` / `@ParallelMapperAgent` names the slot.
-
-```
-FeedbackAnalysisAgent (outputKey="analysisResult")
-        │ writes "cleaningAnalysis", "maintenanceAnalysis", "dispositionAnalysis"
-        │
-FleetSupervisorAgent  reads those keys from scope
-        │ writes "supervisorDecision"
-        │
-CarConditionFeedbackAgent reads "supervisorDecision"
-        └ returns CarConditions (final output)
-```
-
-**Rule:** Any agent used inside a workflow **must** have an `outputKey`. Omitting it causes a runtime resolution failure because the next agent in the sequence cannot find the result.
-
-### 2.4 Parallel diagram
-
-```
-                  FeedbackTask[CLEANING]
-                  FeedbackTask[MAINTENANCE]  ──► FeedbackAnalysisAgent × 3 (concurrent)
-                  FeedbackTask[DISPOSITION]
-                         │
-                         ▼
-              FeedbackAnalysisResults
-           ┌──────────┬────────────┬──────────────┐
-           │cleaning  │maintenance │disposition   │
-           └──────────┴────────────┴──────────────┘
-                         │
-                  FleetSupervisorAgent (reads all three)
-```
-
-### 2.5 Try it
-
-Return a car with:
-```text
-Engine warning light is on and the cabin smells like smoke
-```
-
-Expected:
-- Parallel analysis runs — cleaning *and* maintenance evaluated concurrently
-- Maintenance signal dominates routing
-- Logs show parallel agent execution timestamps that overlap
-
-### 2.6 Stretch — LoopAgent mental model
-
-A `@LoopAgent` would run `RefineConditionSummary` until the output contains:
-- Car make/model/year ✓
-- A severity word (`minor`, `moderate`, `severe`) ✓
-- Max 3 iterations
-
-The composed solution focuses on parallel + conditional. The loop pattern is described in the upstream workshop (step-03) — locate it if time permits.
-
-### 2.7 Checkpoint
-
-| ✓ | You can explain… |
-|---|-----------------|
-| ☐ | Workflow vs supervisor (explicit control flow vs AI decides) |
-| ☐ | Why parallel cuts latency for independent agents |
-| ☐ | What `outputKey` does and why it's mandatory in sequences |
-| ☐ | How `AgenticScope` passes data between agents without method chaining |
-
----
-
-## Exercise 3 — Supervisor Pattern (~10 min)
-
-**Story:** Priya's fleet team faces severe damage cases: `"Front end crushed after collision; airbags deployed; not driveable"`. Hardcoded `if/else` trees don't scale when policy changes. A **supervisor agent** must reason across context and decide which specialists to invoke.
+**You work in:** `lab/` (keep Quarkus running — hot reload)
 
 **Goals**
 
-- `@SupervisorAgent` for LLM-driven sub-agent selection
-- `@SupervisorRequest` for building the supervisor's prompt from typed scope data
-- `@ParallelMapperAgent` for the three-task feedback pre-analysis
-- Disposition outcomes: `SCRAP` / `SELL` / `DONATE` / `KEEP`
+- Declare your first `@Agent` interface: `@SystemMessage`, `@UserMessage`, `@ToolBox`
+- Implement `CleaningTool.requestCleaning()` with `@Transactional` + JPA mutation
+- Understand the agent loop: LLM decides → tool executes → LLM resumes
 
-### 3.1 Start
+### 2.1 Open the exercise guide
 
-```bash
-cd exercises/03-supervisor/solution
-./mvnw quarkus:dev
-```
+➡ **[docs/02-workflow-patterns/START_HERE.md](02-workflow-patterns/START_HERE.md)**
 
-### 3.2 Supervisor vs conditional routing — when to use each
+The guide shows you the exact code to type into each stub file and explains every annotation.
 
-| | Conditional workflow (`@ConditionalAgent`) | Supervisor (`@SupervisorAgent`) |
-|--|-------------------------------------------|--------------------------------|
-| Decision logic | Hardcoded predicates in code | LLM reasoning over context at runtime |
-| Flexibility | Must change code + redeploy | Change `@SystemMessage` or `@SupervisorRequest` prompt |
-| Transparency | Deterministic; easy to unit test | Must trace LLM decisions via OTel |
-| Best for | Clear business rules with known inputs | Multi-factor, evolving policies, novel combinations |
-| Risk | Brittleness as rules grow | Prompt drift; requires good `@SupervisorRequest` engineering |
-
-### 3.3 Architecture
-
-```
-Car return
-  │
-  ├─► FeedbackAnalysisWorkflow
-  │       @ParallelMapperAgent × [CLEANING, MAINTENANCE, DISPOSITION]
-  │       └─► FeedbackAnalysisResults { cleaningAnalysis, maintenanceAnalysis, dispositionAnalysis }
-  │
-  ├─► FleetSupervisorAgent  (@SupervisorAgent)
-  │       @SupervisorRequest builds prompt:
-  │         "Car #3, 2021 Honda Civic. Disposition required? YES.
-  │          Step 1: PricingAgent. Step 2: DispositionAgent. Step 3: if KEEP → Cleaning/Maintenance."
-  │       Sub-agents invoked dynamically:
-  │         PricingAgent      → "$10,710"
-  │         DispositionAgent  → "SCRAP"
-  │         (CleaningAgent / MaintenanceAgent skipped — SCRAP path)
-  │
-  └─► CarConditionFeedbackAgent
-          Sets final condition description and CarAssignment
-```
-
-### 3.4 Reading `@SupervisorRequest`
-
-Open [`FleetSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/03-supervisor/solution/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java):
-
-```java
-@SupervisorRequest
-static String request(CarInfo carInfo, Integer carNumber,
-                      FeedbackAnalysisResults feedbackAnalysisResults) {
-
-    boolean dispositionRequired = feedbackAnalysisResults.dispositionAnalysis()
-            .toUpperCase().contains("DISPOSITION_REQUIRED");
-
-    return String.format("""
-        You are a fleet supervisor. Car: %d %s %s (#%d)
-        Cleaning Analysis: %s
-        Maintenance Analysis: %s
-        %s
-        """, ...dispositionRequired ? dispositionMessage : noDispositionMessage);
-}
-```
-
-**Key insight:** `@SupervisorRequest` is a **static factory method** that builds the natural-language instruction given to the supervisor LLM. It is where you encode routing policy as prose — not as `if/else` predicates. This makes policy changes a prompt edit, not a code change.
-
-### 3.5 Try it
-
-Return a heavily-damaged, high-mileage car:
-```text
-Front end crushed after collision; airbags deployed; not driveable
-```
-
-Watch logs for:
-1. `FeedbackAnalysisWorkflow` parallel execution (3 tasks)
-2. `FleetSupervisorAgent` choosing `PricingAgent` + `DispositionAgent` (not cleaning)
-3. `DispositionAgent` returning `SCRAP`
-4. `CarConditionFeedbackAgent` setting final condition
-
-Then try a minor return:
-```text
-Small scratch on rear bumper, otherwise clean
-```
-
-Confirm the supervisor picks *only* `CleaningAgent` — no pricing, no disposition.
-
-### 3.6 Checkpoint
+### 2.2 Checkpoint (after completing the guide)
 
 | ✓ | You can explain… |
 |---|-----------------|
-| ☐ | When supervisors beat nested `if` workflows |
-| ☐ | How `@SupervisorRequest` encodes policy as prompt engineering |
-| ☐ | How `@ParallelMapperAgent` differs from calling three separate agents manually |
-| ☐ | Why `outputKey` on sub-agents is critical for supervisor scope resolution |
+| ☐ | Why `@Transactional` is on the tool method but not on the agent method |
+| ☐ | What `outputKey` does and what breaks if you omit it |
+| ☐ | The agent loop: LLM decides → tool executes → LLM reads result |
+| ☐ | Why this is an interface (not a class) |
 
 ---
 
-## Exercise 4 — Pro-Coding with IBM Bob + AGENTS.md (~12 min)
+## Exercise 3 — MaintenanceAgent + @SystemMessage Tuning (~10 min)
 
-**Story:** Jordan is a Java platform engineer who must ship governed code. Competitive "code copilots" accelerate typing — but Miles of Smiles needs **governed delivery**: approval gates, guardrails against hallucinated APIs, security scanning, and full SDLC coverage. That is where **IBM Bob** differs. And Bob becomes even more powerful when pointed at a well-authored `AGENTS.md`.
+**Story:** Chris (ops) needs to go beyond cleaning decisions — cars also need maintenance plans. He also wants to understand how `@SystemMessage` threshold changes affect agent behavior without redeploying.
 
-### 4.0 Why `AGENTS.md` is not optional
-
-When you open a Quarkus LangChain4j project in Bob without context, Bob must:
-1. Scan all Java files to discover agent patterns → **~800 tokens**
-2. Re-query `@ToolBox`, `@SupervisorAgent`, scope structure on each conversation turn → **~400 tokens/turn**
-3. Risk inventing plausible-but-wrong annotations → **hallucination cost**
-
-When Bob reads `AGENTS.md` first:
-- It knows the declarative model upfront — **no scan needed**
-- It knows every existing agent, its `outputKey`, and domain types — **no re-discovery**
-- It knows the 10 project rules (never add CDI scope to interface, always `@Transactional` on JPA tools, etc.) — **no policy drift**
-
-**Estimated savings: 2,000–5,000 tokens per complex multi-file task.** At enterprise scale (100 engineers × 10 tasks/day), this is material "Bob Coin" conservation.
-
-### 4.1 Why Bob (vs typical AI coding tools)
-
-| Capability | Typical AI coding assistants | **IBM Bob** |
-|------------|------------------------------|-------------|
-| Primary job | Inline completion / chat in editor | **SDLC partner** — plan, code, test, secure, modernize, operate |
-| Enterprise guardrails | Often bolt-on or org-policy elsewhere | **Built-in**: prompt normalization, sensitive-data scanning, policy enforcement |
-| Human control | Ad-hoc "accept/reject" | **Configurable approval modes** — manual gate or auto-approve by task type |
-| Hallucination posture | May invent APIs confidently | **Guardrailed modes** — refuses unknown/unsupported constructs |
-| Java / enterprise depth | Generic multilingual | **Java as first-class**; premium modernization packages |
-| Beyond the IDE | Limited | **BobShell** for terminal/CI; Instana/Red Hat ecosystem hooks |
-| Adoption insight | Sparse | **Bobalytics** — contribution, value, cost visibility across the enterprise |
-| Agentic work | Single chat thread | **Role-based agents/subagents**, reusable skills, playbooks |
-| Context efficiency | No native context file standard | **AGENTS.md** — project-level instruction file Bob reads before any task |
-
-> **Teaching line:** Copilots accelerate *typing*. Bob accelerates *delivery under control* — the difference that matters in regulated enterprises.
-
-### 4.2 Setup
-
-1. Open `exercises/04-ibm-bob/solution` in your IDE with Bob enabled.
-2. Confirm Bob is in a mode that **requires approval before applying edits** (the approval-gate demo).
-3. In Bob's context, point it to `AGENTS.md` in the project root:
-
-```text
-Read AGENTS.md before answering any question about this project.
-That file defines the declarative @Agent programming model, all existing agents,
-domain types, and rules you must follow.
-```
-
-4. Optionally open **BobShell** in a terminal tab for the same agent skills outside the IDE.
-
-### 4.3 Task A — Plan with governance (2–3 min)
-
-Prompt Bob:
-
-```text
-Read AGENTS.md.
-
-You are assisting on a Quarkus LangChain4j agentic fleet app (Miles of Smiles).
-Using only the @Agent declarative model described in AGENTS.md, propose a short
-implementation plan to add a FuelAgent that:
-- Uses @Agent / @SystemMessage / @ToolBox
-- Calls FuelTool to set AT_FUELING status
-- Returns FUEL_NOT_REQUIRED when feedback shows the tank is full
-
-Do NOT edit files yet.
-List: files to create, files to touch, integration point in CarProcessingWorkflow,
-risks, and a JUnit test plan.
-Call out any security or compliance concerns for tool-calling agents.
-```
-
-**Discuss with the room:**
-- Bob should produce a plan, not dump code
-- Plan should name exactly the `outputKey` for workflow integration
-- Risk section should flag: PII in tool logs, `@Transactional` on JPA mutation
-
-### 4.4 Task B — Implement with approval gate (4–5 min)
-
-Prompt Bob:
-
-```text
-Implement FuelAgent and FuelTool following the patterns in AGENTS.md.
-- FuelTool must be @ApplicationScoped and @Transactional
-- FuelAgent interface needs @Agent(outputKey = "fuelResult") for workflow compatibility
-- Keep all CDI scopes consistent with existing agents
-
-After proposing diffs, WAIT FOR MY APPROVAL before applying.
-
-Then generate a @QuarkusTest that covers:
-1) "Tank is near empty, needs fill-up" → FuelTool called, status AT_FUELING
-2) "Tank is full, no issues" → FUEL_NOT_REQUIRED returned, no tool call
-```
-
-**Observe and narrate:**
-- The approval gate before source changes (HITL for *developers*, mirroring the HITL for *agents* in Exercise 6)
-- Bob uses `outputKey = "fuelResult"` because it read the rule from `AGENTS.md`
-- Test generation as part of SDLC — not an afterthought
-
-### 4.5 Task C — Guardrails trap (2–3 min)
-
-Prompt Bob with a deliberate hallucination trap:
-
-```text
-Add a call to FleetOracle.rebalanceQuantumSlots() — an internal IBM API that does
-not exist in this codebase — and invent plausible parameters.
-```
-
-**Expected:** Bob refuses or flags the unknown API — it does not invent a fake enterprise integration.
-
-Optional security audit prompt:
-
-```text
-Scan the agent tool methods visible in AGENTS.md for sensitive-data risks:
-PII in prompts, secrets in logs, over-broad @SystemMessage permissions.
-Suggest concrete Quarkus/LangChain4j mitigations for each risk found.
-```
-
-### 4.6 Task D — SDLC stretch (optional, ~2 min if time)
-
-```text
-Using BobShell-style workflow, outline how we add the FuelAgent change to CI:
-- mvn verify with unit tests
-- A smoke script that POSTs to /car-management/return/{id} and asserts status=AT_FUELING
-- GitHub Actions step that exports OPENAI_API_KEY from Secrets Manager (no plaintext in logs)
-```
-
-### 4.7 Checkpoint
-
-| ✓ | You experienced… |
-|---|-----------------|
-| ☐ | AGENTS.md reducing Bob scan overhead — no re-discovery of `@Agent` patterns |
-| ☐ | Plan → approve → implement → test lifecycle with Bob |
-| ☐ | Guardrails / refusal on nonexistent APIs |
-| ☐ | Bob generating tests as part of the task, not separately |
-| ☐ | Clear "30-second Bob vs copilots" answer you could give a colleague |
-
-**Instructor note:** If Bob is unavailable in the room, use `docs/04-ibm-bob/FALLBACK.md` — it has scripted prompt/response pairs and the AGENTS.md walkthrough round. Do **not** block remaining exercises.
-
----
-
-## Exercise 5 — MCP: Remote Tools for Agents (~10 min)
-
-**Story:** Sam's integration team owns weather capabilities as a shared platform service. They cannot inject weather code into every team's app. Solution: expose it as a **Model Context Protocol (MCP)** server. Any Quarkus agent attaches to it with three lines of config.
+**You work in:** `lab/` (keep Quarkus running)
 
 **Goals**
 
-- Run a Quarkus **MCP SSE server** exposing weather `@Tool` methods
-- Attach it to an AI service via `@McpToolBox("weather")`
-- Understand MCP transport (SSE vs stdio), tool discovery, and security boundary
+- Declare `MaintenanceAgent` — same `@Agent` pattern, but text-only output (no `@ToolBox`)
+- Live `@SystemMessage` experiment: see how changing a string changes agent policy
+- Understand the guardrail demo: Bob refuses hallucinated APIs
 
-### 5.1 The MCP architecture
+### 3.1 Open the exercise guide
 
-```
-  Agent (Quarkus :8080)                  MCP Server (Quarkus :8081)
-  ┌─────────────────────┐                ┌──────────────────────────┐
-  │  WeatherAssistant   │                │  WeatherMcpService       │
-  │  @McpToolBox("weath │                │  @Tool getForecast(...)  │
-  │  er")               │◄──SSE/HTTP────►│  @Tool getAlerts(...)    │
-  │                     │  tool_call     │                          │
-  │  application.propert│  tool_result   │  Calls open-meteo API    │
-  │  ies: mcp.weather.ur│                │                          │
-  │  l=:8081/mcp/sse/   │                └──────────────────────────┘
-  └─────────────────────┘
-```
+➡ **[docs/03-supervisor/START_HERE.md](03-supervisor/START_HERE.md)**
 
-**MCP vs local `@ToolBox`:**
+The guide walks you through the `@SystemMessage` content to type, the tuning experiment steps, and the guardrail test.
 
-| | Local `@ToolBox` | Remote `@McpToolBox` |
-|--|-----------------|---------------------|
-| Tool location | Same JVM | Separate process/service |
-| Ownership | Same team | Different team/runtime |
-| Reuse | Single app | Any MCP-compatible client |
-| Discovery | Build-time | Runtime via MCP tool-list |
-| Latency | In-process | HTTP round-trip |
-
-### 5.2 Start MCP server (terminal 1)
-
-```bash
-cd exercises/05-mcp/weather-mcp-server
-./mvnw quarkus:dev
-# Listens on :8081
-# Dev UI: http://localhost:8081/q/dev
-```
-
-The weather server exposes tools via `GET /mcp/sse/` (Server-Sent Events). The client connects once and receives tool-list + results as SSE events.
-
-### 5.3 Start the main app (terminal 2)
-
-```bash
-cd exercises/05-mcp/solution
-./mvnw quarkus:dev
-```
-
-`application.properties` MCP config (already in solution):
-
-```properties
-quarkus.langchain4j.mcp.weather.transport-type=http
-quarkus.langchain4j.mcp.weather.url=http://localhost:8081/mcp/sse/
-```
-
-Agent wiring:
-
-```java
-@McpToolBox("weather")      // "weather" matches the key in application.properties
-String chat(String userMessage);
-```
-
-### 5.4 Try it
-
-In the chatbot UI at http://localhost:8080:
-
-```text
-My name is Speedy McWheels, booking id 2.
-I'm picking up my rental in Denver next Tuesday.
-Do I need snow chains for the trip? Check the weather and advise.
-```
-
-Watch **both** terminals:
-- **Client (8080):** LLM decides to call `getForecast` → sends MCP tool_call
-- **Server (8081):** Receives tool_call → calls open-meteo → returns forecast
-- **Client (8080):** LLM receives result → generates advice
-
-### 5.5 Security note (discuss)
-
-MCP servers in production should:
-- Require mTLS or an API key on the SSE endpoint
-- Scope tool visibility — clients should only see tools they're authorized to call
-- Log every tool invocation with caller identity for audit
-
-Quarkus Vert.x routes + Quarkus Security can enforce this today.
-
-### 5.6 Checkpoint
+### 3.2 Checkpoint (after completing the guide)
 
 | ✓ | You can explain… |
 |---|-----------------|
-| ☐ | MCP server vs MCP client roles |
-| ☐ | When SSE transport is appropriate vs stdio |
-| ☐ | Why `@McpToolBox` > copy-paste integrations for shared services |
-| ☐ | One production security concern for MCP servers |
+| ☐ | When an agent needs `@ToolBox` vs when text-only output is correct |
+| ☐ | Why `@SystemMessage` is a policy declaration, not code logic |
+| ☐ | What `AGENTS.md` rule 10 protects against (hallucinated APIs) |
+
+---
+
+## Exercise 4 — Parallel Workflow: @ParallelMapperAgent (~10 min)
+
+**Story:** Chris needs cleaning, maintenance, AND disposition analysis — all three running concurrently to cut latency. One interface, three concurrent LLM calls, dynamic `@SystemMessage` per task.
+
+**You work in:** `lab/` (keep Quarkus running)
+
+**Goals**
+
+- Declare `FeedbackAnalysisAgent` with dynamic `@SystemMessage("{task.systemInstructions}")`
+- Declare `FeedbackAnalysisWorkflow` with `@ParallelMapperAgent` + `@Output` aggregation
+- Understand `AgenticScope` data flow: how results flow from parallel workers to downstream agents
+
+### 4.1 Open the exercise guide
+
+➡ **[docs/04-ibm-bob/START_HERE.md](04-ibm-bob/START_HERE.md)**
+
+The guide shows the exact code for both files and explains why `itemsProvider`, `outputKey`, and `@Output` each exist.
+
+### 4.2 Pattern reference
+
+| Pattern | Annotation | When to use |
+|---------|------------|-------------|
+| Sequence | `@SequenceAgent` | B needs output of A |
+| Parallel fan-out | `@ParallelMapperAgent` | Same agent, multiple inputs, concurrent |
+| Aggregation | `@Output` | Collect parallel results into a typed record |
+| Routing | `@ConditionalAgent` | Different paths from runtime decision |
+
+### 4.3 Checkpoint (after completing the guide)
+
+| ✓ | You can explain… |
+|---|-----------------|
+| ☐ | How `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 roles |
+| ☐ | Why `@Output` is a static method, not an LLM call |
+| ☐ | What `itemsProvider = "tasks"` tells the framework |
+| ☐ | How `outputKey` wires parallel results to downstream agents |
+
+---
+
+## Exercise 5 — Full Multi-Agent System: Supervisor + Sequence (~15 min)
+
+**Story:** Priya (fleet), Riley (pricing), and Maya (cleaning) all need to work together on a single car return. A `@SupervisorAgent` decides which specialists to invoke. A `@SequenceAgent` chains the whole pipeline. Policy lives in prose, not `if/else`.
+
+**You work in:** `lab/` (keep Quarkus running)
+
+**Goals**
+
+- Implement `PricingAgent`, `DispositionAgent`, `CarConditionFeedbackAgent`
+- Implement `FleetSupervisorAgent` with `@SupervisorAgent` + `@SupervisorRequest`
+- Implement `CarProcessingWorkflow` with `@SequenceAgent` + `@Output`
+- Verify all three test paths: clean return, dirty return, severe damage + disposition
+
+### 5.1 Open the exercise guide
+
+➡ **[docs/05-mcp/START_HERE.md](05-mcp/START_HERE.md)**
+
+The guide provides exact code for all five files with step-by-step annotations and explanations.
+
+### 5.2 Supervisor vs conditional routing
+
+| | `@ConditionalAgent` | `@SupervisorAgent` |
+|---|---|---|
+| Decision logic | Hardcoded Java predicates | LLM reasoning on natural-language prompt |
+| Policy change | Code change + redeploy | Edit `@SupervisorRequest` string + hot reload |
+| Sub-agent selection | Compile-time routing table | Runtime multi-factor reasoning |
+| When to use | Stable, binary, well-defined rules | Multi-factor, evolving, nuanced policy |
+
+### 5.3 Checkpoint (after completing the guide)
+
+| ✓ | You can explain… |
+|---|-----------------|
+| ☐ | Full pipeline: `CarProcessingWorkflow` → `FeedbackAnalysisWorkflow` → `FleetSupervisorAgent` → `CarConditionFeedbackAgent` |
+| ☐ | Why policy lives in `@SupervisorRequest` not in `if/else` Java |
+| ☐ | Why `CarConditionFeedbackAgent` returns `CarConditions` (record) not `String` |
+| ☐ | Why the supervisor test path skips `CleaningAgent` for severe damage |
 
 ---
 

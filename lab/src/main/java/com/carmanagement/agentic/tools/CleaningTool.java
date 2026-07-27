@@ -10,29 +10,38 @@ import com.carmanagement.model.CarInfo;
 import com.carmanagement.model.CarStatus;
 
 /**
- * Tool for requesting cleaning operations.
+ * Exercise 2 — implement CleaningTool.requestCleaning().
  *
- * Exercise 2 — Step 2: implement requestCleaning().
+ * See docs/02-workflow-patterns/START_HERE.md Step 2 for full instructions.
+ *
  * Rules from AGENTS.md:
- *  - @ApplicationScoped (already set — never change this)
- *  - @Transactional on any method that calls carInfo.persist()
- *  - Return a String summary (the LLM reads this as tool result)
- *  - Do NOT log full feedback text (PII risk — rule 6 in AGENTS.md)
+ *  - @ApplicationScoped is already set — NEVER change or remove it
+ *  - @Tool("...") on the method — description shown to the LLM as a callable function
+ *  - @Transactional on requestCleaning() — required because carInfo.persist() is a JPA mutation
+ *  - Return a String summary (the LLM reads this as the tool result)
+ *  - Log car number only — do NOT log full feedback text (PII risk — AGENTS.md rule 6)
  */
 @ApplicationScoped
 public class CleaningTool {
 
-    // TODO Exercise 2 — Step 2:
-    //  Add @Tool("Requests a cleaning with the specified options")
-    //  Add @Transactional
-    //  Implement requestCleaning(...) with these parameters:
-    //    Integer carNumber, String carMake, String carModel, Integer carYear,
-    //    boolean exteriorWash, boolean interiorCleaning, boolean detailing,
-    //    boolean waxing, String requestText
-    //  Body should:
-    //    1. CarInfo carInfo = CarInfo.findById(carNumber);
-    //    2. if (carInfo != null) { carInfo.status = CarStatus.AT_CLEANING; carInfo.persist(); }
-    //    3. Build and return a summary string
-    //    4. Log.info("  └─ CleaningTool activated for car #" + carNumber);
+    // TODO Exercise 2 — Step 2: add the requestCleaning method below.
+    //
+    // Annotations:
+    //   @Tool("Requests a cleaning with the specified options")
+    //   @Transactional
+    //
+    // Method signature:
+    //   public String requestCleaning(Integer carNumber, String carMake, String carModel,
+    //                                  Integer carYear, boolean exteriorWash,
+    //                                  boolean interiorCleaning, boolean detailing,
+    //                                  boolean waxing, String requestText)
+    //
+    // Body:
+    //   1. CarInfo carInfo = CarInfo.findById(carNumber);
+    //   2. if (carInfo != null) { carInfo.status = CarStatus.AT_CLEANING; carInfo.persist(); }
+    //   3. Build and return a summary String (see guide for helper StringBuilder pattern)
+    //   4. Log.info("  └─ CleaningTool activated for car #" + carNumber);
+    //
+    // Full code is in docs/02-workflow-patterns/START_HERE.md Step 2.
 
 }
