@@ -1,4 +1,4 @@
-![Lab cover](images/cover_page.png)
+<img src="images/cover_page.png" alt="Lab cover" style="width:100%;max-width:960px;display:block;margin:0 auto 1.5rem auto;">
 
 # Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
 
