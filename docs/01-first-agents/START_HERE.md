@@ -30,7 +30,7 @@ Open **http://localhost:8080** — Fleet Status grid with 8 seeded cars; **Retur
 
 ## Anatomy of `@Agent`
 
-Open [`CleaningAgent.java`](../../exercises/01-first-agents/solution/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java):
+Open [`CleaningAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/01-first-agents/solution/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java):
 
 ```java
 public interface CleaningAgent {

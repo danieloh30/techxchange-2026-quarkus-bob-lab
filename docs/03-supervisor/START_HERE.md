@@ -57,7 +57,7 @@ POST /car-management/return/{carNumber}
 
 ## `@SupervisorRequest` deep-dive
 
-Open [`FleetSupervisorAgent.java`](../../exercises/03-supervisor/solution/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java).
+Open [`FleetSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/03-supervisor/solution/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java).
 
 ```java
 @SupervisorRequest

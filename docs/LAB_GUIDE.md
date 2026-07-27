@@ -197,7 +197,7 @@ Open http://localhost:8080 — Fleet Status grid at the top; **Return** button i
 
 ### 1.2 Anatomy of `CleaningAgent`
 
-Open [`exercises/01-first-agents/solution/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java`](../../exercises/01-first-agents/solution/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java):
+Open [`CleaningAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/01-first-agents/solution/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java):
 
 ```java
 public interface CleaningAgent {
@@ -235,7 +235,7 @@ public interface CleaningAgent {
 
 **Why an interface?** Quarkus generates the implementation at build time using byte-buddy. You declare *intent*; the framework + LLM provide *behavior*. This is the fundamental shift from imperative to declarative AI programming.
 
-Open [`CleaningTool.java`](../../exercises/01-first-agents/solution/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java):
+Open [`CleaningTool.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/01-first-agents/solution/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java):
 
 ```java
 @ApplicationScoped
@@ -470,7 +470,7 @@ Car return
 
 ### 3.4 Reading `@SupervisorRequest`
 
-Open [`exercises/03-supervisor/solution/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java`](../../exercises/03-supervisor/solution/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java):
+Open [`FleetSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/03-supervisor/solution/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java):
 
 ```java
 @SupervisorRequest

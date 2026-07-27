@@ -50,7 +50,7 @@ Open http://localhost:8080
 
 ## AGENTS.md — project context for IBM Bob
 
-The [`AGENTS.md`](../AGENTS.md) file in the repository root is a **token-efficient context file** for IBM Bob. Before any coding session, load it into Bob's context:
+The [`AGENTS.md`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/AGENTS.md) file in the repository root is a **token-efficient context file** for IBM Bob. Before any coding session, load it into Bob's context:
 
 ```text
 Read AGENTS.md before answering anything about this project.
