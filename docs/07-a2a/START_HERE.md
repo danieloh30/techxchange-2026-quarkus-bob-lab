@@ -2,7 +2,7 @@
 
 **Timebox:** 10 minutes  
 **Story:** Riley’s pricing team owns valuation as a remote A2A service.  
-**Solution:** [`exercises/07-a2a/solution`](../../exercises/07-a2a/solution)
+**Solution:** [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution)
 - Main app: `multi-agent-system` (port 8080)
 - Pricing A2A service: `remote-a2a-agent` (port 8888)
 

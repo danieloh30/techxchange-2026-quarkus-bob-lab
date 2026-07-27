@@ -3,8 +3,8 @@
 **Timebox:** 10 minutes  
 **Story:** Chris (ops) needs sequence, parallel analysis, routing, and an optional quality loop.  
 **Solution projects:**
-- Sequence: [`exercises/02-workflow-patterns/solution-sequence`](../../exercises/02-workflow-patterns/solution-sequence) ← [upstream step-02](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-02/)
-- Composed (parallel + conditional): [`exercises/02-workflow-patterns/solution-composed`](../../exercises/02-workflow-patterns/solution-composed) ← [upstream step-03](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-03/)
+- Sequence: [`exercises/02-workflow-patterns/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-sequence) ← [upstream step-02](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-02/)
+- Composed (parallel + conditional): [`exercises/02-workflow-patterns/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-composed) ← [upstream step-03](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-03/)
 
 ![Parallel execution](../images/parallel-execution.png)
 

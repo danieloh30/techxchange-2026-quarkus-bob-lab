@@ -2,7 +2,7 @@
 
 **Timebox:** 12 minutes  
 **Story:** Jordan ships agent code under enterprise governance.  
-**Base Quarkus project:** [`exercises/04-ibm-bob/solution`](../../exercises/04-ibm-bob/solution) (same codebase as Exercise 3 / upstream step-04)  
+**Base Quarkus project:** [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution) (same codebase as Exercise 3 / upstream step-04)  
 **Companion docs:** [BOB_VS_COPILOTS.md](BOB_VS_COPILOTS.md) · [FALLBACK.md](FALLBACK.md)
 
 ## Why this exercise exists

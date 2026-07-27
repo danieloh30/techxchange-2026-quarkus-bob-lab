@@ -2,7 +2,7 @@
 
 **Timebox:** 10 minutes  
 **Story:** Priya needs adaptive disposition — not another `if/else` tree.  
-**Solution project:** [`exercises/03-supervisor/solution`](../../exercises/03-supervisor/solution)  
+**Solution project:** [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution)  
 **Upstream:** [section-2/step-04](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-04/)
 
 ## Start

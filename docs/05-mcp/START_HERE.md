@@ -3,8 +3,8 @@
 **Timebox:** 10 minutes  
 **Story:** Sam exposes weather as a shared MCP server; agents consume it remotely.  
 **Projects:**
-- Client: [`exercises/05-mcp/solution`](../../exercises/05-mcp/solution)
-- Server: [`exercises/05-mcp/weather-mcp-server`](../../exercises/05-mcp/weather-mcp-server)
+- Client: [`exercises/05-mcp/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp/solution)
+- Server: [`exercises/05-mcp/weather-mcp-server`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp/weather-mcp-server)
 
 **Upstream:** [section-1/step-08](https://quarkus.io/quarkus-workshop-langchain4j/section-1/step-08/)
 
