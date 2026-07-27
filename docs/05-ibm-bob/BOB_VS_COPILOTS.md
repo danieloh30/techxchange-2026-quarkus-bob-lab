@@ -1,6 +1,6 @@
 # IBM Bob vs Typical AI Coding Assistants
 
-**Handout for Exercise 4 (2-minute read)**
+**Handout for Exercise 5 (2-minute read)**
 
 ---
 

@@ -1,66 +1,24 @@
-# Exercise 7 — MCP + A2A: Remote Tools and Distributed Agents
+# Exercise 7 — A2A: Distributed Pricing Agent
 
 **Timebox:** 10 minutes  
-**Personas:** Sam (MCP), Riley (A2A)  
-**You work in:** `exercises/05-mcp/` and `exercises/07-a2a/` (run + read)  
-**Bob task:** extend your `lab/AGENTS.md` with MCP and A2A concepts
+**Persona:** Riley — Pricing team lead  
+**You work in:** `exercises/07-a2a/solution/` (run + read)
 
-> 💡 **Reference solutions:**  
-> MCP: [`exercises/05-mcp`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp)  
-> A2A: [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution)
+> 💡 **Reference solution:** [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution)
 
 ---
 
-## Part A — MCP (5 min)
+## The problem
 
-**The problem:** Sam's team owns weather capabilities. They can't inject weather code into every team's app. Model Context Protocol (MCP) exposes tools over HTTP/SSE so any MCP-compatible agent can call them.
+In Exercise 4, `PricingAgent` ran inside the main app — same process, same release cycle. But Riley's pricing team needs independent ownership: their own repo, their own release cadence, and the ability to serve other IBM systems beyond Miles of Smiles.
 
-### Start (two terminals)
-
-```bash
-# Terminal 1 — MCP server
-cd exercises/05-mcp/weather-mcp-server
-./mvnw quarkus:dev   # port :8081
-```
-```bash
-# Terminal 2 — MCP client
-cd exercises/05-mcp/solution
-./mvnw quarkus:dev   # port :8080
-```
-
-### What changed vs `@ToolBox`?
-
-In the client `application.properties`:
-```properties
-quarkus.langchain4j.mcp.weather.transport-type=http
-quarkus.langchain4j.mcp.weather.url=http://localhost:8081/mcp/sse/
-```
-
-In the AI service:
-```java
-@McpToolBox("weather")   // remote tool discovery at runtime
-String chat(String userMessage);
-```
-
-The tool schema is fetched from the MCP server at startup via SSE — no compile-time dependency on the tool implementation.
-
-### Test it
-
-```text
-My name is Speedy McWheels, booking id 2.
-I'm picking up my rental in Denver next Tuesday.
-Do I need snow chains? Check the weather and advise.
-```
-
-Watch both terminals — server logs show `getForecast` called; client shows LLM composing advice from tool result.
+Solution: convert `PricingAgent` into an **Agent-to-Agent (A2A)** remote service.
 
 ---
 
-## Part B — A2A (5 min)
+## Start (two terminals)
 
-**The problem:** Riley's pricing team needs their own release cycle and independent scaling. Convert `PricingAgent` from a local in-process agent to a remote A2A service.
-
-### Start (two terminals)
+Stop any running Quarkus process first (`Ctrl+C`).
 
 ```bash
 # Terminal 1 — pricing service FIRST
@@ -78,47 +36,96 @@ Verify the AgentCard:
 curl http://localhost:8888/.well-known/agent.json
 ```
 
-### The A2A contract
-
+Expected:
+```json
+{
+  "name": "pricing-agent",
+  "description": "Estimates car market value for fleet disposition decisions",
+  "url": "http://localhost:8888/a2a",
+  "capabilities": ["pricing", "valuation"]
+}
 ```
-FleetSupervisorAgent (@A2AClientAgent) → POST /a2a/tasks/send :8888
-                                              │
-                                         AgentExecutor.execute(task)
-                                              │
-                                         PricingAgent (remote LLM call)
-                                              │
-                                         Task result → back to :8080
-```
-
-### MCP vs A2A — the decision
-
-| | MCP | A2A |
-|--|-----|-----|
-| What crosses the wire | Tool call (function + typed args) | Agent task (goal + natural language) |
-| Who reasons | Local LLM uses remote tool | Remote LLM reasons independently |
-| Team ownership | Shared capability (weather, search) | Autonomous team agent (pricing, legal) |
-| Best for | Shared functionality | Delegated decision-making |
 
 ---
 
-## Bob: update AGENTS.md
+## The A2A architecture
 
-```text
-Based on what I just learned about MCP and A2A, suggest additions to
-lab/AGENTS.md that document:
-1. The @McpToolBox annotation pattern for remote tools
-2. The @A2AClientAgent annotation for remote agents
-3. When to use each vs local @ToolBox
-
-Do NOT write code — update only AGENTS.md.
 ```
+CarProcessingWorkflow (main app :8080)
+  └─► FleetSupervisorAgent
+           └─► PricingAgent @A2AClientAgent
+                    │
+                    │  JSON-RPC / HTTP
+                    │  POST /a2a/tasks/send
+                    │
+                    ▼
+             remote-a2a-agent :8888
+               AgentExecutor.execute(task)
+                 └─► PricingAgent (remote LLM call)
+                          └─► LLM → "$10,710"
+               Task result returned to caller
+```
+
+**A2A concepts:**
+
+| Concept | Meaning | Analogy |
+|---------|---------|---------|
+| `AgentCard` | Capability metadata — what can this agent do? | Service contract / OpenAPI spec |
+| `AgentExecutor` | Request handler on the server — processes an incoming `Task` | JAX-RS endpoint for agents |
+| `Task` | Long-running, stateful goal with input/output envelope | Async job submission |
+| `Message` | Single synchronous exchange within a task | Synchronous REST call |
+
+---
+
+## Try it
+
+Return a car that requires valuation + disposition:
+```text
+High-mileage vehicle, transmission slipping, market value uncertain
+```
+
+Correlate logs across **both** processes:
+- **Client (8080):** `[A2AClient] sending task to http://localhost:8888/a2a`
+- **Remote (8888):** `[AgentExecutor] received task, invoking PricingAgent`
+- **Remote (8888):** `[PricingAgent] estimated value: $7,200`
+- **Client (8080):** `[A2AClient] task completed, result: $7,200`
+
+---
+
+## MCP vs A2A — when to use each
+
+You haven't built an MCP integration in this lab, but the distinction matters for architecture decisions:
+
+| | MCP (Model Context Protocol) | A2A (Agent-to-Agent) |
+|--|-----|-----|
+| **What crosses the wire** | Tool call (function + typed args) | Agent task (goal + natural language) |
+| **Who reasons** | Local LLM uses remote tool | Remote LLM reasons independently |
+| **Team ownership** | Shared capability (weather, search, DB lookup) | Autonomous team agent (pricing, legal review) |
+| **State** | Stateless per call | Optionally stateful (task lifecycle) |
+| **Best for** | Shared functionality any agent can call | Delegated decision-making by another team |
+| **Quarkus annotation** | `@McpToolBox("name")` | `@A2AClientAgent` |
+
+**Rule of thumb:** If the remote service just *does something* when told exactly what to do → MCP. If it *decides something* using its own reasoning → A2A.
+
+> **Want to try MCP?** The [`exercises/05-mcp/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp) folder contains a working MCP weather server and client. Run both and see `@McpToolBox` in action as a stretch exercise.
+
+---
+
+## Trade-offs
+
+| Factor | Local agent (Ex 4) | Remote A2A agent |
+|--------|-------------|-----------------|
+| Latency | In-process | +HTTP round-trip |
+| Ownership | Shared codebase | Independent repo + release |
+| Scaling | Scale whole app | Scale pricing service independently |
+| Failure mode | Shared crash domain | Network partition risk |
+| Reuse | Single app | Any A2A-compatible client |
 
 ---
 
 ## Done when
 
-- [ ] MCP: `getForecast` tool invocation visible in **server** logs
 - [ ] A2A: pricing ran in `:8888` (confirmed in remote process logs)
 - [ ] AgentCard verified via `curl`
-- [ ] `lab/AGENTS.md` updated with MCP and A2A patterns
 - [ ] You can contrast MCP vs A2A in one sentence each
+- [ ] You can explain when to keep an agent local vs make it remote

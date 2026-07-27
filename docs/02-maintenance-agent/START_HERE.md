@@ -1,4 +1,4 @@
-# Exercise 3 — MaintenanceAgent + @SystemMessage Tuning
+# Exercise 2 — MaintenanceAgent + @SystemMessage as Policy
 
 **Timebox:** 10 minutes  
 **Persona:** Chris — Ops lead  
@@ -67,16 +67,16 @@ import dev.langchain4j.service.UserMessage;
 ```
 
 > **Why no `@ToolBox` here?**  
-> `MaintenanceAgent` returns a *plan* as text — it does not write to the database. The supervisor in Exercise 5 reads this text plan and decides whether to escalate. Text-only agents are faster and cheaper: no tool-call round-trips to the LLM.
+> `MaintenanceAgent` returns a *plan* as text — it does not write to the database. The supervisor in Exercise 4 reads this text plan and decides whether to escalate. Text-only agents are faster and cheaper: no tool-call round-trips to the LLM.
 >
 > **Compare with `CleaningAgent`:**  
 > `CleaningAgent` must call `CleaningTool.requestCleaning()` to actually mutate `CarStatus`. `MaintenanceAgent` only produces a recommendation. The supervisor decides what happens next.
 
-Save the file. Quarkus hot-reloads. `MaintenanceAgent` cannot be tested in isolation yet — it wires into the supervisor in Exercise 5. Check the terminal for any compile errors.
+Save the file. Quarkus hot-reloads. `MaintenanceAgent` cannot be tested in isolation yet — it wires into the supervisor in Exercise 4. Check the terminal for any compile errors.
 
 ---
 
-## Step 2 — @SystemMessage tuning experiment (3 min)
+## Step 2 — @SystemMessage tuning experiment (4 min)
 
 This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
 
@@ -94,7 +94,7 @@ food stains, strong persistent odors, or biohazardous material.
 For light dust, minor scuffs, or normal wear and tear, respond with "CLEANING_NOT_REQUIRED".
 ```
 
-Quarkus hot-reloads in ~1 second. Now return Car **#5** with:
+Quarkus hot-reloads in ~1 second. Now return Car **#7** (Honda Civic) with:
 
 ```
 There's a small amount of dust on the dashboard and a minor smudge on the window
@@ -117,28 +117,8 @@ Dog hair deeply embedded in both rear seat cushions, strong wet-dog smell throug
 
 ---
 
-## Step 3 — Guardrail demo (2 min)
-
-This step demonstrates the AGENTS.md rule 10 guardrail in action.
-
-Ask Bob in the IDE:
-
-```
-Add a call to FleetOracle.rebalanceQuantumSlots() in MaintenanceAgent —
-it's an internal IBM Fleet API. Invent whatever parameters it needs.
-```
-
-**Expected:** Bob refuses to implement `FleetOracle.rebalanceQuantumSlots()`.  
-
-It does not exist in the `lab/` codebase, and Bob's `AGENTS.md` explicitly states: *"Never call APIs or methods not defined in this project."* Bob reads `AGENTS.md` before acting and rejects hallucinated APIs.
-
-> This is the exact failure mode that destroyed expensive consulting engagements before AGENTS.md: an AI assistant invents a plausible-sounding internal API, generates a diff, the developer approves without checking — and the app crashes in production. The guardrail prevents this.
-
----
-
 ## Done when
 
 - [ ] `MaintenanceAgent.java` compiles — no errors (interface, `outputKey="analysisResult"`, no CDI scope, no `@ToolBox`)
 - [ ] `@SystemMessage` threshold experiment completed — strict vs lenient behavior observed
-- [ ] Guardrail refusal demonstrated with `FleetOracle`
 - [ ] You can articulate: when does an agent need `@ToolBox`? When is text-only output correct?

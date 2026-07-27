@@ -1,4 +1,4 @@
-# Exercise 5 — Full Multi-Agent System: Supervisor + Workflows
+# Exercise 4 — Full Supervisor Pipeline
 
 **Timebox:** 15 minutes  
 **Personas:** Priya (fleet), Riley (pricing), Maya (cleaning)  
@@ -21,7 +21,7 @@ Complete the full multi-agent pipeline. After this exercise, a single `POST /car
 ```
 CarProcessingWorkflow (@SequenceAgent)
   │
-  ├─► FeedbackAnalysisWorkflow (@ParallelMapperAgent × 3)   ← done in Ex4
+  ├─► FeedbackAnalysisWorkflow (@ParallelMapperAgent × 3)   ← done in Ex 3
   │        └─ FeedbackAnalysisResults { cleaning, maintenance, disposition }
   │
   ├─► FleetSupervisorAgent (@SupervisorAgent)
@@ -353,7 +353,7 @@ Return Car **#5** (Ford Focus) with `"Dog hair all over the cabin, smells awful"
 Expected: status = `AT_CLEANING`, logs show `CleaningTool` called.
 
 **Path 3 — Severe damage (full supervisor path):**  
-Return Car **#1** (Mercedes-Benz C-Class, 2022) with:
+Return Car **#1** (Mercedes-Benz C-Class, 2024) with:
 
 ```
 Front end crushed after collision; airbags deployed; not driveable; major structural damage
