@@ -1,6 +1,6 @@
 <img src="images/cover_page.png" alt="Lab cover" style="width:100%;max-width:960px;display:block;margin:0 auto 1.5rem auto;">
 
-# Building Multi-Agent AI Systems in Java with Quarkus and IBM Bob
+# LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
 
 **IBM TechXchange 2026 · Hands-On Lab**
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)
