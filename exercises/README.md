@@ -24,3 +24,13 @@ cd 01-first-agents/solution
 ```
 
 For MCP and A2A exercises, start **both** processes (see the matching `docs/0N-*/START_HERE.md`).
+
+## Versions
+
+Exercise solutions target:
+
+- **Java 25** (`maven.compiler.release`)
+- **Quarkus** `3.37.4` (`quarkus.platform.version`)
+- **Quarkus LangChain4j** `1.12.0` (`quarkus-langchain4j.version`)
+
+Daily Dependabot checks (`.github/dependabot.yml`) open PRs for Quarkus platform and Quarkiverse extension bumps; `.github/workflows/dependabot-automerge.yml` auto-approves and squash-merges those PRs.
