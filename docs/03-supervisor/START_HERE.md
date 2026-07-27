@@ -11,78 +11,134 @@
 
 ## The goal
 
-Add `MaintenanceAgent` — same pattern as `CleaningAgent` but **no tool** (maintenance returns a plan as text). Then explore how `@SystemMessage` tuning changes agent behavior without code changes.
+Add `MaintenanceAgent` — same `@Agent` pattern as `CleaningAgent` but **no tool** (maintenance returns a structured plan as text). Then run a live `@SystemMessage` tuning experiment to see how policy-as-prose controls agent behavior without any code logic.
 
 ---
 
-## Step 1 — Ask Bob to implement MaintenanceAgent
+## Step 1 — Implement `MaintenanceAgent` (4 min)
 
-```text
-Read AGENTS.md.
+Open [`MaintenanceAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/MaintenanceAgent.java).
 
-Implement MaintenanceAgent in lab/src/main/java/com/carmanagement/agentic/agents/MaintenanceAgent.java.
-Follow the TODO comments:
-- @SystemMessage: maintenance intake role, available services list, MAINTENANCE_NOT_REQUIRED skip rule
-  Available services: oil change, tire rotation, brake service, engine service,
-  transmission service, body work
-- @UserMessage: {carMake}, {carModel}, {carYear}, {carNumber}, {maintenanceRequest}
-- @Agent(description="Car maintenance specialist...", outputKey="analysisResult")
-- NO @ToolBox — maintenance agent returns a text plan only
-- Method: String processMaintenance(String carMake, String carModel,
-                                    Integer carYear, Integer carNumber,
-                                    String maintenanceRequest)
+Replace the `// TODO` block with the following code **exactly**:
 
-Wait for approval before applying.
+```java
+@SystemMessage("""
+    You handle intake for the car maintenance department of a car rental company.
+    Based on the maintenance request, determine what specific services are needed
+    and provide a detailed maintenance plan.
+    Be specific about what services are needed based on the maintenance request.
+
+    Available maintenance services include:
+    - Oil change
+    - Tire rotation
+    - Brake service
+    - Engine service
+    - Transmission service
+    - Body work (dent repair, paint, collision repair)
+
+    For body damage like dents, scratches, or collision damage, include body work in your plan.
+
+    Provide your response as a structured maintenance plan listing the specific services needed.
+    If no maintenance is needed based on the request, respond with "MAINTENANCE_NOT_REQUIRED".
+    """)
+@UserMessage("""
+    Car Information:
+    Make: {carMake}
+    Model: {carModel}
+    Year: {carYear}
+    Car Number: {carNumber}
+
+    Maintenance Request:
+    {maintenanceRequest}
+    """)
+@Agent(description = "Car maintenance specialist. Using car information and request, determines what maintenance services are needed.",
+       outputKey = "analysisResult")
+String processMaintenance(String carMake, String carModel,
+                          Integer carYear, Integer carNumber,
+                          String maintenanceRequest);
 ```
 
-After approval: Quarkus hot-reloads. No test possible yet — `MaintenanceAgent` is wired into the supervisor in Exercise 5. But verify the file compiles (no red errors in IDE).
+Add these imports at the top:
+
+```java
+import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
+```
+
+> **Why no `@ToolBox` here?**  
+> `MaintenanceAgent` returns a *plan* as text — it does not write to the database. The supervisor in Exercise 5 reads this text plan and decides whether to escalate. Text-only agents are faster and cheaper: no tool-call round-trips to the LLM.
+>
+> **Compare with `CleaningAgent`:**  
+> `CleaningAgent` must call `CleaningTool.requestCleaning()` to actually mutate `CarStatus`. `MaintenanceAgent` only produces a recommendation. The supervisor decides what happens next.
+
+Save the file. Quarkus hot-reloads. `MaintenanceAgent` cannot be tested in isolation yet — it wires into the supervisor in Exercise 5. Check the terminal for any compile errors.
 
 ---
 
-## Step 2 — @SystemMessage tuning experiment
+## Step 2 — @SystemMessage tuning experiment (3 min)
 
-With `CleaningAgent` already running, change the `@SystemMessage` in `CleaningAgent.java`:
+This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
 
-**Original threshold:**
+Open `CleaningAgent.java`. Find this line in your `@SystemMessage`:
+
 ```
 If no cleaning is needed based on the feedback, respond with "CLEANING_NOT_REQUIRED".
 ```
 
-**Stricter version (paste into @SystemMessage):**
+**Replace it** with the stricter version:
+
 ```
-Only request cleaning for SEVERE contamination: pet hair, food stains, strong odors.
-For light dust, minor scuffs, or normal wear, respond with "CLEANING_NOT_REQUIRED".
+Only request cleaning for SEVERE contamination: pet hair embedded in upholstery,
+food stains, strong persistent odors, or biohazardous material.
+For light dust, minor scuffs, or normal wear and tear, respond with "CLEANING_NOT_REQUIRED".
 ```
 
-Hot-reload fires automatically. Test with `"minor scuff on the door panel"`:
-- With original: tool may be called
-- With strict: `CLEANING_NOT_REQUIRED` (no tool call)
+Quarkus hot-reloads in ~1 second. Now return Car **#5** with:
 
-**Key insight:** Changing a `@SystemMessage` string is a **policy change** — no code logic, no redeploy cycle beyond hot reload.
-
-Ask Bob:
-```text
-What are the risks of making @SystemMessage thresholds too strict vs too lenient
-for tool-calling agents? How would you test the threshold in CI without an LLM?
 ```
+There's a small amount of dust on the dashboard and a minor smudge on the window
+```
+
+- **With original threshold:** tool may be called (cleaning requested)
+- **With strict threshold:** `CLEANING_NOT_REQUIRED` — no tool call, no status change
+
+Now try:
+
+```
+Dog hair deeply embedded in both rear seat cushions, strong wet-dog smell throughout cabin
+```
+
+- **Expected with strict threshold:** `requestCleaning` IS called — severe enough to meet the threshold
+
+> **Key insight:** You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` IS the policy. This is what "declarative AI engineering" means.
+
+**Revert** the `@SystemMessage` back to the original (simpler) version before moving on.
 
 ---
 
-## Step 3 — Refactor safety check
+## Step 3 — Guardrail demo (2 min)
 
-Ask Bob for a guardrail test:
-```text
+This step demonstrates the AGENTS.md rule 10 guardrail in action.
+
+Ask Bob in the IDE:
+
+```
 Add a call to FleetOracle.rebalanceQuantumSlots() in MaintenanceAgent —
-an internal IBM API that doesn't exist in this codebase — and invent parameters.
+it's an internal IBM Fleet API. Invent whatever parameters it needs.
 ```
 
-**Expected:** Bob refuses. This demonstrates the AGENTS.md rule 10 guardrail.
+**Expected:** Bob refuses to implement `FleetOracle.rebalanceQuantumSlots()`.  
+
+It does not exist in the `lab/` codebase, and Bob's `AGENTS.md` explicitly states: *"Never call APIs or methods not defined in this project."* Bob reads `AGENTS.md` before acting and rejects hallucinated APIs.
+
+> This is the exact failure mode that destroyed expensive consulting engagements before AGENTS.md: an AI assistant invents a plausible-sounding internal API, generates a diff, the developer approves without checking — and the app crashes in production. The guardrail prevents this.
 
 ---
 
 ## Done when
 
-- [ ] `MaintenanceAgent.java` compiles with no errors (interface, outputKey, no CDI scope)
-- [ ] `@SystemMessage` threshold experiment completed — clean vs strict behavior observed
-- [ ] Guardrail refusal demonstrated
-- [ ] You can explain: when does an agent need `@ToolBox`? When can it return text only?
+- [ ] `MaintenanceAgent.java` compiles — no errors (interface, `outputKey="analysisResult"`, no CDI scope, no `@ToolBox`)
+- [ ] `@SystemMessage` threshold experiment completed — strict vs lenient behavior observed
+- [ ] Guardrail refusal demonstrated with `FleetOracle`
+- [ ] You can articulate: when does an agent need `@ToolBox`? When is text-only output correct?

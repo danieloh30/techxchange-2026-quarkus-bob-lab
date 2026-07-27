@@ -13,9 +13,9 @@
 
 ## The goal
 
-Instead of calling one agent at a time, run cleaning, maintenance, and disposition analysis **concurrently**. Wall-clock time ≈ slowest single call (not sum). Then assemble results into a typed `FeedbackAnalysisResults` record.
+Instead of calling cleaning, maintenance, and disposition analysis sequentially, run all three **concurrently** with `@ParallelMapperAgent`. Wall-clock time ≈ slowest single call (not the sum). Then assemble three independent `String` results into a single typed `FeedbackAnalysisResults` record via an `@Output` method.
 
-Pattern: `@ParallelMapperAgent` + `@Output`
+This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, different prompt at runtime) and **`@Output`** (result aggregation before the next agent reads scope).
 
 ---
 
@@ -23,9 +23,9 @@ Pattern: `@ParallelMapperAgent` + `@Output`
 
 ```
 FeedbackAnalysisAgent × 3 (concurrent)
-  outputKey = "feedbackAnalysis"  ← each writes its result here
+  Each invocation: outputKey = "feedbackAnalysis"
          │
-         ▼ (FeedbackAnalysisWorkflow @Output collects all three)
+         ▼ @Output collects all three List<String> results
 FeedbackAnalysisResults { cleaningAnalysis, maintenanceAnalysis, dispositionAnalysis }
   outputKey = "feedbackAnalysisResults"
          │
@@ -33,83 +33,128 @@ FeedbackAnalysisResults { cleaningAnalysis, maintenanceAnalysis, dispositionAnal
 FleetSupervisorAgent reads "feedbackAnalysisResults" from AgenticScope  (Exercise 5)
 ```
 
-> **Rule:** Every agent in a workflow **must** declare `outputKey`. Without it, the next agent finds nothing in scope and the workflow fails at runtime.
+Each parallel invocation of `FeedbackAnalysisAgent` writes its result under `"feedbackAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `FeedbackAnalysisResults`.
+
+> **Rule:** Every agent in a workflow **must** declare `outputKey`. Without it, the result is silently dropped from scope and the next agent finds nothing.
 
 ---
 
-## Step 1 — Ask Bob to implement FeedbackAnalysisAgent
+## Step 1 — Implement `FeedbackAnalysisAgent` (4 min)
 
-```text
-Read AGENTS.md.
+Open [`FeedbackAnalysisAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/FeedbackAnalysisAgent.java).
 
-Implement FeedbackAnalysisAgent in lab/src/main/java/com/carmanagement/agentic/agents/FeedbackAnalysisAgent.java.
-Follow the TODO comments:
-- @SystemMessage("{task.systemInstructions}")
-  Note: the system prompt is DYNAMIC — it comes from FeedbackTask.systemInstructions at runtime.
-  This is how the same interface handles cleaning, maintenance, and disposition analysis.
-- @UserMessage: carInfo.make, carInfo.model, carInfo.year, carInfo.condition, feedback
-- @Agent(description="Feedback analyzer...", outputKey="feedbackAnalysis")
-  ⚠ outputKey MUST be "feedbackAnalysis" — FeedbackAnalysisWorkflow reads this exact key
-- Method: String analyzeFeedback(FeedbackTask task, CarInfo carInfo,
-                                  Integer carNumber, String feedback)
+Replace the `// TODO` block with the following code **exactly**:
 
-Wait for approval before applying.
+```java
+@SystemMessage("{task.systemInstructions}")
+@UserMessage("""
+    Car Information:
+    Make: {carInfo.make}
+    Model: {carInfo.model}
+    Year: {carInfo.year}
+    Previous Condition: {carInfo.condition}
+
+    Feedback: {feedback}
+    """)
+@Agent(description = "Feedback analyzer. Using feedback, determines if action is needed based on task type.",
+       outputKey = "feedbackAnalysis")
+String analyzeFeedback(FeedbackTask task, CarInfo carInfo,
+                       Integer carNumber, String feedback);
 ```
 
----
+Add these imports:
 
-## Step 2 — Ask Bob to implement FeedbackAnalysisWorkflow
-
-```text
-Implement FeedbackAnalysisWorkflow in lab/src/main/java/com/carmanagement/agentic/workflow/FeedbackAnalysisWorkflow.java.
-Follow the TODO comments:
-
-Step 2a — @ParallelMapperAgent method:
-  @ParallelMapperAgent(
-      description = "Analyzes car feedback in parallel",
-      outputKey = "feedbackAnalysisResults",
-      subAgent = FeedbackAnalysisAgent.class,
-      itemsProvider = "tasks")
-  FeedbackAnalysisResults analyzeFeedback(List<FeedbackTask> tasks, CarInfo carInfo,
-                                           Integer carNumber, String feedback);
-
-Step 2b — @Output static method:
-  @Output
-  static FeedbackAnalysisResults output(AgenticScope scope,
-                                        List<String> feedbackAnalysisResults) {
-      return new FeedbackAnalysisResults(
-              feedbackAnalysisResults.get(0),
-              feedbackAnalysisResults.get(1),
-              feedbackAnalysisResults.get(2));
-  }
-
-Wait for approval before applying.
+```java
+import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
 ```
 
+> **`@SystemMessage("{task.systemInstructions}")` — dynamic system prompt**  
+> The `{task.systemInstructions}` placeholder is resolved from the `FeedbackTask` parameter at runtime, not from a compile-time constant. The same interface handles three completely different analysis tasks:
+>
+> | Task index | `systemInstructions` content |
+> |------------|------------------------------|
+> | 0 | "You are a cleaning analyst. Respond with cleaning assessment or CLEANING_NOT_REQUIRED." |
+> | 1 | "You are a maintenance analyst. Respond with maintenance assessment or MAINTENANCE_NOT_REQUIRED." |
+> | 2 | "You are a disposition analyst. If severe damage, respond DISPOSITION_REQUIRED + reason. Else DISPOSITION_NOT_REQUIRED." |
+>
+> One interface declaration powers three concurrent LLM calls with different roles.
+
 ---
 
-## Step 3 — Observe parallel execution
+## Step 2 — Implement `FeedbackAnalysisWorkflow` (3 min)
 
-After hot-reload, check the Dev UI CDI beans panel — `FeedbackAnalysisAgent` and `FeedbackAnalysisWorkflow` should now appear as managed beans.
+Open [`FeedbackAnalysisWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/workflow/FeedbackAnalysisWorkflow.java).
+
+Replace both `// TODO` blocks with the following **two members** (the interface already has the correct imports declared in comments — add the real imports too):
+
+**2a — `@ParallelMapperAgent` method:**
+
+```java
+@ParallelMapperAgent(
+        description = "Analyzes car feedback in parallel for cleaning, maintenance, and disposition needs",
+        outputKey = "feedbackAnalysisResults",
+        subAgent = FeedbackAnalysisAgent.class,
+        itemsProvider = "tasks")
+FeedbackAnalysisResults analyzeFeedback(List<FeedbackTask> tasks,
+                                        CarInfo carInfo,
+                                        Integer carNumber,
+                                        String feedback);
+```
+
+**2b — `@Output` static method:**
+
+```java
+@Output
+static FeedbackAnalysisResults output(AgenticScope scope,
+                                      List<String> feedbackAnalysisResults) {
+    return new FeedbackAnalysisResults(
+            feedbackAnalysisResults.get(0),  // cleaningAnalysis
+            feedbackAnalysisResults.get(1),  // maintenanceAnalysis
+            feedbackAnalysisResults.get(2)   // dispositionAnalysis
+    );
+}
+```
+
+Add these imports at the top of the file:
+
+```java
+import dev.langchain4j.agentic.declarative.Output;
+import dev.langchain4j.agentic.declarative.ParallelMapperAgent;
+```
+
+> **Why `itemsProvider = "tasks"`?**  
+> `@ParallelMapperAgent` needs to know which method parameter holds the list of items to fan out over. `itemsProvider = "tasks"` names the `tasks` parameter — the framework fans out one `FeedbackAnalysisAgent` call per element in `tasks`. The three calls run concurrently in separate virtual threads.
+>
+> **Why a static `@Output` method instead of a regular method?**  
+> `@Output` is a post-processing step, not an LLM call. It receives the collected results from all parallel invocations and transforms them into a typed record. It runs synchronously after all parallel calls complete. Marking it `static` makes it clear it is a pure transformation with no injected dependencies.
+
+Save both files. Quarkus hot-reloads.
+
+---
+
+## Step 3 — Verify parallel execution (2 min)
 
 Return Car **#5** (Ford Focus) with:
-```text
+
+```
 Engine warning light is on and the cabin smells like smoke
 ```
 
-**Expected in logs:** Three `analyzeFeedback` invocations with **overlapping timestamps** (parallel). All three analysis types run concurrently.
+**Watch the terminal logs.** You should see three `analyzeFeedback` invocations with **overlapping timestamps** — they start within milliseconds of each other, not sequentially.
 
-Ask Bob:
-```text
-Explain why @ParallelMapperAgent uses itemsProvider="tasks" instead of just
-iterating the list in Java. What does AgenticScope provide that a simple for-loop cannot?
-```
+You can also open the **Dev UI** (`http://localhost:8080/q/dev`) → **CDI beans** panel and verify `FeedbackAnalysisAgent` and `FeedbackAnalysisWorkflow` appear as managed beans.
+
+> **Conceptual question to ponder:**  
+> Why does `@ParallelMapperAgent` use `itemsProvider="tasks"` instead of a Java `for` loop over the list?  
+> Answer: `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
 
 ---
 
 ## Done when
 
 - [ ] `FeedbackAnalysisAgent` and `FeedbackAnalysisWorkflow` compile and appear in Dev UI CDI beans
-- [ ] Parallel log timestamps overlap on a test return
-- [ ] You can explain `outputKey` rule from memory — what breaks without it
+- [ ] Terminal logs show overlapping timestamps for the three `analyzeFeedback` invocations
+- [ ] You can explain `outputKey` and `@Output` from memory
 - [ ] You can explain how `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 tasks
