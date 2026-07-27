@@ -28,7 +28,7 @@ Read the full narrative, timing sheet, and troubleshooting guide in the **[Full 
 
 | Requirement | Notes |
 |-------------|-------|
-| **JDK 25** | `java -version` |
+| **Java 25+** | `java -version` |
 | Maven 3.9+ | or use `./mvnw` in each exercise |
 | Quarkus **3.37.4** (IBM Enterprise Build) | Java 25 target |
 | [IBM Bob](https://bob.ibm.com/) | Sign in before the lab starts |

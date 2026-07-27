@@ -36,7 +36,7 @@ Open http://localhost:8080
 
 ## Prerequisites
 
-- **JDK 25**
+- **Java 25+**
 - Maven 3.9+ (or use `./mvnw` in each exercise)
 - Quarkus **3.37.4** (Java 25) — kept current via Dependabot
 - IBM Bob ([bob.ibm.com](https://bob.ibm.com/))
