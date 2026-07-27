@@ -13,3 +13,5 @@ target/
 
 # MkDocs build output
 site/
+exercises/**/solution/.mcp.json
+exercises/**/solution/CLAUDE.md
