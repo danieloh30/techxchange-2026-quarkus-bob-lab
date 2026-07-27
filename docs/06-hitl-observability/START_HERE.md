@@ -2,12 +2,18 @@
 
 **Timebox:** 10 minutes  
 **Persona:** Alex — Compliance officer  
-**Story:** No autonomous disposition of high-value vehicles (Mercedes-Benz, BMW, Audi in the seed data). Every LLM decision must be traceable. This exercise wires the approval gate and turns on OpenTelemetry tracing.  
-**Projects:**
-- HITL solution: [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution) ← [upstream section-2/step-05](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-05/)
-- Observability reference (chatbot + LGTM): [`exercises/06-hitl-observability/observability-reference`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/observability-reference) ← [upstream section-1/step-10](https://quarkus.io/quarkus-workshop-langchain4j/section-1/step-10/)
+**You work in:** `exercises/06-hitl-observability/solution` (read + run — HITL is pre-built)  
+**Learn by:** reading `DispositionProposalAgent` + `HumanApprovalAgent`, running the UI, reading OTel spans
 
-![Observability Dev UI](../images/dev-ui-observability.png)
+> 💡 **Reference solution:** [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution)
+
+---
+
+## Why HITL is non-negotiable in enterprise
+
+The compliance rule: **no autonomous disposition of vehicles worth > $15,000**.  
+Without a gate, the supervisor would SCRAP a $42,000 BMW based purely on LLM reasoning.  
+With `@HumanInTheLoop`, the system proposes and pauses — a human approves or rejects.
 
 ---
 
@@ -18,98 +24,91 @@ cd exercises/06-hitl-observability/solution
 ./mvnw quarkus:dev
 ```
 
-Quarkus **Observability Dev Services** (LGTM stack) auto-starts alongside the PostgreSQL container. Wait for both:
+Wait for the LGTM stack:
 ```
 DevServices for Observability started — Grafana: http://localhost:3000
-car-management ... started in ~4s
+car-management started in ~4s
 ```
 
 ---
 
-## HITL flow
+## Read the HITL pattern (3 min)
 
-The compliance rule: **Cars with `HIGH_VALUE` flag or estimated market value > $15,000 require human approval before any disposition action.**
-
-The seeded high-value cars are IDs 1–3 (Mercedes-Benz C-Class, BMW X5, Audi Q4).
+Open [`DispositionProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/carmanagement/agentic/agents/DispositionProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/carmanagement/agentic/agents/HumanApprovalAgent.java).
 
 ```
-Return a high-value car with severe damage
+FleetSupervisorAgent
+  │ (disposition required)
+  ▼
+DispositionProposalAgent  → proposed_action=SCRAP, rationale="airbags..."
   │
   ▼
-DispositionProposalAgent
-  │  proposed_action = SCRAP
-  │  rationale = "airbags deployed, chassis bent, repair cost exceeds value"
+@HumanInTheLoop gate      ← UI: "Awaiting Approval"
   │
-  ▼
-@HumanInTheLoop gate      ← UI shows "Awaiting approval"
-  │
-  ├── APPROVED → execute: status → PENDING_DISPOSITION
-  └── REJECTED → fallback: status → IN_MAINTENANCE (reassessment path)
+  ├── APPROVED → status = PENDING_DISPOSITION
+  └── REJECTED → status = IN_MAINTENANCE (reassessment)
 ```
 
-**To trigger:** Return Car **#1** (Mercedes-Benz C-Class) with:
+Ask Bob (with AGENTS.md loaded):
 ```text
-Major collision damage, frame is bent, airbags deployed,
-estimated repair cost exceeds the car's market value
+What would I add to my lab/AGENTS.md agents table to document HumanApprovalAgent?
+What is its outputKey and what does it prevent automated disposition of?
 ```
-
-In the UI you will see an **"Awaiting Approval"** state. Approve once → observe `PENDING_DISPOSITION`. Reject once → observe `IN_MAINTENANCE`.
 
 ---
 
-## OpenTelemetry configuration
+## Test the HITL gate (3 min)
 
-The four tracing properties available in this project (confirmed from live config):
+Return Car **#1** (Mercedes-Benz C-Class) with:
+```text
+Major collision damage, airbags deployed, frame is bent, repair cost exceeds value
+```
 
+UI shows **"Awaiting Approval"**:
+- **Approve** → status becomes `PENDING_DISPOSITION`
+- Repeat with same car (reset DB or use Car #3 Audi) → **Reject** → status becomes `IN_MAINTENANCE`
+
+---
+
+## Read OTel spans in Grafana (3 min)
+
+Open **http://localhost:3000** → Explore → Tempo → service `car-management`.
+
+Enable prompt tracing first (uncomment in `application.properties`):
 ```properties
-# In application.properties (RUNTIME properties — no rebuild needed to toggle)
-quarkus.langchain4j.tracing.include-prompt=true          # exports full prompt text as span attribute
-quarkus.langchain4j.tracing.include-completion=true      # exports full LLM response
-quarkus.langchain4j.tracing.include-tool-arguments=true  # exports tool call arguments
-quarkus.langchain4j.tracing.include-tool-result=true     # exports tool return value
+quarkus.langchain4j.tracing.include-prompt=true
+quarkus.langchain4j.tracing.include-tool-arguments=true
 ```
 
-> ⚠️ **Production warning:** `include-prompt=true` exports full `@UserMessage` content — which includes car condition text derived from customer feedback. This can contain PII. Disable or redact before production deployment.
+Find spans and read:
 
-The Quarkus OTel extension auto-instruments REST endpoints, JDBC, and CDI beans. LangChain4j adds `gen_ai.*` span attributes to every LLM call.
-
----
-
-## Reading spans in Grafana
-
-Open **http://localhost:3000** → Explore → Tempo → Search for service `car-management`.
-
-Key span attributes to understand:
-
-| OTel attribute | FinOps / compliance use |
-|----------------|------------------------|
-| `gen_ai.usage.input_tokens` | Tokens consumed per LLM request — main cost input |
-| `gen_ai.usage.output_tokens` | Generated tokens — often 2–3× more expensive per unit |
-| `gen_ai.request.model` | Which model was used — cost tier varies |
-| `langchain4j.tool.name` | Which `@Tool` the LLM invoked |
-| `langchain4j.tool.arguments` | Tool arguments (when `include-tool-arguments=true`) |
-| `http.route` | Which REST endpoint triggered the agent chain |
+| Attribute | What to look for |
+|-----------|-----------------|
+| `gen_ai.usage.input_tokens` | How many tokens each LLM call consumed |
+| `gen_ai.usage.output_tokens` | Generated tokens (≈ 2–3× cost of input) |
+| `langchain4j.tool.name` | Which tool the LLM invoked |
 | `duration` | End-to-end latency including all LLM round-trips |
 
-**FinOps calculation example:**  
-At 500 returns/day × avg 1,500 input tokens × `gpt-4o` pricing: ~$15/day. A bloated `@UserMessage` (no AGENTS.md discipline) can easily double input tokens → $30/day. Tracing makes this visible and actionable.
+**FinOps thought experiment:** 500 car returns/day × avg 1,500 input tokens × gpt-4o pricing = ~$15/day.  
+An unbounded `@UserMessage` without AGENTS.md discipline can double input tokens → $30/day.  
+Tracing is how you catch that before the bill arrives.
 
 ---
 
-## Running the observability-reference project (optional)
+## Bob stretch: add HITL pattern to lab/ (optional)
 
-```bash
-cd exercises/06-hitl-observability/observability-reference
-./mvnw quarkus:dev -Dquarkus.http.port=8082
+```text
+Based on DispositionProposalAgent and HumanApprovalAgent in the HITL solution,
+propose a plan to add HITL approval to my lab/ project for cars worth > $15,000.
+List only the files to create/modify and the AGENTS.md table update needed.
+Do NOT write code — plan only.
 ```
-
-This is a simpler chatbot + LGTM reference that shows `gen_ai` spans without the full supervisor workflow — useful for understanding the baseline tracing shape before the more complex workflows.
 
 ---
 
 ## Done when
 
-- [ ] HITL gate blocked a disposition on a high-value car
-- [ ] HITL gate allowed a disposition on the same car after approval
-- [ ] At least one `gen_ai.usage.input_tokens` span visible in Grafana/Tempo
-- [ ] You can explain `include-prompt=true` trade-off: compliance value vs PII risk
+- [ ] HITL gate blocked disposition on a high-value car
+- [ ] HITL gate allowed disposition after approval
+- [ ] At least one `gen_ai.usage.input_tokens` span found in Grafana/Tempo
+- [ ] You can explain `include-prompt=true` trade-off (compliance value vs PII risk)

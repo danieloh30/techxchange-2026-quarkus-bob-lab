@@ -12,14 +12,18 @@
 | Block | Time | Cumulative | Focus |
 |-------|------|------------|-------|
 | Intro presentation | 10 min | :10 | Story, architecture, what you will build |
-| Exercise 1 | 10 min | :20 | Your first AI agents — `@Agent`, `@ToolBox`, tool calls |
-| Exercise 2 | 10 min | :30 | Workflow patterns — sequence, parallel, routing, loop |
-| Exercise 3 | 10 min | :40 | Supervisor pattern — AI-driven orchestration |
-| Exercise 4 | 12 min | :52 | Pro-coding with IBM Bob + AGENTS.md context file |
-| Exercise 5 | 10 min | :62 | MCP — remote tools via Model Context Protocol |
-| Exercise 6 | 10 min | :72 | Human-in-the-loop + OpenTelemetry observability |
-| Exercise 7 | 10 min | :82 | A2A — distributed agent-to-agent communication |
-| Wrap-up | 8 min | :90 | Takeaways, patterns cheat sheet, Q&A |
+| Exercise 1 | 12 min | :22 | **IBM Bob setup + author `lab/AGENTS.md`** (governed context first) |
+| Exercise 2 | 10 min | :32 | First agent — `CleaningAgent` + `CleaningTool` with Bob |
+| Exercise 3 | 10 min | :42 | `MaintenanceAgent` + `@SystemMessage` tuning |
+| Exercise 4 | 10 min | :52 | Parallel workflow — `@ParallelMapperAgent` + `AgenticScope` |
+| Exercise 5 | 15 min | :67 | Full multi-agent: supervisor, pricing, disposition, sequence |
+| Exercise 6 | 10 min | :77 | Human-in-the-loop + OpenTelemetry observability |
+| Exercise 7 | 10 min | :87 | MCP + A2A — remote tools and distributed agents |
+| Wrap-up | 8 min | :95 | Patterns cheat sheet + Q&A |
+
+> **Working project:** `lab/` — a single Quarkus starter you build incrementally across all exercises.
+> Each exercise adds code to `lab/` using IBM Bob (with `lab/AGENTS.md` loaded).
+> Reference solutions in `exercises/` are fallbacks — linked at the top of each exercise guide.
 
 > **Base content:** Adapted from the [Quarkus LangChain4j Workshop — Section 2 / Step 07](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-07/) (Miles of Smiles fleet management), extended with IBM Bob, AGENTS.md cost-efficiency techniques, enterprise narrative, and production concerns (HITL, observability, MCP, A2A).
 

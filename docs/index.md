@@ -12,13 +12,13 @@ Build an agentic fleet-management system with **IBM Enterprise Build of Quarkus*
 | Block | Time | Focus |
 |-------|------|--------|
 | [Intro presentation](00-intro/SPEAKER_NOTES.md) | 10 min | Story, architecture, what you will build |
-| [Exercise 1](01-first-agents/START_HERE.md) | 10 min | First AI agents — `@Agent`, `@ToolBox`, tool-call loop |
-| [Exercise 2](02-workflow-patterns/START_HERE.md) | 10 min | Workflow patterns — sequence, parallel, routing, loop |
-| [Exercise 3](03-supervisor/START_HERE.md) | 10 min | Supervisor pattern — `@SupervisorAgent` + `@SupervisorRequest` |
-| [Exercise 4](04-ibm-bob/START_HERE.md) | 12 min | Pro-coding with IBM Bob + **AGENTS.md** token efficiency |
-| [Exercise 5](05-mcp/START_HERE.md) | 10 min | MCP — remote tools via Model Context Protocol |
+| [Exercise 1](01-first-agents/START_HERE.md) | 12 min | **IBM Bob setup + author `lab/AGENTS.md`** |
+| [Exercise 2](02-workflow-patterns/START_HERE.md) | 10 min | First agent — `CleaningAgent` + `CleaningTool` |
+| [Exercise 3](03-supervisor/START_HERE.md) | 10 min | `MaintenanceAgent` + `@SystemMessage` tuning |
+| [Exercise 4](04-ibm-bob/START_HERE.md) | 10 min | Parallel workflow — `@ParallelMapperAgent` |
+| [Exercise 5](05-mcp/START_HERE.md) | 15 min | Full multi-agent: supervisor + sequence workflow |
 | [Exercise 6](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry observability |
-| [Exercise 7](07-a2a/START_HERE.md) | 10 min | A2A — distributed agent-to-agent communication |
+| [Exercise 7](07-a2a/START_HERE.md) | 10 min | MCP + A2A — remote tools and distributed agents |
 
 Read the full narrative, timing sheet, and troubleshooting guide in the **[Full lab guide](LAB_GUIDE.md)**.
 
@@ -41,12 +41,15 @@ git clone https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab.git
 cd techxchange-2026-quarkus-bob-lab
 export OPENAI_API_KEY=sk-your-lab-key-here
 
-# Start Exercise 1
-cd exercises/01-first-agents/solution
+# Your working project — start here for all exercises
+cd lab
 ./mvnw quarkus:dev
 ```
 
-Open http://localhost:8080
+Open http://localhost:8080 — Fleet Status UI with 8 seeded cars.
+No agent behavior yet: that's Exercise 1.
+
+> **Reference solutions** live in `exercises/*/solution`. Each exercise guide links to its solution at the top — use them only if you get stuck.
 
 ## AGENTS.md — project context for IBM Bob
 

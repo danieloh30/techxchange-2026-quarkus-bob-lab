@@ -1,107 +1,107 @@
-# Exercise 2 — Workflow Patterns
+# Exercise 2 — Your First Agent: CleaningAgent
 
 **Timebox:** 10 minutes  
-**Persona:** Chris — Ops lead  
-**Story:** Cleaning and maintenance analysis must happen concurrently. A car with an engine warning can't sit in the cleaning queue — it goes to maintenance.  
-**Solution projects:**
-- Sequence: [`exercises/02-workflow-patterns/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-sequence) ← [upstream step-02](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-02/)
-- Composed (parallel + conditional): [`exercises/02-workflow-patterns/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-composed) ← [upstream step-03](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-03/)
+**Persona:** Maya — Rental desk manager  
+**You work in:** `lab/` (keep Quarkus running — hot reload)  
+**Files to edit:** `lab/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java`  
+                   `lab/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java`
 
-![Parallel execution](../images/parallel-execution.png)
-
----
-
-## Start (use composed for the full pattern set)
-
-```bash
-cd exercises/02-workflow-patterns/solution-composed
-./mvnw quarkus:dev
-```
-
-> Compare with `solution-sequence` first if you want the simpler prompt-chaining baseline.
+> 💡 **Solution fallback:** [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution) — open if stuck.
 
 ---
 
-## Pattern map
+## The goal
 
-| Need | Annotation | When to use | This exercise |
-|------|-----------|-------------|--------------|
-| A then B | `@SequenceAgent` | B needs output of A | Analyze feedback → update condition |
-| A and B at once | `@ParallelMapperAgent` | Independent work, cut wall-clock | Cleaning + maintenance analysis concurrently |
-| If X then A else B | `@ConditionalAgent` | Data-driven routing | Mechanical? → MaintenanceAgent; else CleaningAgent |
-| Retry until good | `@LoopAgent` | Refine until quality threshold | Rewrite summary until it names severity |
+By the end of this exercise, returning a dirty car flips its status to `AT_CLEANING` and triggers a visible tool call in the logs. Returning a clean car produces `CLEANING_NOT_REQUIRED` with no tool call.
 
 ---
 
-## `AgenticScope` — the glue between agents
-
-`AgenticScope` is a **request-scoped key-value store** injected into every agent and workflow. The `outputKey` attribute on `@Agent` / `@SequenceAgent` / `@ParallelMapperAgent` names the write slot. The next agent in the chain reads from the same scope.
-
-```
-FeedbackAnalysisWorkflow
-  @ParallelMapperAgent(outputKey="feedbackAnalysisResults")
-         │ writes feedbackAnalysisResults list
-         ▼
-FleetSupervisorAgent
-  @SupervisorAgent — reads feedbackAnalysisResults from scope
-         │ writes supervisorDecision
-         ▼
-CarConditionFeedbackAgent
-  reads supervisorDecision → produces CarConditions
-```
-
-> **Rule you must know:** Any agent used inside `@SequenceAgent` or `@SupervisorAgent` **must** have `@Agent(outputKey = "...")`. Omitting `outputKey` causes a runtime scope resolution failure — the next agent finds nothing in the store.
-
----
-
-## The parallel diagram
-
-```
-FeedbackTask[CLEANING]    ─┐
-FeedbackTask[MAINTENANCE] ─┼──► FeedbackAnalysisAgent × 3  (run concurrently)
-FeedbackTask[DISPOSITION] ─┘
-                                │
-                                ▼
-                    FeedbackAnalysisResults
-                 ┌──────────┬────────────┬────────────────┐
-                 │cleaning  │maintenance │disposition     │
-                 └──────────┴────────────┴────────────────┘
-                                │
-                     FleetSupervisorAgent (reads all three keys)
-```
-
-The `@ParallelMapperAgent` invokes the same `FeedbackAnalysisAgent` once per `FeedbackTask` in the input list — concurrently. Wall-clock time ≈ slowest single call rather than sum of all calls.
-
----
-
-## Do
-
-1. Open `CarProcessingWorkflow.java` — trace the `@SequenceAgent` sub-agent order.
-2. Open `FeedbackAnalysisWorkflow.java` — find the `@ParallelMapperAgent` and `@Output` method.
-3. Look at `FeedbackAnalysisAgent` — note `outputKey = "analysisResult"` on its `@Agent`.
-4. Return Car **#5** (Ford Focus, RENTED) with:
+## Step 1 — Ask Bob to implement CleaningAgent
 
 ```text
-Engine warning light is on and the cabin smells like smoke
+Read AGENTS.md.
+
+Implement CleaningAgent in lab/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java.
+Follow the TODO comments and AGENTS.md rules exactly:
+- @SystemMessage: cleaning intake role, requestCleaning tool, CLEANING_NOT_REQUIRED skip rule
+- @UserMessage: carInfo.make, carInfo.model, carInfo.year, carNumber, feedback placeholders
+- @Agent(description="...", outputKey="analysisResult")
+- @ToolBox(CleaningTool.class)
+- Method: String processCleaning(CarInfo carInfo, Integer carNumber, String feedback)
+
+Wait for my approval before applying the diff.
 ```
 
-**Expected in logs:**
-- Three `FeedbackAnalysisAgent` calls with overlapping timestamps (parallel)
-- Routing leans toward maintenance over cleaning
+**Review Bob's diff:** check that:
+- It's an interface (no `implements`, no CDI scope)
+- `outputKey = "analysisResult"` is set
+- `@ToolBox(CleaningTool.class)` is present
 
-### Stretch — LoopAgent mental model (~2 min if time)
+Approve → Bob applies the change → Quarkus hot-reloads.
 
-A `@LoopAgent` runs the same agent repeatedly until an exit condition is met (or a max iteration limit is hit). For this project, a natural use would be `RefineConditionSummary` that loops until the output contains:
-- Vehicle make/model/year
-- A severity word (`minor` / `moderate` / `severe`)
+---
 
-Max 3 iterations. The composed solution focuses on parallel + conditional; the loop is in upstream step-03 — locate it if time permits.
+## Step 2 — Ask Bob to implement CleaningTool
+
+```text
+Now implement CleaningTool in lab/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java.
+Follow the TODO comments and AGENTS.md rules:
+- @ApplicationScoped (already there — don't change)
+- @Tool("Requests a cleaning with the specified options")
+- @Transactional on requestCleaning (JPA mutation — rule 5 in AGENTS.md)
+- Body: find CarInfo by carNumber, set status = CarStatus.AT_CLEANING, persist, return summary
+- Log.info only car number (not feedback text — rule 6 in AGENTS.md)
+
+Wait for approval before applying.
+```
+
+---
+
+## Step 3 — Test it
+
+Open **http://localhost:8080** and return Car **#5** (Ford Focus, RENTED) with:
+
+```text
+Car has dog hair all over the back seat
+```
+
+**Expected logs:**
+```
+[dev.langchain4j.agentic] ← LLM: tool_call requestCleaning(carNumber=5, interiorCleaning=true, ...)
+  └─ CleaningTool activated for car #5
+```
+
+**Expected UI:** Car #5 status → `AT_CLEANING`
+
+Now return Car **#6** (Toyota Corolla) with:
+```text
+Car looks good, no issues
+```
+**Expected:** `CLEANING_NOT_REQUIRED` in response; status stays `AVAILABLE`; no tool call logged.
+
+---
+
+## Step 4 — The agent loop (understand it, don't just run it)
+
+```
+@UserMessage → LLM → tool_call requestCleaning()
+                          │
+                          ▼
+               CleaningTool.requestCleaning()
+               → carInfo.status = AT_CLEANING
+               → returns summary string
+                          │
+                          ▼
+              LLM reads tool result → final response
+```
+
+Ask Bob: `"Explain why @Transactional is required on CleaningTool.requestCleaning() but NOT on CleaningAgent.processCleaning()."`
 
 ---
 
 ## Done when
 
-- [ ] Parallel path runs cleaning + maintenance analysis concurrently
-- [ ] Routing sends mechanical issues toward maintenance
-- [ ] You can explain `outputKey` and why omitting it breaks the workflow
-- [ ] You can name all four patterns without notes
+- [ ] Tool call visible in logs for dirty-car return
+- [ ] No tool call for clean-car return; status = AVAILABLE
+- [ ] Bob's diff respected AGENTS.md rules (interface, outputKey, @Transactional)
+- [ ] You can draw the agent loop from memory
