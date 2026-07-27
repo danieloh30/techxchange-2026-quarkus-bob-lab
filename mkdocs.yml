@@ -67,8 +67,8 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Lab Overview: 00-intro/SPEAKER_NOTES.md
   - Exercises:
-      - Intro: 00-intro/SPEAKER_NOTES.md
       - "1. First agent": 01-first-agent/START_HERE.md
       - "2. Maintenance agent": 02-maintenance-agent/START_HERE.md
       - "3. Parallel workflow": 03-parallel-workflow/START_HERE.md
