@@ -1,0 +1,63 @@
+# Dependabot — daily Quarkus / extension version updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # GitHub Actions used by this repo (including automerge workflow)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # All exercise Quarkus solution projects
+  - package-ecosystem: "maven"
+    directories:
+      - "/exercises/01-first-agents/solution"
+      - "/exercises/02-workflow-patterns/solution-sequence"
+      - "/exercises/02-workflow-patterns/solution-composed"
+      - "/exercises/03-supervisor/solution"
+      - "/exercises/04-ibm-bob/solution"
+      - "/exercises/05-mcp/solution"
+      - "/exercises/05-mcp/weather-mcp-server"
+      - "/exercises/06-hitl-observability/solution"
+      - "/exercises/06-hitl-observability/observability-reference"
+      - "/exercises/07-a2a/solution/multi-agent-system"
+      - "/exercises/07-a2a/solution/remote-a2a-agent"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 20
+    labels:
+      - "dependencies"
+      - "quarkus"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # Prefer Quarkus platform + Quarkiverse extension bumps
+    allow:
+      - dependency-name: "io.quarkus.platform:*"
+      - dependency-name: "io.quarkus:*"
+      - dependency-name: "io.quarkiverse.langchain4j:*"
+      - dependency-name: "io.quarkiverse.mcp:*"
+      - dependency-name: "dev.langchain4j:*"
+      - dependency-name: "io.a2a:*"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus.platform:*"
+          - "io.quarkus:*"
+      quarkiverse-extensions:
+        patterns:
+          - "io.quarkiverse.langchain4j:*"
+          - "io.quarkiverse.mcp:*"
+          - "dev.langchain4j:*"
+          - "io.a2a:*"
+    ignore:
+      # Skip milestone / CR builds; stay on stable releases
+      - dependency-name: "io.quarkus.platform:*"
+        versions: ["*-CR*", "*.CR*"]
+      - dependency-name: "io.quarkiverse.langchain4j:*"
+        versions: ["*-CR*", "*.CR*"]

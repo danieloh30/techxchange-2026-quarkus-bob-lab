@@ -31,7 +31,7 @@ Before the lab starts, ensure you have:
 
 - **JDK 25**
 - **Maven 3.9+** (or use the workshop wrapper `./mvnw`)
-- **IBM Enterprise Build of Quarkus** (or community Quarkus 3.x compatible with the lab branch)
+- **IBM Enterprise Build of Quarkus** / Quarkus **3.37.4** (Java 25; Dependabot keeps exercise solutions current)
 - **IBM Bob** installed and signed in ([bob.ibm.com](https://bob.ibm.com/))
 - An LLM API key (lab instructors will provide keys or a shared endpoint)
 - Ports **8080**, **8081**, and **8888** free
