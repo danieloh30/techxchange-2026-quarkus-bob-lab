@@ -64,4 +64,4 @@ Discuss how Bob's capabilities map across the delivery lifecycle:
 
 ---
 
-Then continue to Exercise 5 — you are on schedule.
+Then continue to Exercise 6 — you are on schedule.

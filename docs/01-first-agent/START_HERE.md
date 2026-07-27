@@ -1,6 +1,6 @@
-# Exercise 2 — Your First Agent: CleaningAgent + CleaningTool
+# Exercise 1 — Your First Agent: CleaningAgent + CleaningTool
 
-**Timebox:** 10 minutes  
+**Timebox:** 15 minutes  
 **Persona:** Maya — Rental desk manager  
 **You work in:** `lab/` (keep Quarkus running — hot reload)  
 **Files to edit:**
@@ -19,7 +19,19 @@ This exercise introduces the three-part `@Agent` anatomy: **interface declaratio
 
 ---
 
-## Step 1 — Implement `CleaningAgent` (4 min)
+## Step 0 — Start the lab project (2 min)
+
+```bash
+cd lab
+export OPENAI_API_KEY=sk-your-lab-key-here
+./mvnw quarkus:dev
+```
+
+Open **http://localhost:8080** — you'll see the Fleet Status UI with 8 seeded cars but no agent behavior yet (returns will fail — that's expected, you haven't wired the agents).
+
+---
+
+## Step 1 — Implement `CleaningAgent` (5 min)
 
 Open [`CleaningAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java).
 
@@ -64,7 +76,7 @@ import dev.langchain4j.service.UserMessage;
 
 ---
 
-## Step 2 — Implement `CleaningTool` (3 min)
+## Step 2 — Implement `CleaningTool` (4 min)
 
 Open [`CleaningTool.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java).
 
@@ -143,7 +155,7 @@ The LLM decides *whether* to call the tool based on the `@SystemMessage` policy.
 
 ---
 
-## Step 4 — Test it
+## Step 4 — Test it (4 min)
 
 Open **http://localhost:8080** and return Car **#5** (Ford Focus, status: `RENTED`) with:
 
@@ -174,3 +186,5 @@ Car looks perfect, no issues at all
 - [ ] No tool call for clean-car return; status = `AVAILABLE`
 - [ ] You can explain from memory: why `@Transactional` on the tool but not the agent
 - [ ] You can explain from memory: what `outputKey` does and what breaks without it
+
+> **Keep Quarkus running** — Exercise 2 adds the next agent with hot reload.

@@ -2,10 +2,10 @@
 
 ## Your hands-on project: `lab/`
 
-This is where you work throughout all exercises. It contains:
+This is where you work throughout Exercises 1–4. It contains:
 - A running Quarkus app with UI, model, REST endpoints, and seeded data
 - **Stub files** in `src/main/java/com/carmanagement/agentic/` — interfaces with `// TODO` markers
-- `lab/AGENTS.md` — your project-level IBM Bob context file
+- `lab/AGENTS.md` — your project-level IBM Bob context file (used in Exercise 5)
 
 ```bash
 cd lab
@@ -13,7 +13,7 @@ export OPENAI_API_KEY=sk-your-key-here
 ./mvnw quarkus:dev
 ```
 
-Open IBM Bob → load `lab/AGENTS.md` → follow the exercise guides in `docs/`.
+Open http://localhost:8080 → follow the exercise guides in `docs/`.
 
 ---
 
@@ -24,15 +24,23 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
-| Ex 1 + 2 | [`01-first-agents/solution`](01-first-agents/solution) | `CleaningAgent` + `CleaningTool` |
-| Ex 2 (sequence) | [`02-workflow-patterns/solution-sequence`](02-workflow-patterns/solution-sequence) | `@SequenceAgent` prompt chain |
-| Ex 2 (composed) | [`02-workflow-patterns/solution-composed`](02-workflow-patterns/solution-composed) | Parallel + conditional |
-| Ex 3 + 4 | [`03-supervisor/solution`](03-supervisor/solution) | `MaintenanceAgent` + `@SupervisorAgent` |
-| Ex 5 (full) | [`04-ibm-bob/solution`](04-ibm-bob/solution) | Complete multi-agent pipeline |
-| Ex 6 MCP client | [`05-mcp/solution`](05-mcp/solution) | `@McpToolBox` + weather client |
-| Ex 6 MCP server | [`05-mcp/weather-mcp-server`](05-mcp/weather-mcp-server) | MCP SSE server |
-| Ex 6 HITL | [`06-hitl-observability/solution`](06-hitl-observability/solution) | `@HumanInTheLoop` + OTel |
-| Ex 7 A2A | [`07-a2a/solution`](07-a2a/solution) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
+| Ex 1 | [`01-first-agents/solution`](01-first-agents/solution) | `CleaningAgent` + `CleaningTool` |
+| Ex 2 | [`03-supervisor/solution`](03-supervisor/solution) | `MaintenanceAgent` + full agent set |
+| Ex 3 | [`03-supervisor/solution`](03-supervisor/solution) | `FeedbackAnalysisWorkflow` + `@ParallelMapperAgent` |
+| Ex 4 | [`04-ibm-bob/solution`](04-ibm-bob/solution) | Complete multi-agent supervisor pipeline |
+| Ex 5 | [`04-ibm-bob/solution`](04-ibm-bob/solution) | Same project — Bob validates this codebase |
+| Ex 6 | [`06-hitl-observability/solution`](06-hitl-observability/solution) | `@HumanInTheLoop` + OTel |
+| Ex 7 | [`07-a2a/solution`](07-a2a/solution) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
+
+### Additional reference projects
+
+| Folder | What it shows |
+|--------|--------------|
+| [`02-workflow-patterns/solution-sequence`](02-workflow-patterns/solution-sequence) | `@SequenceAgent` chain |
+| [`02-workflow-patterns/solution-composed`](02-workflow-patterns/solution-composed) | Parallel + conditional workflows |
+| [`05-mcp/solution`](05-mcp/solution) | MCP client with `@McpToolBox` (stretch exercise) |
+| [`05-mcp/weather-mcp-server`](05-mcp/weather-mcp-server) | MCP SSE weather server |
+| [`06-hitl-observability/observability-reference`](06-hitl-observability/observability-reference) | Prompt injection guard + observability |
 
 ## Versions
 

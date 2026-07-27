@@ -1,4 +1,4 @@
-# Exercise 4 — Parallel Workflow: FeedbackAnalysisWorkflow
+# Exercise 3 — Parallel Workflow: @ParallelMapperAgent
 
 **Timebox:** 10 minutes  
 **Persona:** Chris — Ops lead  
@@ -30,7 +30,7 @@ FeedbackAnalysisResults { cleaningAnalysis, maintenanceAnalysis, dispositionAnal
   outputKey = "feedbackAnalysisResults"
          │
          ▼
-FleetSupervisorAgent reads "feedbackAnalysisResults" from AgenticScope  (Exercise 5)
+FleetSupervisorAgent reads "feedbackAnalysisResults" from AgenticScope  (Exercise 4)
 ```
 
 Each parallel invocation of `FeedbackAnalysisAgent` writes its result under `"feedbackAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `FeedbackAnalysisResults`.
@@ -87,7 +87,7 @@ import dev.langchain4j.service.UserMessage;
 
 Open [`FeedbackAnalysisWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/workflow/FeedbackAnalysisWorkflow.java).
 
-Replace both `// TODO` blocks with the following **two members** (the interface already has the correct imports declared in comments — add the real imports too):
+Replace both `// TODO` blocks with the following **two members**:
 
 **2a — `@ParallelMapperAgent` method:**
 
