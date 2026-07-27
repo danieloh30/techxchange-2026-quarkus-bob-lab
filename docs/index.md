@@ -1,6 +1,8 @@
+![Lab cover](images/cover_page.png)
+
 # Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
 
-**IBM TechXchange 2026 · Hands-On Lab**  
+**IBM TechXchange 2026 · Hands-On Lab**
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)
 
 Build an agentic fleet-management system with **IBM Enterprise Build of Quarkus**, **Quarkus LangChain4j**, and **IBM Bob** — covering workflow patterns, supervisor orchestration, MCP, A2A, human-in-the-loop, and observability.
