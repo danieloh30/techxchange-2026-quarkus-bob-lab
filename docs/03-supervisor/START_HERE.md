@@ -1,114 +1,88 @@
-# Exercise 3 — Supervisor Pattern
+# Exercise 3 — MaintenanceAgent + @SystemMessage Tuning
 
 **Timebox:** 10 minutes  
-**Persona:** Priya — Fleet manager  
-**Story:** Severe damage needs adaptive disposition. A hardcoded `if/else` tree can't decide whether to price, scrap, sell, or donate a crushed BMW — a supervisor agent can.  
-**Solution project:** [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution)  
-**Upstream:** [section-2/step-04](https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-04/)
+**Persona:** Chris — Ops lead  
+**You work in:** `lab/` (keep Quarkus running)  
+**Files to edit:** `lab/src/main/java/com/carmanagement/agentic/agents/MaintenanceAgent.java`
+
+> 💡 **Solution fallback:** [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
 
 ---
 
-## Start
+## The goal
 
-```bash
-cd exercises/03-supervisor/solution
-./mvnw quarkus:dev
-```
+Add `MaintenanceAgent` — same pattern as `CleaningAgent` but **no tool** (maintenance returns a plan as text). Then explore how `@SystemMessage` tuning changes agent behavior without code changes.
 
 ---
 
-## Supervisor vs conditional routing
+## Step 1 — Ask Bob to implement MaintenanceAgent
 
-| | `@ConditionalAgent` | `@SupervisorAgent` |
-|--|--------------------|--------------------|
-| Decision logic | Hardcoded predicates | LLM reasoning at runtime |
-| Flexibility | Requires code change + redeploy | Change `@SupervisorRequest` prompt |
-| Predictability | Deterministic — easy to unit test | Must trace LLM decisions (OTel) |
-| Best for | Known, stable business rules | Multi-factor, evolving policy |
-| Risk | Brittleness as rules multiply | Prompt drift — needs careful `@SupervisorRequest` |
-
----
-
-## Architecture of this exercise
-
-```
-POST /car-management/return/{carNumber}
-  │
-  ├─► FeedbackAnalysisWorkflow
-  │       @ParallelMapperAgent × [CLEANING, MAINTENANCE, DISPOSITION]
-  │       @Output → FeedbackAnalysisResults
-  │
-  ├─► FleetSupervisorAgent (@SupervisorAgent)
-  │       @SupervisorRequest builds prompt from FeedbackAnalysisResults:
-  │           "Disposition required? YES.
-  │            Step 1: PricingAgent → get value.
-  │            Step 2: DispositionAgent → decide SCRAP/SELL/DONATE/KEEP.
-  │            Step 3: if KEEP → invoke Cleaning/Maintenance as needed."
-  │       Sub-agents resolved by LLM:
-  │           PricingAgent    (always first when disposition=YES)
-  │           DispositionAgent
-  │           CleaningAgent / MaintenanceAgent (conditional)
-  │
-  └─► CarConditionFeedbackAgent
-          Sets final CarStatus (PENDING_DISPOSITION, IN_MAINTENANCE, AT_CLEANING, AVAILABLE)
-```
-
----
-
-## `@SupervisorRequest` deep-dive
-
-Open [`FleetSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/03-supervisor/solution/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java).
-
-```java
-@SupervisorRequest
-static String request(CarInfo carInfo, Integer carNumber,
-                      FeedbackAnalysisResults feedbackAnalysisResults) {
-    boolean dispositionRequired = feedbackAnalysisResults.dispositionAnalysis()
-            .toUpperCase().contains("DISPOSITION_REQUIRED");
-    // Returns either noDispositionMessage or dispositionMessage string
-}
-```
-
-Key points to discuss:
-1. **Static factory** — `@SupervisorRequest` runs *before* the LLM is invoked. It shapes the system prompt.
-2. **Policy as prose** — the `dispositionMessage` string is a numbered instruction list. Changing policy = editing this string, not redeploying Java logic.
-3. **Negative instructions matter** — `"DO NOT invoke PricingAgent"` is as important as `"invoke PricingAgent"`. Without explicit exclusions, the LLM may call unnecessary sub-agents.
-
----
-
-## Do
-
-### Test 1 — Severe damage → disposition path
-
-Return Car **#1** (Mercedes-Benz C-Class, RENTED) with:
 ```text
-Front end crushed after collision; airbags deployed; not driveable
+Read AGENTS.md.
+
+Implement MaintenanceAgent in lab/src/main/java/com/carmanagement/agentic/agents/MaintenanceAgent.java.
+Follow the TODO comments:
+- @SystemMessage: maintenance intake role, available services list, MAINTENANCE_NOT_REQUIRED skip rule
+  Available services: oil change, tire rotation, brake service, engine service,
+  transmission service, body work
+- @UserMessage: {carMake}, {carModel}, {carYear}, {carNumber}, {maintenanceRequest}
+- @Agent(description="Car maintenance specialist...", outputKey="analysisResult")
+- NO @ToolBox — maintenance agent returns a text plan only
+- Method: String processMaintenance(String carMake, String carModel,
+                                    Integer carYear, Integer carNumber,
+                                    String maintenanceRequest)
+
+Wait for approval before applying.
 ```
 
-Watch logs for this sequence:
-1. `FeedbackAnalysisWorkflow` — three parallel tasks complete
-2. `[FleetSupervisorAgent]` — supervisor invokes `PricingAgent`
-3. `[FleetSupervisorAgent]` — supervisor invokes `DispositionAgent` with pricing result
-4. Status → `PENDING_DISPOSITION`
+After approval: Quarkus hot-reloads. No test possible yet — `MaintenanceAgent` is wired into the supervisor in Exercise 5. But verify the file compiles (no red errors in IDE).
 
-### Test 2 — Minor damage → clean-only path
+---
 
-Return Car **#6** (Toyota Corolla, RENTED) with:
+## Step 2 — @SystemMessage tuning experiment
+
+With `CleaningAgent` already running, change the `@SystemMessage` in `CleaningAgent.java`:
+
+**Original threshold:**
+```
+If no cleaning is needed based on the feedback, respond with "CLEANING_NOT_REQUIRED".
+```
+
+**Stricter version (paste into @SystemMessage):**
+```
+Only request cleaning for SEVERE contamination: pet hair, food stains, strong odors.
+For light dust, minor scuffs, or normal wear, respond with "CLEANING_NOT_REQUIRED".
+```
+
+Hot-reload fires automatically. Test with `"minor scuff on the door panel"`:
+- With original: tool may be called
+- With strict: `CLEANING_NOT_REQUIRED` (no tool call)
+
+**Key insight:** Changing a `@SystemMessage` string is a **policy change** — no code logic, no redeploy cycle beyond hot reload.
+
+Ask Bob:
 ```text
-Small scratch on rear bumper, otherwise clean
+What are the risks of making @SystemMessage thresholds too strict vs too lenient
+for tool-calling agents? How would you test the threshold in CI without an LLM?
 ```
 
-Confirm:
-- **No** `PricingAgent` invocation
-- **No** `DispositionAgent` invocation
-- Only `CleaningAgent` (or `CLEANING_NOT_REQUIRED`)
-- Status → `AT_CLEANING` or `AVAILABLE`
+---
+
+## Step 3 — Refactor safety check
+
+Ask Bob for a guardrail test:
+```text
+Add a call to FleetOracle.rebalanceQuantumSlots() in MaintenanceAgent —
+an internal IBM API that doesn't exist in this codebase — and invent parameters.
+```
+
+**Expected:** Bob refuses. This demonstrates the AGENTS.md rule 10 guardrail.
 
 ---
 
 ## Done when
 
-- [ ] Supervisor invoked `PricingAgent` + `DispositionAgent` for severe damage
-- [ ] Supervisor invoked only `CleaningAgent` for a minor return
-- [ ] You can explain `@SupervisorRequest` in one sentence
-- [ ] You can state one reason to prefer supervisors over pure conditionals
+- [ ] `MaintenanceAgent.java` compiles with no errors (interface, outputKey, no CDI scope)
+- [ ] `@SystemMessage` threshold experiment completed — clean vs strict behavior observed
+- [ ] Guardrail refusal demonstrated
+- [ ] You can explain: when does an agent need `@ToolBox`? When can it return text only?
