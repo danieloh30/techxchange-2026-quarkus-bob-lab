@@ -2,31 +2,13 @@
 
 # LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
 
-**IBM TechXchange 2026 · Hands-On Lab**
-**Duration:** 90 minutes (10 min intro · 80 min hands-on)
-
-Build an agentic fleet-management system with **IBM Enterprise Build of Quarkus**, **Quarkus LangChain4j**, and **IBM Bob** — covering workflow patterns, supervisor orchestration, human-in-the-loop, observability, and A2A.
-
-![Workshop architecture](images/global-architecture.png)
-
-## Lab at a glance
-
-| Block | Time | Focus |
-|-------|------|--------|
-| [Intro presentation](00-intro/SPEAKER_NOTES.md) | 10 min | Story, architecture, what you will build |
-| [Exercise 1](01-first-agent/START_HERE.md) | 15 min | First agent — `CleaningAgent` + `CleaningTool` |
-| [Exercise 2](02-maintenance-agent/START_HERE.md) | 10 min | `MaintenanceAgent` + `@SystemMessage` as policy |
-| [Exercise 3](03-parallel-workflow/START_HERE.md) | 10 min | Parallel workflow — `@ParallelMapperAgent` |
-| [Exercise 4](04-supervisor/START_HERE.md) | 15 min | Full supervisor pipeline |
-| [Exercise 5](05-ibm-bob/START_HERE.md) | 10 min | IBM Bob + `AGENTS.md` — governed AI development |
-| [Exercise 6](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry observability |
-| [Exercise 7](07-a2a/START_HERE.md) | 10 min | A2A — distributed pricing agent |
-
-Read the full narrative, timing sheet, and troubleshooting guide in the **[Full lab guide](LAB_GUIDE.md)**.
+**IBM TechXchange 2026 · Hands-On Lab · 90 minutes**
 
 ## Prerequisites
 
-| Requirement | Notes |
+Confirm these before the lab starts:
+
+| Requirement | Check |
 |-------------|-------|
 | **Java 25+** | `java -version` |
 | Maven 3.9+ | or use `./mvnw` in each exercise |
@@ -53,11 +35,19 @@ No agent behavior yet: that's Exercise 1.
 
 > **Reference solutions** live in `exercises/*/solution`. Each exercise guide links to its solution at the top — use them only if you get stuck.
 
-## AGENTS.md — project context for IBM Bob
+## Exercises
 
-The [`AGENTS.md`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/AGENTS.md) file in the repository root is a **token-efficient context file** for IBM Bob. In Exercise 5, you will use it with Bob to validate and govern the agents you built in Exercises 1–4.
+| Exercise | Time | Focus |
+|----------|------|-------|
+| [1. First agent](01-first-agent/START_HERE.md) | 15 min | `CleaningAgent` + `CleaningTool` |
+| [2. Maintenance agent](02-maintenance-agent/START_HERE.md) | 10 min | `MaintenanceAgent` + `@SystemMessage` as policy |
+| [3. Parallel workflow](03-parallel-workflow/START_HERE.md) | 10 min | `@ParallelMapperAgent` + `@Output` |
+| [4. Supervisor pipeline](04-supervisor/START_HERE.md) | 15 min | Full multi-agent supervisor |
+| [5. IBM Bob](05-ibm-bob/START_HERE.md) | 10 min | `AGENTS.md` — governed AI development |
+| [6. HITL + observability](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
+| [7. A2A](07-a2a/START_HERE.md) | 10 min | Distributed pricing agent |
 
-It contains: the `@Agent` declarative model, all 7 existing agents and their `outputKey` values, domain types (`CarInfo`, `CarStatus`, `FeedbackAnalysisResults`), API endpoints, and 10 project rules. This eliminates redundant codebase scans — estimated savings: **2,000–5,000 tokens per complex request**.
+Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 
 ## Repository layout
 
