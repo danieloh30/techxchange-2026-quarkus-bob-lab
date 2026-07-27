@@ -67,9 +67,8 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Full lab guide: LAB_GUIDE.md
-  - Intro (10 min): 00-intro/SPEAKER_NOTES.md
   - Exercises:
+      - Intro: 00-intro/SPEAKER_NOTES.md
       - "1. First agent": 01-first-agent/START_HERE.md
       - "2. Maintenance agent": 02-maintenance-agent/START_HERE.md
       - "3. Parallel workflow": 03-parallel-workflow/START_HERE.md
@@ -80,6 +79,7 @@ nav:
           - Fallback card: 05-ibm-bob/FALLBACK.md
       - "6. HITL + observability": 06-hitl-observability/START_HERE.md
       - "7. A2A": 07-a2a/START_HERE.md
+  - Instructor guide: LAB_GUIDE.md
   - Attribution: ATTRIBUTION.md
 
 extra:
