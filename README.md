@@ -1,4 +1,4 @@
-![Lab cover](https://raw.githubusercontent.com/danieloh30/techxchange-2026-quarkus-bob-lab/main/docs/images/cover_page.png)
+![Lab cover](docs/images/cover_page.png)
 
 # Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
 
