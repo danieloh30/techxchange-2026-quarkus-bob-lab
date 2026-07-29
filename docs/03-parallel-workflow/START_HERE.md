@@ -1,13 +1,17 @@
 # Exercise 3 — Parallel Workflow: @ParallelMapperAgent
 
+<span class="badge badge--code-along">Code-Along</span>
+
 **Timebox:** 10 minutes  
 **Persona:** Chris — Ops lead  
 **You work in:** `lab/` (keep Quarkus running)  
 **Files to edit:**
+
 - `lab/src/main/java/com/carmanagement/agentic/agents/FeedbackAnalysisAgent.java`
 - `lab/src/main/java/com/carmanagement/agentic/workflow/FeedbackAnalysisWorkflow.java`
 
-> 💡 **Solution fallback:** [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
+!!! tip "Solution fallback"
+    [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
 
 ---
 
@@ -21,21 +25,24 @@ This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, 
 
 ## How `AgenticScope` connects agents
 
-```
-FeedbackAnalysisAgent × 3 (concurrent)
-  Each invocation: outputKey = "feedbackAnalysis"
-         │
-         ▼ @Output collects all three List<String> results
-FeedbackAnalysisResults { cleaningAnalysis, maintenanceAnalysis, dispositionAnalysis }
-  outputKey = "feedbackAnalysisResults"
-         │
-         ▼
-FleetSupervisorAgent reads "feedbackAnalysisResults" from AgenticScope  (Exercise 4)
+```mermaid
+flowchart TD
+    A["FeedbackAnalysisAgent × 3<br/>(concurrent)"] --> B["@Output collects List&lt;String&gt;"]
+    B --> C["FeedbackAnalysisResults<br/>outputKey = feedbackAnalysisResults"]
+    C --> D["FleetSupervisorAgent<br/>(Exercise 4)"]
+
+    subgraph parallel["Each invocation: outputKey = feedbackAnalysis"]
+        A1["🧹 Cleaning analyst"] ~~~ A2["🔧 Maintenance analyst"] ~~~ A3["⚠️ Disposition analyst"]
+    end
+    A1 --> B
+    A2 --> B
+    A3 --> B
 ```
 
 Each parallel invocation of `FeedbackAnalysisAgent` writes its result under `"feedbackAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `FeedbackAnalysisResults`.
 
-> **Rule:** Every agent in a workflow **must** declare `outputKey`. Without it, the result is silently dropped from scope and the next agent finds nothing.
+!!! warning "Rule"
+    Every agent in a workflow **must** declare `outputKey`. Without it, the result is silently dropped from scope and the next agent finds nothing.
 
 ---
 
@@ -70,16 +77,16 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 ```
 
-> **`@SystemMessage("{task.systemInstructions}")` — dynamic system prompt**  
-> The `{task.systemInstructions}` placeholder is resolved from the `FeedbackTask` parameter at runtime, not from a compile-time constant. The same interface handles three completely different analysis tasks:
->
-> | Task index | `systemInstructions` content |
-> |------------|------------------------------|
-> | 0 | "You are a cleaning analyst. Respond with cleaning assessment or CLEANING_NOT_REQUIRED." |
-> | 1 | "You are a maintenance analyst. Respond with maintenance assessment or MAINTENANCE_NOT_REQUIRED." |
-> | 2 | "You are a disposition analyst. If severe damage, respond DISPOSITION_REQUIRED + reason. Else DISPOSITION_NOT_REQUIRED." |
->
-> One interface declaration powers three concurrent LLM calls with different roles.
+??? info "Dynamic `@SystemMessage` — one interface, three roles"
+    The `{task.systemInstructions}` placeholder is resolved from the `FeedbackTask` parameter at runtime, not from a compile-time constant. The same interface handles three completely different analysis tasks:
+
+    | Task index | `systemInstructions` content |
+    |------------|------------------------------|
+    | 0 | "You are a cleaning analyst. Respond with cleaning assessment or CLEANING_NOT_REQUIRED." |
+    | 1 | "You are a maintenance analyst. Respond with maintenance assessment or MAINTENANCE_NOT_REQUIRED." |
+    | 2 | "You are a disposition analyst. If severe damage, respond DISPOSITION_REQUIRED + reason. Else DISPOSITION_NOT_REQUIRED." |
+
+    One interface declaration powers three concurrent LLM calls with different roles.
 
 ---
 
@@ -124,11 +131,11 @@ import dev.langchain4j.agentic.declarative.Output;
 import dev.langchain4j.agentic.declarative.ParallelMapperAgent;
 ```
 
-> **Why `itemsProvider = "tasks"`?**  
-> `@ParallelMapperAgent` needs to know which method parameter holds the list of items to fan out over. `itemsProvider = "tasks"` names the `tasks` parameter — the framework fans out one `FeedbackAnalysisAgent` call per element in `tasks`. The three calls run concurrently in separate virtual threads.
->
-> **Why a static `@Output` method instead of a regular method?**  
-> `@Output` is a post-processing step, not an LLM call. It receives the collected results from all parallel invocations and transforms them into a typed record. It runs synchronously after all parallel calls complete. Marking it `static` makes it clear it is a pure transformation with no injected dependencies.
+??? info "Why `itemsProvider = \"tasks\"`?"
+    `@ParallelMapperAgent` needs to know which method parameter holds the list of items to fan out over. `itemsProvider = "tasks"` names the `tasks` parameter — the framework fans out one `FeedbackAnalysisAgent` call per element in `tasks`. The three calls run concurrently in separate virtual threads.
+
+??? info "Why a static `@Output` method?"
+    `@Output` is a post-processing step, not an LLM call. It receives the collected results from all parallel invocations and transforms them into a typed record. It runs synchronously after all parallel calls complete. Marking it `static` makes it clear it is a pure transformation with no injected dependencies.
 
 Save both files. Quarkus hot-reloads.
 
@@ -146,15 +153,18 @@ Engine warning light is on and the cabin smells like smoke
 
 You can also open the **Dev UI** (`http://localhost:8080/q/dev`) → **CDI beans** panel and verify `FeedbackAnalysisAgent` and `FeedbackAnalysisWorkflow` appear as managed beans.
 
-> **Conceptual question to ponder:**  
-> Why does `@ParallelMapperAgent` use `itemsProvider="tasks"` instead of a Java `for` loop over the list?  
-> Answer: `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
+??? question "Why not a Java `for` loop instead of `itemsProvider`?"
+    `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
 
 ---
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] `FeedbackAnalysisAgent` and `FeedbackAnalysisWorkflow` compile and appear in Dev UI CDI beans
 - [ ] Terminal logs show overlapping timestamps for the three `analyzeFeedback` invocations
 - [ ] You can explain `outputKey` and `@Output` from memory
 - [ ] You can explain how `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 tasks
+
+</div>

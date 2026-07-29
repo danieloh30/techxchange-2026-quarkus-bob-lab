@@ -1,16 +1,20 @@
 # Exercise 4 — Full Supervisor Pipeline
 
+<span class="badge badge--code-along">Code-Along</span>
+
 **Timebox:** 15 minutes  
 **Personas:** Priya (fleet), Riley (pricing), Maya (cleaning)  
 **You work in:** `lab/` (keep Quarkus running)  
 **Files to edit:**
+
 - `lab/src/main/java/com/carmanagement/agentic/agents/PricingAgent.java`
 - `lab/src/main/java/com/carmanagement/agentic/agents/DispositionAgent.java`
 - `lab/src/main/java/com/carmanagement/agentic/agents/CarConditionFeedbackAgent.java`
 - `lab/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java`
 - `lab/src/main/java/com/carmanagement/agentic/workflow/CarProcessingWorkflow.java`
 
-> 💡 **Solution fallback:** [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution) — open if stuck.
+!!! tip "Solution fallback"
+    [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution) — open if stuck.
 
 ---
 
@@ -18,19 +22,23 @@
 
 Complete the full multi-agent pipeline. After this exercise, a single `POST /car-management/return/{id}` triggers:
 
-```
-CarProcessingWorkflow (@SequenceAgent)
-  │
-  ├─► FeedbackAnalysisWorkflow (@ParallelMapperAgent × 3)   ← done in Ex 3
-  │        └─ FeedbackAnalysisResults { cleaning, maintenance, disposition }
-  │
-  ├─► FleetSupervisorAgent (@SupervisorAgent)
-  │        LLM decides: PricingAgent → DispositionAgent → Maintenance/Cleaning
-  │        └─ supervisorDecision (String)
-  │
-  └─► CarConditionFeedbackAgent (@Agent)
-           └─ CarConditions { generalCondition, carAssignment }
-                → CarManagementService sets final CarStatus
+```mermaid
+flowchart TD
+    CPW["CarProcessingWorkflow<br/>@SequenceAgent"] --> FAW
+    CPW --> FSA
+    CPW --> CCFA
+
+    FAW["FeedbackAnalysisWorkflow<br/>@ParallelMapperAgent × 3<br/><i>done in Ex 3</i>"]
+    FAW --> |FeedbackAnalysisResults| FSA
+
+    FSA["FleetSupervisorAgent<br/>@SupervisorAgent"]
+    FSA --> |LLM decides| PA["PricingAgent"]
+    FSA --> |LLM decides| DA["DispositionAgent"]
+    FSA --> |LLM decides| MA["MaintenanceAgent"]
+    FSA --> |LLM decides| CA["CleaningAgent"]
+
+    CCFA["CarConditionFeedbackAgent<br/>@Agent"]
+    CCFA --> |CarConditions| CMS["CarManagementService<br/>sets final CarStatus"]
 ```
 
 ---
@@ -92,7 +100,8 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 ```
 
-> **`{current_date}` is a built-in Quarkus LangChain4j template variable** — it resolves to today's date automatically. This lets the agent compute vehicle age without hardcoding a year.
+!!! note
+    `{current_date}` is a built-in Quarkus LangChain4j template variable — it resolves to today's date automatically. This lets the agent compute vehicle age without hardcoding a year.
 
 ---
 
@@ -144,7 +153,8 @@ String processDisposition(String carMake, String carModel, Integer carYear,
 
 Add the same three imports as Step 1.
 
-> **Note the `{carValue}` placeholder:** the supervisor passes the `PricingAgent` output (e.g., `"$42,000"`) directly into this `@UserMessage`. `AgenticScope` wires it — no Java code needed to thread values between agents.
+!!! note
+    The `{carValue}` placeholder means the supervisor passes the `PricingAgent` output (e.g., `"$42,000"`) directly into this `@UserMessage`. `AgenticScope` wires it — no Java code needed to thread values between agents.
 
 ---
 
@@ -198,8 +208,8 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 ```
 
-> **Return type is `CarConditions`, not `String`.**  
-> Quarkus LangChain4j deserializes the LLM's JSON output directly into the `CarConditions` record. The `@SystemMessage` instructs the LLM to output well-formed JSON; the framework handles parsing. If parsing fails, an exception is thrown at runtime — which is far better than silently accepting a malformed string downstream.
+??? info "Why return `CarConditions` instead of `String`?"
+    Quarkus LangChain4j deserializes the LLM's JSON output directly into the `CarConditions` record. The `@SystemMessage` instructs the LLM to output well-formed JSON; the framework handles parsing. If parsing fails, an exception is thrown at runtime — which is far better than silently accepting a malformed string downstream.
 
 ---
 
@@ -294,11 +304,11 @@ import dev.langchain4j.agentic.declarative.SupervisorAgent;
 import dev.langchain4j.agentic.declarative.SupervisorRequest;
 ```
 
-> **`@SupervisorRequest` is where policy lives.**  
-> The boolean `dispositionRequired` is the only Java logic here — it checks whether the upstream `FeedbackAnalysisWorkflow` flagged a disposition case. Everything else is natural-language instructions. To change the supervisor's behavior (add a new sub-agent, change escalation rules), you edit this string. No `if/else` chains, no enum routing tables.
->
-> **Why declare sub-agents in `@SupervisorAgent` but not call them explicitly?**  
-> The LLM reads the `@SupervisorRequest` prompt and decides which sub-agents to call, in what order, with what parameters. `subAgents` is the capability declaration — it tells the framework what tools to expose. The LLM decides the invocation strategy.
+??? info "Why policy lives in `@SupervisorRequest`"
+    The boolean `dispositionRequired` is the only Java logic here — it checks whether the upstream `FeedbackAnalysisWorkflow` flagged a disposition case. Everything else is natural-language instructions. To change the supervisor's behavior (add a new sub-agent, change escalation rules), you edit this string. No `if/else` chains, no enum routing tables.
+
+??? info "Why declare sub-agents in `@SupervisorAgent` but not call them explicitly?"
+    The LLM reads the `@SupervisorRequest` prompt and decides which sub-agents to call, in what order, with what parameters. `subAgents` is the capability declaration — it tells the framework what tools to expose. The LLM decides the invocation strategy.
 
 ---
 
@@ -374,10 +384,14 @@ Expected: status = `PENDING_DISPOSITION`, logs show `PricingAgent` then `Disposi
 
 ---
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] Full pipeline runs end-to-end: `POST /car-management/return/{id}` produces correct `CarStatus`
 - [ ] Supervisor chose pricing + disposition for severe damage (Path 3)
 - [ ] Supervisor chose cleaning only for dirty car (Path 2)
 - [ ] You can draw the full agent chain from `CarProcessingWorkflow` → `CarStatus` from memory
 - [ ] You can explain why policy lives in `@SupervisorRequest` and not in Java `if/else`
+
+</div>

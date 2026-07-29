@@ -1,10 +1,13 @@
 # Exercise 7 — A2A: Distributed Pricing Agent
 
+<span class="badge badge--run-read">Run + Read</span>
+
 **Timebox:** 10 minutes  
 **Persona:** Riley — Pricing team lead  
 **You work in:** `exercises/07-a2a/solution/` (run + read)
 
-> 💡 **Reference solution:** [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution)
+!!! tip "Reference solution"
+    [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution)
 
 ---
 
@@ -20,16 +23,19 @@ Solution: convert `PricingAgent` into an **Agent-to-Agent (A2A)** remote service
 
 Stop any running Quarkus process first (`Ctrl+C`).
 
-```bash
-# Terminal 1 — pricing service FIRST
-cd exercises/07-a2a/solution/remote-a2a-agent
-./mvnw quarkus:dev   # port :8888
-```
-```bash
-# Terminal 2 — main system
-cd exercises/07-a2a/solution/multi-agent-system
-./mvnw quarkus:dev   # port :8080
-```
+=== "Terminal 1 — pricing service (start first)"
+
+    ```bash
+    cd exercises/07-a2a/solution/remote-a2a-agent
+    ./mvnw quarkus:dev   # port :8888
+    ```
+
+=== "Terminal 2 — main system"
+
+    ```bash
+    cd exercises/07-a2a/solution/multi-agent-system
+    ./mvnw quarkus:dev   # port :8080
+    ```
 
 Verify the AgentCard:
 ```bash
@@ -50,20 +56,21 @@ Expected:
 
 ## The A2A architecture
 
-```
-CarProcessingWorkflow (main app :8080)
-  └─► FleetSupervisorAgent
-           └─► PricingAgent @A2AClientAgent
-                    │
-                    │  JSON-RPC / HTTP
-                    │  POST /a2a/tasks/send
-                    │
-                    ▼
-             remote-a2a-agent :8888
-               AgentExecutor.execute(task)
-                 └─► PricingAgent (remote LLM call)
-                          └─► LLM → "$10,710"
-               Task result returned to caller
+```mermaid
+flowchart LR
+    subgraph main[":8080 — Main App"]
+        CPW["CarProcessingWorkflow"] --> FSA["FleetSupervisorAgent"]
+        FSA --> PA["PricingAgent<br/>@A2AClientAgent"]
+    end
+
+    PA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
+
+    subgraph remote[":8888 — Remote Pricing"]
+        AE["AgentExecutor"] --> RPA["PricingAgent<br/>(local LLM call)"]
+        RPA --> LLM["LLM → $10,710"]
+    end
+
+    LLM -->|"Task result"| PA
 ```
 
 **A2A concepts:**
@@ -107,7 +114,8 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 
 **Rule of thumb:** If the remote service just *does something* when told exactly what to do → MCP. If it *decides something* using its own reasoning → A2A.
 
-> **Want to try MCP?** The [`exercises/05-mcp/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp) folder contains a working MCP weather server and client. Run both and see `@McpToolBox` in action as a stretch exercise.
+!!! example "Stretch: Try MCP"
+    The [`exercises/05-mcp/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp) folder contains a working MCP weather server and client. Run both and see `@McpToolBox` in action as a stretch exercise.
 
 ---
 
@@ -123,9 +131,13 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 
 ---
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] A2A: pricing ran in `:8888` (confirmed in remote process logs)
 - [ ] AgentCard verified via `curl`
 - [ ] You can contrast MCP vs A2A in one sentence each
 - [ ] You can explain when to keep an agent local vs make it remote
+
+</div>

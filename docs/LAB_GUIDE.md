@@ -20,13 +20,15 @@
 | Exercise 6 | 10 min | :80 | Human-in-the-loop + OpenTelemetry observability |
 | Exercise 7 | 10 min | :90 | A2A — distributed pricing agent |
 
-> **Working project:** `lab/` — a single Quarkus starter you build incrementally across Exercises 1–4.  
-> **Exercises 1–4 are direct code-along:** open each stub file, read the `// TODO` comments, and type in the code shown in the guide. Hot reload keeps Quarkus running.  
-> **Exercise 5** uses IBM Bob to document and validate the agents you built.  
-> **Exercises 6–7** run pre-built solutions to explore HITL, observability, and A2A patterns.  
-> Reference solutions in `exercises/` are fallbacks — linked at the top of each exercise guide.
+!!! note "How this lab works"
+    **Working project:** `lab/` — a single Quarkus starter you build incrementally across Exercises 1–4.  
+    **Exercises 1–4 are direct code-along:** open each stub file, read the `// TODO` comments, and type in the code shown in the guide. Hot reload keeps Quarkus running.  
+    **Exercise 5** uses IBM Bob to document and validate the agents you built.  
+    **Exercises 6–7** run pre-built solutions to explore HITL, observability, and A2A patterns.  
+    Reference solutions in `exercises/` are fallbacks — linked at the top of each exercise guide.
 
-> **Base content:** Adapted from the [Quarkus LangChain4j Workshop](https://quarkus.io/quarkus-workshop-langchain4j/) (Miles of Smiles fleet management), extended with IBM Bob, AGENTS.md cost-efficiency techniques, enterprise narrative, and production concerns (HITL, observability, A2A).
+!!! info "Base content"
+    Adapted from the [Quarkus LangChain4j Workshop](https://quarkus.io/quarkus-workshop-langchain4j/) (Miles of Smiles fleet management), extended with IBM Bob, AGENTS.md cost-efficiency techniques, enterprise narrative, and production concerns (HITL, observability, A2A).
 
 ---
 
@@ -131,24 +133,23 @@ Miles of Smiles needs systems that:
 
 ### Architecture you will grow into
 
-```
-                    ┌──────────────────────────────────────────────┐
-                    │      Miles of Smiles Car Management          │
-                    │          (Quarkus · port 8080)               │
-                    │                                              │
-  Car return ──►   │  CarProcessingWorkflow (@SequenceAgent)      │
-                    │    │                                         │
-                    │    ├─► FeedbackAnalysisWorkflow              │
-                    │    │        (@ParallelMapperAgent × 3 tasks) │
-                    │    │                                         │
-                    │    ├─► FleetSupervisorAgent (@SupervisorAgent)│
-                    │    │        ├─ CleaningAgent   (@ToolBox)    │
-                    │    │        ├─ MaintenanceAgent              │
-                    │    │        ├─ DispositionAgent + HITL gate  │
-                    │    │        └─ PricingAgent ──A2A──► :8888  │
-                    │    │                                         │
-                    │    └─► CarConditionFeedbackAgent             │
-                    └──────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    CR["Car Return"] --> CPW
+
+    subgraph main["Miles of Smiles Car Management (Quarkus :8080)"]
+        CPW["CarProcessingWorkflow<br/>@SequenceAgent"]
+        CPW --> FAW["FeedbackAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
+        CPW --> FSA["FleetSupervisorAgent<br/>@SupervisorAgent"]
+        CPW --> CCFA["CarConditionFeedbackAgent"]
+
+        FSA --> CA["CleaningAgent<br/>@ToolBox"]
+        FSA --> MA["MaintenanceAgent"]
+        FSA --> DA["DispositionAgent<br/>+ HITL gate"]
+        FSA --> PA["PricingAgent"]
+    end
+
+    PA -->|"A2A"| RA[":8888<br/>Remote Pricing"]
 ```
 
 ### IBM stack for this lab
@@ -397,18 +398,17 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 
 ### 6.2 HITL flow
 
-```
-Car return (value > $15,000 AND severe damage)
-  │
-  ▼
-DispositionProposalAgent
-  │  returns: proposed_action=SCRAP, rationale="airbags deployed, chassis bent"
-  │
-  ▼
-@HumanInTheLoop gate
-  │
-  ├─► APPROVED  → execute disposition (SCRAP/SELL/DONATE)
-  └─► REJECTED  → fallback: KEEP + route to IN_MAINTENANCE for assessment
+```mermaid
+flowchart TD
+    CR["Car return<br/>(value > $15k AND severe damage)"] --> DPA
+    DPA["DispositionProposalAgent<br/>proposed_action=SCRAP"] --> HITL
+    HITL{"@HumanInTheLoop gate"}
+    HITL -->|APPROVED| EXEC["Execute disposition<br/>(SCRAP/SELL/DONATE)"]
+    HITL -->|REJECTED| FALL["Fallback: KEEP<br/>→ IN_MAINTENANCE"]
+
+    style HITL fill:#ff9800,color:#fff
+    style EXEC fill:#4caf50,color:#fff
+    style FALL fill:#2196f3,color:#fff
 ```
 
 ### 6.3 OpenTelemetry key spans
@@ -452,20 +452,21 @@ DispositionProposalAgent
 
 ### 7.2 A2A architecture
 
-```
-CarProcessingWorkflow (main app :8080)
-  └─► FleetSupervisorAgent
-           └─► PricingAgent @A2AClientAgent
-                    │
-                    │  JSON-RPC / HTTP
-                    │  POST /a2a/tasks/send
-                    │
-                    ▼
-             remote-a2a-agent :8888
-               AgentExecutor.execute(task)
-                 └─► PricingAgent (local AI service)
-                          └─► LLM call → "$10,710"
-               Task result returned to caller
+```mermaid
+flowchart LR
+    subgraph main[":8080 — Main App"]
+        CPW["CarProcessingWorkflow"] --> FSA["FleetSupervisorAgent"]
+        FSA --> PA["PricingAgent<br/>@A2AClientAgent"]
+    end
+
+    PA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
+
+    subgraph remote[":8888 — Remote Pricing"]
+        AE["AgentExecutor"] --> RPA["PricingAgent<br/>(local LLM call)"]
+        RPA --> LLM["LLM → $10,710"]
+    end
+
+    LLM -->|"Task result"| PA
 ```
 
 ### 7.3 MCP vs A2A
@@ -507,13 +508,14 @@ A production-shaped **agentic fleet platform** on IBM Enterprise Build of Quarku
 
 ## Enterprise takeaway
 
-> Agentic AI in the enterprise is not only model quality.  
-> It is **patterns + protocols + platforms + people-in-the-loop**.  
->
-> **Quarkus** gives you the build-time-validated, production-hardened runtime.  
-> **LangChain4j** gives you the declarative agent patterns.  
-> **IBM Bob** helps your developers ship them safely across the full SDLC.  
-> **AGENTS.md** makes Bob cost-efficient — front-load context once, save tokens every turn.
+!!! quote "Enterprise takeaway"
+    Agentic AI in the enterprise is not only model quality.
+    It is **patterns + protocols + platforms + people-in-the-loop**.
+
+    **Quarkus** gives you the build-time-validated, production-hardened runtime.  
+    **LangChain4j** gives you the declarative agent patterns.  
+    **IBM Bob** helps your developers ship them safely across the full SDLC.  
+    **AGENTS.md** makes Bob cost-efficient — front-load context once, save tokens every turn.
 
 ## Patterns cheat sheet (take this with you)
 

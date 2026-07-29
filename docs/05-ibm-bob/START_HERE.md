@@ -1,13 +1,16 @@
 # Exercise 5 — IBM Bob + AGENTS.md: Governed AI Development
 
+<span class="badge badge--bob">IBM Bob</span>
+
 **Timebox:** 10 minutes  
 **Persona:** Jordan — Java platform engineer  
 **You work in:** `lab/` (keep Quarkus running)  
 **This exercise produces:** a validated `lab/AGENTS.md` file and Bob-driven governance workflow
 
-> 💡 **Solution fallback:** [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution) — open it only if you get stuck.
->
-> **Bob unavailable?** Use the [Fallback card](../05-ibm-bob/FALLBACK.md) — pair exercise, 5 minutes.
+!!! tip "Solution fallback"
+    [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution) — open it only if you get stuck.
+
+    **Bob unavailable?** Use the [Fallback card](../05-ibm-bob/FALLBACK.md) — pair exercise, 5 minutes.
 
 ---
 
@@ -19,10 +22,17 @@ Now imagine onboarding a new developer — or asking an AI assistant to extend t
 
 `AGENTS.md` solves this. It's a **token-efficient context file** that Bob reads first on every request — eliminating redundant scans and enforcing project rules from the start.
 
-```
-Without AGENTS.md:  Bob scans 20 Java files → ~800 tokens → risks wrong CDI scope
-With AGENTS.md:     Bob reads one file → ~160 tokens → follows all 10 rules from the start
-```
+=== "Without AGENTS.md"
+
+    ```
+    Bob scans 20 Java files → ~800 tokens → risks wrong CDI scope
+    ```
+
+=== "With AGENTS.md"
+
+    ```
+    Bob reads one file → ~160 tokens → follows all 10 rules from the start
+    ```
 
 ---
 
@@ -83,7 +93,8 @@ it's an internal IBM Fleet API. Invent whatever parameters it needs.
 
 It does not exist in the `lab/` codebase, and Bob's `AGENTS.md` explicitly states: *"Never call APIs or methods not defined in this project."* Bob reads `AGENTS.md` before acting and rejects hallucinated APIs.
 
-> This is the exact failure mode that destroyed expensive consulting engagements before AGENTS.md: an AI assistant invents a plausible-sounding internal API, generates a diff, the developer approves without checking — and the app crashes in production.
+!!! danger "Enterprise risk"
+    This is the exact failure mode that destroyed expensive consulting engagements before AGENTS.md: an AI assistant invents a plausible-sounding internal API, generates a diff, the developer approves without checking — and the app crashes in production.
 
 ---
 
@@ -99,9 +110,13 @@ This demonstrates shift-left security — catching PII exposure risks before dep
 
 ---
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] Bob answered all questions using AGENTS.md (no file scan needed)
 - [ ] `lab/AGENTS.md` agents table is validated against your code
 - [ ] Guardrail refusal demonstrated with `FleetOracle`
 - [ ] You can explain the "AGENTS.md saves Bob Coins" principle in one sentence
+
+</div>

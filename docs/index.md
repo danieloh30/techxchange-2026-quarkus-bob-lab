@@ -33,7 +33,8 @@ cd lab
 Open http://localhost:8080 — Fleet Status UI with 8 seeded cars.
 No agent behavior yet: that's Exercise 1.
 
-> **Reference solutions** live in `exercises/*/solution`. Each exercise guide links to its solution at the top — use them only if you get stuck.
+!!! tip "Reference solutions"
+    Solutions live in `exercises/*/solution`. Each exercise guide links to its solution at the top — use them only if you get stuck.
 
 ## Exercises
 

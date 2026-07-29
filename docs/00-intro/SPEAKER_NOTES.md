@@ -32,24 +32,23 @@ Miles of Smiles needs systems that **reason** over messy natural-language feedba
 
 A production-shaped **agentic fleet platform** on IBM Enterprise Build of Quarkus — from a single agent to a full multi-agent supervisor pipeline with human oversight and distributed services.
 
-```
-                    ┌──────────────────────────────────────────────┐
-                    │      Miles of Smiles Car Management          │
-                    │          (Quarkus · port 8080)               │
-                    │                                              │
-  Car return ──►   │  CarProcessingWorkflow (@SequenceAgent)      │
-                    │    │                                         │
-                    │    ├─► FeedbackAnalysisWorkflow              │
-                    │    │        (@ParallelMapperAgent × 3 tasks) │
-                    │    │                                         │
-                    │    ├─► FleetSupervisorAgent (@SupervisorAgent)│
-                    │    │        ├─ CleaningAgent   (@ToolBox)    │
-                    │    │        ├─ MaintenanceAgent              │
-                    │    │        ├─ DispositionAgent + HITL gate  │
-                    │    │        └─ PricingAgent ──A2A──► :8888  │
-                    │    │                                         │
-                    │    └─► CarConditionFeedbackAgent             │
-                    └──────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    CR["Car Return"] --> CPW
+
+    subgraph main["Miles of Smiles Car Management (Quarkus :8080)"]
+        CPW["CarProcessingWorkflow<br/>@SequenceAgent"]
+        CPW --> FAW["FeedbackAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
+        CPW --> FSA["FleetSupervisorAgent<br/>@SupervisorAgent"]
+        CPW --> CCFA["CarConditionFeedbackAgent"]
+
+        FSA --> CA["CleaningAgent<br/>@ToolBox"]
+        FSA --> MA["MaintenanceAgent"]
+        FSA --> DA["DispositionAgent<br/>+ HITL gate"]
+        FSA --> PA["PricingAgent"]
+    end
+
+    PA -->|"A2A"| RA[":8888<br/>Remote Pricing"]
 ```
 
 ---

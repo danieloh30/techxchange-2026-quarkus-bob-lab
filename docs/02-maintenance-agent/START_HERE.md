@@ -1,11 +1,14 @@
 # Exercise 2 — MaintenanceAgent + @SystemMessage as Policy
 
+<span class="badge badge--code-along">Code-Along</span>
+
 **Timebox:** 10 minutes  
 **Persona:** Chris — Ops lead  
 **You work in:** `lab/` (keep Quarkus running)  
 **Files to edit:** `lab/src/main/java/com/carmanagement/agentic/agents/MaintenanceAgent.java`
 
-> 💡 **Solution fallback:** [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
+!!! tip "Solution fallback"
+    [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
 
 ---
 
@@ -66,11 +69,10 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 ```
 
-> **Why no `@ToolBox` here?**  
-> `MaintenanceAgent` returns a *plan* as text — it does not write to the database. The supervisor in Exercise 4 reads this text plan and decides whether to escalate. Text-only agents are faster and cheaper: no tool-call round-trips to the LLM.
->
-> **Compare with `CleaningAgent`:**  
-> `CleaningAgent` must call `CleaningTool.requestCleaning()` to actually mutate `CarStatus`. `MaintenanceAgent` only produces a recommendation. The supervisor decides what happens next.
+??? info "Why no `@ToolBox` here?"
+    `MaintenanceAgent` returns a *plan* as text — it does not write to the database. The supervisor in Exercise 4 reads this text plan and decides whether to escalate. Text-only agents are faster and cheaper: no tool-call round-trips to the LLM.
+
+    **Compare with `CleaningAgent`:** `CleaningAgent` must call `CleaningTool.requestCleaning()` to actually mutate `CarStatus`. `MaintenanceAgent` only produces a recommendation. The supervisor decides what happens next.
 
 Save the file. Quarkus hot-reloads. `MaintenanceAgent` cannot be tested in isolation yet — it wires into the supervisor in Exercise 4. Check the terminal for any compile errors.
 
@@ -80,19 +82,23 @@ Save the file. Quarkus hot-reloads. `MaintenanceAgent` cannot be tested in isola
 
 This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
 
-Open `CleaningAgent.java`. Find this line in your `@SystemMessage`:
+Open `CleaningAgent.java`. Find the threshold line in your `@SystemMessage` and compare:
 
-```
-If no cleaning is needed based on the feedback, respond with "CLEANING_NOT_REQUIRED".
-```
+=== "Original (lenient)"
 
-**Replace it** with the stricter version:
+    ```
+    If no cleaning is needed based on the feedback, respond with "CLEANING_NOT_REQUIRED".
+    ```
 
-```
-Only request cleaning for SEVERE contamination: pet hair embedded in upholstery,
-food stains, strong persistent odors, or biohazardous material.
-For light dust, minor scuffs, or normal wear and tear, respond with "CLEANING_NOT_REQUIRED".
-```
+=== "Strict (replace with this)"
+
+    ```
+    Only request cleaning for SEVERE contamination: pet hair embedded in upholstery,
+    food stains, strong persistent odors, or biohazardous material.
+    For light dust, minor scuffs, or normal wear and tear, respond with "CLEANING_NOT_REQUIRED".
+    ```
+
+**Replace** the original line with the strict version.
 
 Quarkus hot-reloads in ~1 second. Now return Car **#7** (Honda Civic) with:
 
@@ -111,14 +117,19 @@ Dog hair deeply embedded in both rear seat cushions, strong wet-dog smell throug
 
 - **Expected with strict threshold:** `requestCleaning` IS called — severe enough to meet the threshold
 
-> **Key insight:** You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` IS the policy. This is what "declarative AI engineering" means.
+!!! warning "Key insight"
+    You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` IS the policy. This is what "declarative AI engineering" means.
 
 **Revert** the `@SystemMessage` back to the original (simpler) version before moving on.
 
 ---
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] `MaintenanceAgent.java` compiles — no errors (interface, `outputKey="analysisResult"`, no CDI scope, no `@ToolBox`)
 - [ ] `@SystemMessage` threshold experiment completed — strict vs lenient behavior observed
 - [ ] You can articulate: when does an agent need `@ToolBox`? When is text-only output correct?
+
+</div>
