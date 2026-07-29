@@ -74,11 +74,22 @@ import dev.langchain4j.service.UserMessage;
 
     **Compare with `TriageAgent`:** `TriageAgent` must call `TriageTool.requestTriage()` to actually mutate `IncidentStatus`. `DiagnosticAgent` only produces a recommendation. The supervisor decides what happens next.
 
-Save the file. Quarkus hot-reloads. `DiagnosticAgent` cannot be tested in isolation yet — it wires into the supervisor in Exercise 4. Check the terminal for any compile errors.
+Save the file. Quarkus hot-reloads. Check the terminal for any compile errors.
 
 ---
 
-## Step 2 — @SystemMessage tuning experiment (4 min)
+## Step 2 — Verify the compile (1 min)
+
+`DiagnosticAgent` wires into the supervisor pipeline in Exercise 4, so it can't be tested end-to-end yet. But you can confirm it compiled correctly:
+
+1. Check the Quarkus terminal — no red stack traces after hot reload
+2. Open **http://localhost:8080** and press `q` in the terminal to open Dev UI, or visit **http://localhost:8080/q/dev-ui** — confirm no CDI errors
+
+If you see `Unsatisfied dependency` or `AmbiguousResolutionException`, double-check: `DiagnosticAgent` must be an **interface** (not a class), with **no** `@ApplicationScoped` annotation.
+
+---
+
+## Step 3 — @SystemMessage tuning experiment (4 min)
 
 This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
 
