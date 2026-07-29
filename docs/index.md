@@ -30,8 +30,10 @@ cd lab
 ./mvnw quarkus:dev
 ```
 
-Open http://localhost:8080 — Incident Dashboard with 8 seeded incidents.
+Open http://localhost:8080 — Incident Dashboard with 8 seeded incidents and status cards.
 No agent behavior yet: that's Exercise 1.
+
+<img src="images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 !!! tip "Reference solutions"
     Solutions live in `exercises/*/solution`. Each exercise guide links to its solution at the top — use them only if you get stuck.
