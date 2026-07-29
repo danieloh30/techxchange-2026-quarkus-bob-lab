@@ -104,24 +104,21 @@ This is one of the most important insights in this lab: **`@SystemMessage` is a 
     cd exercises/02-workflow-patterns/solution-sequence
     ./mvnw quarkus:dev
     ```
+    The `TriageAgent.java` to edit below lives in the same relative path inside the solution project.
 
-Open `TriageAgent.java`. Find the threshold line in your `@SystemMessage` and compare:
+Open `TriageAgent.java` and find this line in the `@SystemMessage`:
 
-=== "Original (lenient)"
+```
+If no triage action is needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
+```
 
-    ```
-    If no triage action is needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
-    ```
+**Replace** that line with the strict version:
 
-=== "Strict (replace with this)"
-
-    ```
-    Only request triage for CRITICAL issues: complete service outages,
-    data loss or corruption, security breaches, or cascading failures affecting multiple systems.
-    For intermittent errors, slow responses, or single-user complaints, respond with "TRIAGE_NOT_REQUIRED".
-    ```
-
-**Replace** the original line with the strict version.
+```
+Only request triage for CRITICAL issues: complete service outages,
+data loss or corruption, security breaches, or cascading failures affecting multiple systems.
+For intermittent errors, slow responses, or single-user complaints, respond with "TRIAGE_NOT_REQUIRED".
+```
 
 Quarkus hot-reloads in ~1 second. Now process Incident **#7** (monitoring/alerting-api) with:
 
