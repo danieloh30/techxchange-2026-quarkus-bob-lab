@@ -21,6 +21,9 @@ theme:
     - navigation.instant
     - navigation.tracking
     - navigation.sections
+    - navigation.tabs
+    - navigation.footer
+    - navigation.expand
     - navigation.top
     - search.suggest
     - search.highlight
@@ -29,15 +32,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: blue
-      accent: light blue
+      primary: indigo
+      accent: teal
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: blue
-      accent: light blue
+      primary: indigo
+      accent: teal
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -64,6 +67,12 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
 
 nav:
   - Home: index.md
@@ -81,6 +90,9 @@ nav:
       - "7. A2A": 07-a2a/START_HERE.md
   - Instructor guide: LAB_GUIDE.md
   - Attribution: ATTRIBUTION.md
+
+extra_css:
+  - stylesheets/extra.css
 
 extra:
   social:

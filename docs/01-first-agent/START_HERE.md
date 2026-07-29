@@ -1,13 +1,17 @@
 # Exercise 1 — Your First Agent: CleaningAgent + CleaningTool
 
+<span class="badge badge--code-along">Code-Along</span>
+
 **Timebox:** 15 minutes  
 **Persona:** Maya — Rental desk manager  
 **You work in:** `lab/` (keep Quarkus running — hot reload)  
 **Files to edit:**
+
 - `lab/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java`
 - `lab/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java`
 
-> 💡 **Solution fallback:** [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution) — open if stuck.
+!!! tip "Solution fallback"
+    [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution) — open if stuck.
 
 ---
 
@@ -68,11 +72,11 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 ```
 
-> **Why `outputKey = "analysisResult"`?**  
-> `AgenticScope` is a shared context map passed through a workflow. Every agent writes its result under its `outputKey` so the next agent can read it. Without `outputKey`, the result is silently dropped and downstream agents find nothing. This is the single most common cause of workflow failures.
+??? info "Why `outputKey = \"analysisResult\"`?"
+    `AgenticScope` is a shared context map passed through a workflow. Every agent writes its result under its `outputKey` so the next agent can read it. Without `outputKey`, the result is silently dropped and downstream agents find nothing. This is the single most common cause of workflow failures.
 
-> **Why is this an interface, not a class?**  
-> Quarkus LangChain4j generates the CDI proxy at build time. The framework manages the LLM call, message formatting, and tool invocation. You declare *what* to do via annotations; the framework handles *how*.
+??? info "Why is this an interface, not a class?"
+    Quarkus LangChain4j generates the CDI proxy at build time. The framework manages the LLM call, message formatting, and tool invocation. You declare *what* to do via annotations; the framework handles *how*.
 
 ---
 
@@ -118,11 +122,11 @@ public String requestCleaning(
 }
 ```
 
-> **Why `@Transactional` here but not on `CleaningAgent`?**  
-> `CarInfo.persist()` writes to the PostgreSQL database. JPA requires an active transaction for mutations. `CleaningAgent` is an LLM-backed interface (no JPA operations) — adding `@Transactional` there would have no effect and would mislead future readers.
->
-> **Why `@ApplicationScoped` on the tool class?**  
-> Tools are CDI beans injected into the LLM call context. They must be scoped. `@ApplicationScoped` is the correct scope — tools hold no per-request state.
+??? info "Why `@Transactional` here but not on `CleaningAgent`?"
+    `CarInfo.persist()` writes to the PostgreSQL database. JPA requires an active transaction for mutations. `CleaningAgent` is an LLM-backed interface (no JPA operations) — adding `@Transactional` there would have no effect and would mislead future readers.
+
+??? info "Why `@ApplicationScoped` on the tool class?"
+    Tools are CDI beans injected into the LLM call context. They must be scoped. `@ApplicationScoped` is the correct scope — tools hold no per-request state.
 
 Save both files. Quarkus hot-reloads automatically.
 
@@ -132,23 +136,18 @@ Save both files. Quarkus hot-reloads automatically.
 
 Before testing, trace the execution path in your head:
 
-```
-processCleaning(carInfo, carNumber, feedback)
-        │
-        ▼
-  @UserMessage → formatted prompt → LLM
-        │
-        ▼  LLM decides: "I need to call requestCleaning"
-  tool_call: requestCleaning(carNumber=5, interiorCleaning=true, ...)
-        │
-        ▼
-  CleaningTool.requestCleaning()
-    carInfo.status = AT_CLEANING
-    carInfo.persist()
-    returns "Cleaning requested for Ford Focus..."
-        │
-        ▼  LLM reads tool result
-  final response written to AgenticScope["analysisResult"]
+```mermaid
+sequenceDiagram
+    participant App as processCleaning()
+    participant LLM as LLM
+    participant Tool as CleaningTool
+
+    App->>LLM: @UserMessage (car info + feedback)
+    LLM->>LLM: Decides: "needs cleaning"
+    LLM->>Tool: tool_call: requestCleaning(carNumber=5, ...)
+    Tool->>Tool: carInfo.status = AT_CLEANING
+    Tool-->>LLM: "Cleaning requested for Ford Focus..."
+    LLM-->>App: Final response → AgenticScope["analysisResult"]
 ```
 
 The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If feedback says "car looks fine", the LLM produces `CLEANING_NOT_REQUIRED` directly — no tool call.
@@ -180,11 +179,16 @@ Car looks perfect, no issues at all
 
 ---
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] Tool call visible in logs for dirty-car return; status = `AT_CLEANING`
 - [ ] No tool call for clean-car return; status = `AVAILABLE`
 - [ ] You can explain from memory: why `@Transactional` on the tool but not the agent
 - [ ] You can explain from memory: what `outputKey` does and what breaks without it
 
-> **Keep Quarkus running** — Exercise 2 adds the next agent with hot reload.
+</div>
+
+!!! note
+    **Keep Quarkus running** — Exercise 2 adds the next agent with hot reload.

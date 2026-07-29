@@ -1,11 +1,14 @@
 # Exercise 6 — Human-in-the-Loop + Observability
 
+<span class="badge badge--run-read">Run + Read</span>
+
 **Timebox:** 10 minutes  
 **Persona:** Alex — Compliance officer  
 **You work in:** `exercises/06-hitl-observability/solution` (run + read — HITL is pre-built)  
 **Learn by:** reading `DispositionProposalAgent` + `HumanApprovalAgent`, running the UI, reading OTel spans
 
-> 💡 **Reference solution:** [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution)
+!!! tip "Reference solution"
+    [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution)
 
 ---
 
@@ -38,17 +41,17 @@ car-management started in ~4s
 
 Open [`DispositionProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/carmanagement/agentic/agents/DispositionProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/carmanagement/agentic/agents/HumanApprovalAgent.java).
 
-```
-FleetSupervisorAgent
-  │ (disposition required)
-  ▼
-DispositionProposalAgent  → proposed_action=SCRAP, rationale="airbags..."
-  │
-  ▼
-@HumanInTheLoop gate      ← UI: "Awaiting Approval"
-  │
-  ├── APPROVED → status = PENDING_DISPOSITION
-  └── REJECTED → status = IN_MAINTENANCE (reassessment)
+```mermaid
+flowchart TD
+    FSA["FleetSupervisorAgent<br/>(disposition required)"] --> DPA
+    DPA["DispositionProposalAgent<br/>proposed_action=SCRAP"] --> HITL
+    HITL{"@HumanInTheLoop gate<br/>UI: Awaiting Approval"}
+    HITL -->|APPROVED| PD["PENDING_DISPOSITION"]
+    HITL -->|REJECTED| IM["IN_MAINTENANCE<br/>(reassessment)"]
+
+    style HITL fill:#ff9800,color:#fff
+    style PD fill:#4caf50,color:#fff
+    style IM fill:#2196f3,color:#fff
 ```
 
 ---
@@ -79,8 +82,8 @@ Find spans and read:
 | `langchain4j.tool.name` | Which tool the LLM invoked |
 | `duration` | End-to-end latency including all LLM round-trips |
 
-> **Warning — production:** `include-prompt=true` exports full prompt text to your tracing backend.
-> This can include PII from `@UserMessage` templates. Disable or redact before production.
+!!! warning "Production caution"
+    `include-prompt=true` exports full prompt text to your tracing backend. This can include PII from `@UserMessage` templates. Disable or redact before production.
 
 **FinOps thought experiment:** 500 car returns/day × avg 1,500 input tokens × gpt-4o pricing = ~$15/day.  
 An unbounded `@UserMessage` without AGENTS.md discipline can double input tokens → $30/day.  
@@ -88,9 +91,13 @@ Tracing is how you catch that before the bill arrives.
 
 ---
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] HITL gate blocked disposition on a high-value car
 - [ ] HITL gate allowed disposition after approval
 - [ ] At least one `gen_ai.usage.input_tokens` span found in Grafana/Tempo
 - [ ] You can explain `include-prompt=true` trade-off (compliance value vs PII risk)
+
+</div>
