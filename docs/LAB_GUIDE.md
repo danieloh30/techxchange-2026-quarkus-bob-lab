@@ -27,9 +27,6 @@
     **Exercises 6–7** run pre-built solutions to explore HITL, observability, and A2A patterns.  
     Reference solutions in `exercises/` are fallbacks — linked at the top of each exercise guide.
 
-!!! info "Base content"
-    Adapted from the [Quarkus LangChain4j Workshop](https://quarkus.io/quarkus-workshop-langchain4j/) (community workshop), extended with IBM Bob, AGENTS.md cost-efficiency techniques, enterprise narrative, and production concerns (HITL, observability, A2A).
-
 ---
 
 ## Prerequisites
@@ -532,8 +529,7 @@ Goal: human approval on high-stakes → @HumanInTheLoop
 
 ## Resources
 
-- Quarkus LangChain4j workshop (upstream): https://quarkus.io/quarkus-workshop-langchain4j/
-- Section 2 / Step 07 (A2A): https://quarkus.io/quarkus-workshop-langchain4j/section-2/step-07/
+- Quarkus LangChain4j docs: https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html
 - Observability docs: https://docs.quarkiverse.io/quarkus-langchain4j/dev/observability.html
 - IBM Bob: https://bob.ibm.com/
 - IBM Bob GA announcement: https://newsroom.ibm.com/2026-04-28-introducing-ibm-bob-ai-development-partner-that-takes-enterprises-from-ai-assisted-coding-to-production-ready-software

@@ -46,6 +46,3 @@ Open http://localhost:8080
 - Free ports **8080**, **8888**
 - Docker or Podman (for Quarkus Dev Services)
 
-## Upstream attribution
-
-Exercise solutions are adapted from the community [Quarkus LangChain4j Workshop](https://github.com/quarkusio/quarkus-workshop-langchain4j). See [docs/ATTRIBUTION.md](docs/ATTRIBUTION.md).
