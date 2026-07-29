@@ -8,7 +8,12 @@
 **Files to edit:** `lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java`
 
 !!! tip "Solution fallback"
-    [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
+    Two solution variants exist — both include `DiagnosticAgent`:
+
+    - [`exercises/02-workflow-patterns/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-sequence) — sequence workflow pattern
+    - [`exercises/02-workflow-patterns/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-composed) — composed workflow pattern
+
+    Either works for this exercise. Use **solution-sequence** if unsure.
 
 ---
 
@@ -92,6 +97,13 @@ If you see `Unsatisfied dependency` or `AmbiguousResolutionException`, double-ch
 ## Step 3 — @SystemMessage tuning experiment (4 min)
 
 This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
+
+!!! note "Using a solution project instead of `lab/`?"
+    Stop `lab/` first (`Ctrl+C`), then run either solution:
+    ```bash
+    cd exercises/02-workflow-patterns/solution-sequence
+    ./mvnw quarkus:dev
+    ```
 
 Open `TriageAgent.java`. Find the threshold line in your `@SystemMessage` and compare:
 
