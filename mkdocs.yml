@@ -82,10 +82,7 @@ nav:
       - "2. Maintenance agent": 02-maintenance-agent/START_HERE.md
       - "3. Parallel workflow": 03-parallel-workflow/START_HERE.md
       - "4. Supervisor pipeline": 04-supervisor/START_HERE.md
-      - "5. IBM Bob":
-          - Start here: 05-ibm-bob/START_HERE.md
-          - Bob vs copilots: 05-ibm-bob/BOB_VS_COPILOTS.md
-          - Fallback card: 05-ibm-bob/FALLBACK.md
+      - "5. IBM Bob": 05-ibm-bob/START_HERE.md
       - "6. HITL + observability": 06-hitl-observability/START_HERE.md
       - "7. A2A": 07-a2a/START_HERE.md
   - Instructor guide: LAB_GUIDE.md
