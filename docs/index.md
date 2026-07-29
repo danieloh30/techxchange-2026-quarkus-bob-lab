@@ -30,7 +30,7 @@ cd lab
 ./mvnw quarkus:dev
 ```
 
-Open http://localhost:8080 — Fleet Status UI with 8 seeded cars.
+Open http://localhost:8080 — Incident Dashboard with 8 seeded incidents.
 No agent behavior yet: that's Exercise 1.
 
 !!! tip "Reference solutions"
@@ -40,13 +40,13 @@ No agent behavior yet: that's Exercise 1.
 
 | Exercise | Time | Focus |
 |----------|------|-------|
-| [1. First agent](01-first-agent/START_HERE.md) | 15 min | `CleaningAgent` + `CleaningTool` |
-| [2. Maintenance agent](02-maintenance-agent/START_HERE.md) | 10 min | `MaintenanceAgent` + `@SystemMessage` as policy |
+| [1. First agent](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
+| [2. Diagnostic agent](02-maintenance-agent/START_HERE.md) | 10 min | `DiagnosticAgent` + `@SystemMessage` as policy |
 | [3. Parallel workflow](03-parallel-workflow/START_HERE.md) | 10 min | `@ParallelMapperAgent` + `@Output` |
 | [4. Supervisor pipeline](04-supervisor/START_HERE.md) | 15 min | Full multi-agent supervisor |
 | [5. IBM Bob](05-ibm-bob/START_HERE.md) | 10 min | `AGENTS.md` — governed AI development |
 | [6. HITL + observability](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
-| [7. A2A](07-a2a/START_HERE.md) | 10 min | Distributed pricing agent |
+| [7. A2A](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 

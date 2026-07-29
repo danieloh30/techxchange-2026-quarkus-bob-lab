@@ -6,7 +6,7 @@
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)  
 **Lab site:** https://danieloh30.github.io/techxchange-2026-quarkus-bob-lab/
 
-Build a multi-agent fleet-management system with **IBM Enterprise Build of Quarkus**, **Quarkus LangChain4j**, and **IBM Bob** — covering workflow patterns, supervisor orchestration, human-in-the-loop, observability, and A2A.
+Build a multi-agent incident management system with **IBM Enterprise Build of Quarkus**, **Quarkus LangChain4j**, and **IBM Bob** — covering workflow patterns, supervisor orchestration, human-in-the-loop, observability, and A2A.
 
 ## Repository layout
 

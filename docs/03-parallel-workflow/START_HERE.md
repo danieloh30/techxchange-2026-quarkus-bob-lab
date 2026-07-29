@@ -7,8 +7,8 @@
 **You work in:** `lab/` (keep Quarkus running)  
 **Files to edit:**
 
-- `lab/src/main/java/com/carmanagement/agentic/agents/FeedbackAnalysisAgent.java`
-- `lab/src/main/java/com/carmanagement/agentic/workflow/FeedbackAnalysisWorkflow.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentAnalysisAgent.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentAnalysisWorkflow.java`
 
 !!! tip "Solution fallback"
     [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
@@ -17,7 +17,7 @@
 
 ## The goal
 
-Instead of calling cleaning, maintenance, and disposition analysis sequentially, run all three **concurrently** with `@ParallelMapperAgent`. Wall-clock time ≈ slowest single call (not the sum). Then assemble three independent `String` results into a single typed `FeedbackAnalysisResults` record via an `@Output` method.
+Instead of calling severity, impact, and resolution analysis sequentially, run all three **concurrently** with `@ParallelMapperAgent`. Wall-clock time ≈ slowest single call (not the sum). Then assemble three independent `String` results into a single typed `IncidentAnalysisResults` record via an `@Output` method.
 
 This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, different prompt at runtime) and **`@Output`** (result aggregation before the next agent reads scope).
 
@@ -27,46 +27,46 @@ This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, 
 
 ```mermaid
 flowchart TD
-    A["FeedbackAnalysisAgent × 3<br/>(concurrent)"] --> B["@Output collects List&lt;String&gt;"]
-    B --> C["FeedbackAnalysisResults<br/>outputKey = feedbackAnalysisResults"]
-    C --> D["FleetSupervisorAgent<br/>(Exercise 4)"]
+    A["IncidentAnalysisAgent × 3<br/>(concurrent)"] --> B["@Output collects List&lt;String&gt;"]
+    B --> C["IncidentAnalysisResults<br/>outputKey = incidentAnalysisResults"]
+    C --> D["IncidentSupervisorAgent<br/>(Exercise 4)"]
 
-    subgraph parallel["Each invocation: outputKey = feedbackAnalysis"]
-        A1["🧹 Cleaning analyst"] ~~~ A2["🔧 Maintenance analyst"] ~~~ A3["⚠️ Disposition analyst"]
+    subgraph parallel["Each invocation: outputKey = incidentAnalysis"]
+        A1["🔴 Severity analyst"] ~~~ A2["💰 Impact analyst"] ~~~ A3["⚠️ Resolution analyst"]
     end
     A1 --> B
     A2 --> B
     A3 --> B
 ```
 
-Each parallel invocation of `FeedbackAnalysisAgent` writes its result under `"feedbackAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `FeedbackAnalysisResults`.
+Each parallel invocation of `IncidentAnalysisAgent` writes its result under `"incidentAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `IncidentAnalysisResults`.
 
 !!! warning "Rule"
     Every agent in a workflow **must** declare `outputKey`. Without it, the result is silently dropped from scope and the next agent finds nothing.
 
 ---
 
-## Step 1 — Implement `FeedbackAnalysisAgent` (4 min)
+## Step 1 — Implement `IncidentAnalysisAgent` (4 min)
 
-Open [`FeedbackAnalysisAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/FeedbackAnalysisAgent.java).
+Open [`IncidentAnalysisAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentAnalysisAgent.java).
 
 Replace the `// TODO` block with the following code **exactly**:
 
 ```java
 @SystemMessage("{task.systemInstructions}")
 @UserMessage("""
-    Car Information:
-    Make: {carInfo.make}
-    Model: {carInfo.model}
-    Year: {carInfo.year}
-    Previous Condition: {carInfo.condition}
+    Incident Information:
+    System: {incidentInfo.system}
+    Service: {incidentInfo.service}
+    Priority: P{incidentInfo.priority}
+    Current Description: {incidentInfo.description}
 
-    Feedback: {feedback}
+    Report: {report}
     """)
-@Agent(description = "Feedback analyzer. Using feedback, determines if action is needed based on task type.",
-       outputKey = "feedbackAnalysis")
-String analyzeFeedback(FeedbackTask task, CarInfo carInfo,
-                       Integer carNumber, String feedback);
+@Agent(description = "Incident analyzer. Using report, determines if action is needed based on task type.",
+       outputKey = "incidentAnalysis")
+String analyzeIncident(AnalysisTask task, IncidentInfo incidentInfo,
+                       Integer incidentNumber, String report);
 ```
 
 Add these imports:
@@ -78,21 +78,21 @@ import dev.langchain4j.service.UserMessage;
 ```
 
 ??? info "Dynamic `@SystemMessage` — one interface, three roles"
-    The `{task.systemInstructions}` placeholder is resolved from the `FeedbackTask` parameter at runtime, not from a compile-time constant. The same interface handles three completely different analysis tasks:
+    The `{task.systemInstructions}` placeholder is resolved from the `AnalysisTask` parameter at runtime, not from a compile-time constant. The same interface handles three completely different analysis tasks:
 
     | Task index | `systemInstructions` content |
     |------------|------------------------------|
-    | 0 | "You are a cleaning analyst. Respond with cleaning assessment or CLEANING_NOT_REQUIRED." |
-    | 1 | "You are a maintenance analyst. Respond with maintenance assessment or MAINTENANCE_NOT_REQUIRED." |
-    | 2 | "You are a disposition analyst. If severe damage, respond DISPOSITION_REQUIRED + reason. Else DISPOSITION_NOT_REQUIRED." |
+    | 0 | "You are a severity analyzer. Classify as P1-P4 or SEVERITY_LOW." |
+    | 1 | "You are a business impact analyzer. Assess revenue/SLA impact or IMPACT_MINIMAL." |
+    | 2 | "You are a resolution analyzer. If critical, ESCALATION_REQUIRED. Else ESCALATION_NOT_REQUIRED." |
 
     One interface declaration powers three concurrent LLM calls with different roles.
 
 ---
 
-## Step 2 — Implement `FeedbackAnalysisWorkflow` (3 min)
+## Step 2 — Implement `IncidentAnalysisWorkflow` (3 min)
 
-Open [`FeedbackAnalysisWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/workflow/FeedbackAnalysisWorkflow.java).
+Open [`IncidentAnalysisWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentAnalysisWorkflow.java).
 
 Replace both `// TODO` blocks with the following **two members**:
 
@@ -100,26 +100,26 @@ Replace both `// TODO` blocks with the following **two members**:
 
 ```java
 @ParallelMapperAgent(
-        description = "Analyzes car feedback in parallel for cleaning, maintenance, and disposition needs",
-        outputKey = "feedbackAnalysisResults",
-        subAgent = FeedbackAnalysisAgent.class,
+        description = "Analyzes incident reports in parallel for severity, impact, and resolution needs",
+        outputKey = "incidentAnalysisResults",
+        subAgent = IncidentAnalysisAgent.class,
         itemsProvider = "tasks")
-FeedbackAnalysisResults analyzeFeedback(List<FeedbackTask> tasks,
-                                        CarInfo carInfo,
-                                        Integer carNumber,
-                                        String feedback);
+IncidentAnalysisResults analyzeIncident(List<AnalysisTask> tasks,
+                                        IncidentInfo incidentInfo,
+                                        Integer incidentNumber,
+                                        String report);
 ```
 
 **2b — `@Output` static method:**
 
 ```java
 @Output
-static FeedbackAnalysisResults output(AgenticScope scope,
-                                      List<String> feedbackAnalysisResults) {
-    return new FeedbackAnalysisResults(
-            feedbackAnalysisResults.get(0),  // cleaningAnalysis
-            feedbackAnalysisResults.get(1),  // maintenanceAnalysis
-            feedbackAnalysisResults.get(2)   // dispositionAnalysis
+static IncidentAnalysisResults output(AgenticScope scope,
+                                      List<String> incidentAnalysisResults) {
+    return new IncidentAnalysisResults(
+            incidentAnalysisResults.get(0),  // severityAnalysis
+            incidentAnalysisResults.get(1),  // impactAnalysis
+            incidentAnalysisResults.get(2)   // resolutionAnalysis
     );
 }
 ```
@@ -132,7 +132,7 @@ import dev.langchain4j.agentic.declarative.ParallelMapperAgent;
 ```
 
 ??? info "Why `itemsProvider = \"tasks\"`?"
-    `@ParallelMapperAgent` needs to know which method parameter holds the list of items to fan out over. `itemsProvider = "tasks"` names the `tasks` parameter — the framework fans out one `FeedbackAnalysisAgent` call per element in `tasks`. The three calls run concurrently in separate virtual threads.
+    `@ParallelMapperAgent` needs to know which method parameter holds the list of items to fan out over. `itemsProvider = "tasks"` names the `tasks` parameter — the framework fans out one `IncidentAnalysisAgent` call per element in `tasks`. The three calls run concurrently in separate virtual threads.
 
 ??? info "Why a static `@Output` method?"
     `@Output` is a post-processing step, not an LLM call. It receives the collected results from all parallel invocations and transforms them into a typed record. It runs synchronously after all parallel calls complete. Marking it `static` makes it clear it is a pure transformation with no injected dependencies.
@@ -143,15 +143,15 @@ Save both files. Quarkus hot-reloads.
 
 ## Step 3 — Verify parallel execution (2 min)
 
-Return Car **#5** (Ford Focus) with:
+Process Incident **#5** (email-service/notification-api) with:
 
 ```
-Engine warning light is on and the cabin smells like smoke
+Complete email delivery failure, SMTP connections timing out, queue backlog growing
 ```
 
-**Watch the terminal logs.** You should see three `analyzeFeedback` invocations with **overlapping timestamps** — they start within milliseconds of each other, not sequentially.
+**Watch the terminal logs.** You should see three `analyzeIncident` invocations with **overlapping timestamps** — they start within milliseconds of each other, not sequentially.
 
-You can also open the **Dev UI** (`http://localhost:8080/q/dev`) → **CDI beans** panel and verify `FeedbackAnalysisAgent` and `FeedbackAnalysisWorkflow` appear as managed beans.
+You can also open the **Dev UI** (`http://localhost:8080/q/dev`) → **CDI beans** panel and verify `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear as managed beans.
 
 ??? question "Why not a Java `for` loop instead of `itemsProvider`?"
     `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
@@ -162,8 +162,8 @@ You can also open the **Dev UI** (`http://localhost:8080/q/dev`) → **CDI beans
 
 ## :material-check-circle: Done when
 
-- [ ] `FeedbackAnalysisAgent` and `FeedbackAnalysisWorkflow` compile and appear in Dev UI CDI beans
-- [ ] Terminal logs show overlapping timestamps for the three `analyzeFeedback` invocations
+- [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` compile and appear in Dev UI CDI beans
+- [ ] Terminal logs show overlapping timestamps for the three `analyzeIncident` invocations
 - [ ] You can explain `outputKey` and `@Output` from memory
 - [ ] You can explain how `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 tasks
 

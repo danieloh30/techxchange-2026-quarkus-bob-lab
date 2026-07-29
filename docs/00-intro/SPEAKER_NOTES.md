@@ -1,16 +1,16 @@
 # Lab Overview
 
-## The scenario: Miles of Smiles
+## The scenario: Apex Systems
 
-**Miles of Smiles** is a mid-size car rental company with hundreds of vehicles across airport and city locations. Every returned car generates free-text feedback from rental desks, cleaning crews, and maintenance bays — but today that feedback lives in sticky notes, chat threads, and tribal knowledge.
+**Apex Systems** is a mid-size enterprise IT services company managing infrastructure across data centers and cloud regions. The NOC (Network Operations Center) receives free-text incident reports from monitoring tools, tickets, and on-call engineers — but today those reports live in chat threads, email chains, and tribal knowledge.
 
-Last quarter's incident report told the story:
+Last quarter's post-mortem told the story:
 
-- Three expensive vehicles were **scrapped without a formal review** — $80k lost
-- Two others **sat in AT_CLEANING for 3 days** when a quick wash was all they needed
-- Fleet managers cannot see *why* a car moved between statuses or whether it should have been dispositioned
+- Three P1 outages lasted **4+ hours due to P3 misclassification** — $200k revenue loss
+- Two incidents were **escalated to the wrong engineering team**, wasting 40 engineer-hours
+- Service managers cannot see *why* an incident was routed or whether escalation was appropriate
 
-Leadership mandate: **automate fleet decisions with AI agents — without losing enterprise control.**
+Leadership mandate: **automate incident triage and routing with AI agents — without losing enterprise control.**
 
 ---
 
@@ -20,52 +20,52 @@ Leadership mandate: **automate fleet decisions with AI agents — without losing
 |---------|-------|
 | Answers questions | Takes actions |
 | One LLM call | Multi-step reasoning + tool calls |
-| No side effects | Mutates state (e.g., `CarStatus → AT_CLEANING`) |
+| No side effects | Mutates state (e.g., `IncidentStatus → TRIAGING`) |
 | Stateless | Shares context via `AgenticScope` across workflow |
-| Single model | Composed specialists (cleaning, maintenance, pricing) |
+| Single model | Composed specialists (triage, diagnostic, impact) |
 
-Miles of Smiles needs systems that **reason** over messy natural-language feedback, **act** by calling enterprise tools, **collaborate** across specialized roles, **pause** for humans on high-stakes outcomes, and **scale** across teams via open protocols.
+Apex Systems needs systems that **reason** over messy natural-language incident reports, **act** by calling enterprise tools, **collaborate** across specialized roles, **pause** for humans on high-stakes outcomes, and **scale** across teams via open protocols.
 
 ---
 
 ## What you will build
 
-A production-shaped **agentic fleet platform** on IBM Enterprise Build of Quarkus — from a single agent to a full multi-agent supervisor pipeline with human oversight and distributed services.
+A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus — from a single agent to a full multi-agent supervisor pipeline with human oversight and distributed services.
 
 ```mermaid
 flowchart TD
-    CR["Car Return"] --> CPW
+    IR["Incident Report"] --> IPW
 
-    subgraph main["Miles of Smiles Car Management (Quarkus :8080)"]
-        CPW["CarProcessingWorkflow<br/>@SequenceAgent"]
-        CPW --> FAW["FeedbackAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
-        CPW --> FSA["FleetSupervisorAgent<br/>@SupervisorAgent"]
-        CPW --> CCFA["CarConditionFeedbackAgent"]
+    subgraph main["Apex Systems Incident Management (Quarkus :8080)"]
+        IPW["IncidentProcessingWorkflow<br/>@SequenceAgent"]
+        IPW --> IAW["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
+        IPW --> ISA["IncidentSupervisorAgent<br/>@SupervisorAgent"]
+        IPW --> RA["ResolutionAgent"]
 
-        FSA --> CA["CleaningAgent<br/>@ToolBox"]
-        FSA --> MA["MaintenanceAgent"]
-        FSA --> DA["DispositionAgent<br/>+ HITL gate"]
-        FSA --> PA["PricingAgent"]
+        ISA --> TA["TriageAgent<br/>@ToolBox"]
+        ISA --> DA["DiagnosticAgent"]
+        ISA --> EA["EscalationAgent<br/>+ HITL gate"]
+        ISA --> IA["ImpactAgent"]
     end
 
-    PA -->|"A2A"| RA[":8888<br/>Remote Pricing"]
+    IA -->|"A2A"| RIA[":8888<br/>Remote Impact Assessment"]
 ```
 
 ---
 
 ## Your learning path
 
-Each exercise adds a new capability, guided by a persona facing a real fleet operations problem:
+Each exercise adds a new capability, guided by a persona facing a real IT operations problem:
 
 | Exercise | Persona | Problem | Pattern you learn |
 |----------|---------|---------|-------------------|
-| **1** | **Maya** — Rental desk | Free-text returns pile up; status is manual | `@Agent` + `@ToolBox` — your first agent |
-| **2** | **Chris** — Ops lead | Maintenance decisions need policy, not code | `@SystemMessage` as policy declaration |
+| **1** | **Sam** — NOC analyst | Free-text reports pile up; triage is manual | `@Agent` + `@ToolBox` — your first agent |
+| **2** | **Chris** — Ops lead | Diagnostic decisions need policy, not code | `@SystemMessage` as policy declaration |
 | **3** | **Chris** — Ops lead | Three analyses must run concurrently | `@ParallelMapperAgent` + `@Output` |
-| **4** | **Priya** — Fleet manager | Severe damage needs adaptive disposition | `@SupervisorAgent` orchestration |
+| **4** | **Priya** — IT service mgr | Critical incidents need adaptive escalation | `@SupervisorAgent` orchestration |
 | **5** | **Jordan** — Platform engineer | Must ship governed code; copilots hallucinate | **IBM Bob** + `AGENTS.md` |
-| **6** | **Alex** — Compliance officer | High-value cars need approval + audit trail | **HITL** + OpenTelemetry |
-| **7** | **Riley** — Pricing team | Valuation is a separate service/team | **A2A** remote pricing agent |
+| **6** | **Alex** — Compliance officer | P1 incidents need approval + audit trail | **HITL** + OpenTelemetry |
+| **7** | **Riley** — SRE lead | Impact assessment is a separate team | **A2A** remote impact agent |
 
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses IBM Bob to govern and validate the system you built.  
@@ -97,22 +97,22 @@ After this lab you will be able to:
 
 ---
 
-## The seeded fleet
+## The seeded incidents
 
-When you start the app in Exercise 1, you'll see 8 cars in the Fleet Status UI:
+When you start the app in Exercise 1, you'll see 8 incidents in the Incident Dashboard:
 
-| Car # | Make | Model | Year | Initial Status |
-|-------|------|-------|------|----------------|
-| 1 | Mercedes-Benz | C-Class | 2024 | RENTED |
-| 2 | BMW | X5 | 2025 | IN_MAINTENANCE |
-| 3 | Audi | Q4 | 2025 | RENTED |
-| 4 | Nissan | Altima | 2018 | AT_CLEANING |
-| 5 | Ford | Focus | 2014 | RENTED |
-| 6 | Toyota | Corolla | 2023 | RENTED |
-| 7 | Honda | Civic | 2022 | RENTED |
-| 8 | Ford | F-150 | 2024 | IN_MAINTENANCE |
+| Incident # | System | Service | Priority | Initial Status |
+|------------|--------|---------|----------|----------------|
+| 1 | payment-gateway | checkout-api | P2 | OPEN |
+| 2 | auth-service | user-login | P1 | IN_PROGRESS |
+| 3 | inventory-db | stock-sync | P3 | OPEN |
+| 4 | cdn-edge | static-assets | P4 | TRIAGING |
+| 5 | email-service | notification-api | P2 | OPEN |
+| 6 | search-engine | product-search | P3 | OPEN |
+| 7 | monitoring | alerting-api | P2 | OPEN |
+| 8 | api-gateway | rate-limiter | P1 | IN_PROGRESS |
 
-You'll use these cars throughout the exercises — returning them with different feedback to trigger different agent behaviors.
+You'll use these incidents throughout the exercises — processing them with different reports to trigger different agent behaviors.
 
 ---
 

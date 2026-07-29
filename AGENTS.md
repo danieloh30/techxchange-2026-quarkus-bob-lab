@@ -15,13 +15,13 @@
 | Field | Value |
 |-------|-------|
 | Name | `techxchange-2026-quarkus-bob-lab` |
-| Company | Miles of Smiles (fictional car rental company) |
+| Company | Apex Systems (fictional IT services company) |
 | Lab event | IBM TechXchange 2026 — 90-minute hands-on lab |
 | Runtime | IBM Enterprise Build of Quarkus 3.37.4 / Java 25 |
 | AI extension | `quarkus-langchain4j` 1.12.0 (`io.quarkiverse.langchain4j`) |
 | LLM | OpenAI `gpt-4o` via `${OPENAI_API_KEY}`; temperature = 0 |
 | Build tool | Maven (wrapper `./mvnw`) |
-| Main package | `com.carmanagement` |
+| Main package | `com.incidentmanagement` |
 
 ---
 
@@ -93,19 +93,19 @@ public class WidgetTool {
 
 ```
 exercises/
-├── 01-first-agents/solution          CleaningAgent + CleaningTool  [port 8080]
+├── 01-first-agents/solution          TriageAgent + TriageTool          [port 8080]
 ├── 02-workflow-patterns/
-│   ├── solution-sequence             @SequenceAgent chain           [port 8080]
-│   └── solution-composed             parallel + conditional          [port 8080]
-├── 03-supervisor/solution            FleetSupervisorAgent            [port 8080]
-├── 04-ibm-bob/solution               full supervisor stack (Bob lab) [port 8080]
+│   ├── solution-sequence             @SequenceAgent chain               [port 8080]
+│   └── solution-composed             parallel + conditional              [port 8080]
+├── 03-supervisor/solution            IncidentSupervisorAgent             [port 8080]
+├── 04-ibm-bob/solution               full supervisor stack (Bob lab)     [port 8080]
 ├── 05-mcp/
-│   ├── solution                      MCP client (@McpToolBox)        [port 8080]
-│   └── weather-mcp-server            MCP SSE server                  [port 8081]
-├── 06-hitl-observability/solution    HITL + OTel + LGTM              [port 8080]
+│   ├── solution                      MCP client (@McpToolBox)            [port 8080]
+│   └── weather-mcp-server            MCP SSE server                      [port 8081]
+├── 06-hitl-observability/solution    HITL + OTel + LGTM                  [port 8080]
 └── 07-a2a/solution/
-    ├── multi-agent-system            A2A client + supervisor         [port 8080]
-    └── remote-a2a-agent              A2A pricing service             [port 8888]
+    ├── multi-agent-system            A2A client + supervisor             [port 8080]
+    └── remote-a2a-agent              A2A impact assessment service       [port 8888]
 ```
 
 ---
@@ -114,20 +114,20 @@ exercises/
 
 | Interface | File | Role | outputKey |
 |-----------|------|------|-----------|
-| `CleaningAgent` | `agents/CleaningAgent.java` | Requests cleaning via `CleaningTool` | `analysisResult` |
-| `MaintenanceAgent` | `agents/MaintenanceAgent.java` | Plans maintenance services (no tool, returns plan) | `analysisResult` |
-| `DispositionAgent` | `agents/DispositionAgent.java` | Decides SCRAP / SELL / DONATE / KEEP | — |
-| `PricingAgent` | `agents/PricingAgent.java` | Estimates car market value | — |
-| `FeedbackAnalysisAgent` | `agents/FeedbackAnalysisAgent.java` | Classifies feedback by task type | `analysisResult` |
-| `CarConditionFeedbackAgent` | `agents/CarConditionFeedbackAgent.java` | Sets final car assignment + condition | — |
-| `FleetSupervisorAgent` | `agents/FleetSupervisorAgent.java` | `@SupervisorAgent` — orchestrates sub-agents | `supervisorDecision` |
+| `TriageAgent` | `agents/TriageAgent.java` | Requests triage via `TriageTool` | `analysisResult` |
+| `DiagnosticAgent` | `agents/DiagnosticAgent.java` | Plans diagnostic actions (no tool, returns plan) | `analysisResult` |
+| `EscalationAgent` | `agents/EscalationAgent.java` | Decides ESCALATE_P1 / ASSIGN_TEAM / WORKAROUND / CLOSE | `escalationAction` |
+| `ImpactAgent` | `agents/ImpactAgent.java` | Estimates business impact and SLA cost | `businessImpact` |
+| `IncidentAnalysisAgent` | `agents/IncidentAnalysisAgent.java` | Classifies incident by task type | `incidentAnalysis` |
+| `ResolutionAgent` | `agents/ResolutionAgent.java` | Sets final incident action + resolution | `incidentOutcome` |
+| `IncidentSupervisorAgent` | `agents/IncidentSupervisorAgent.java` | `@SupervisorAgent` — orchestrates sub-agents | `supervisorDecision` |
 
 ### Workflows
 
 | Interface | Annotation | Sub-agents |
 |-----------|------------|------------|
-| `FeedbackAnalysisWorkflow` | `@ParallelMapperAgent` | `FeedbackAnalysisAgent` × 3 tasks |
-| `CarProcessingWorkflow` | `@SequenceAgent` | `FeedbackAnalysisWorkflow` → `FleetSupervisorAgent` → `CarConditionFeedbackAgent` |
+| `IncidentAnalysisWorkflow` | `@ParallelMapperAgent` | `IncidentAnalysisAgent` × 3 tasks |
+| `IncidentProcessingWorkflow` | `@SequenceAgent` | `IncidentAnalysisWorkflow` → `IncidentSupervisorAgent` → `ResolutionAgent` |
 
 ---
 
@@ -135,12 +135,12 @@ exercises/
 
 | Class | Key fields |
 |-------|-----------|
-| `CarInfo` (Panache entity) | `id` (Long, auto), `make`, `model`, `year`, `status` (`CarStatus`), `condition` |
-| `CarStatus` (enum) | `RENTED`, `AVAILABLE`, `AT_CLEANING`, `IN_MAINTENANCE`, `PENDING_DISPOSITION` |
-| `CarAssignment` (enum) | `KEEP`, `SCRAP`, `SELL`, `DONATE` |
-| `FeedbackAnalysisResults` (record) | `cleaningAnalysis`, `maintenanceAnalysis`, `dispositionAnalysis` |
-| `FeedbackTask` (record) | `taskType` (`FeedbackType`), `instructions` |
-| `CarConditions` (record) | `generalCondition`, `carAssignment` |
+| `IncidentInfo` (Panache entity) | `id` (Long, auto), `system` (column: system_name), `service`, `priority`, `status` (`IncidentStatus`), `description` |
+| `IncidentStatus` (enum) | `OPEN`, `TRIAGING`, `IN_PROGRESS`, `ESCALATED`, `RESOLVED` |
+| `IncidentAction` (enum) | `ESCALATE`, `INVESTIGATE`, `TRIAGE`, `RESOLVE` |
+| `IncidentAnalysisResults` (record) | `severityAnalysis`, `impactAnalysis`, `resolutionAnalysis` |
+| `AnalysisTask` (record) | `analysisType` (`AnalysisType`), `systemInstructions` |
+| `IncidentOutcome` (record) | `resolution`, `incidentAction` |
 
 ---
 
@@ -151,7 +151,7 @@ exercises/
 3. **`@ToolBox` and `@Tool` only.** Do not reference tools via constructor injection in agent interfaces.
 4. **`outputKey` is mandatory on any agent used inside a workflow.** Omitting it breaks `AgenticScope` resolution.
 5. **All tools that mutate JPA entities must be `@Transactional`.**
-6. **Do not log full customer feedback strings** at INFO level — log only car number and status transition.
+6. **Do not log full incident report strings** at INFO level — log only incident number and status transition.
 7. **No secrets in `@SystemMessage` / `@UserMessage`.** Use environment variable references in `application.properties`.
 8. **Approval gate first:** Bob must produce a diff/plan and wait for human approval before writing files.
 9. **Tests are part of definition of done** — any agent or tool change requires a matching `@QuarkusTest`.

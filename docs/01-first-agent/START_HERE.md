@@ -1,14 +1,14 @@
-# Exercise 1 — Your First Agent: CleaningAgent + CleaningTool
+# Exercise 1 — Your First Agent: TriageAgent + TriageTool
 
 <span class="badge badge--code-along">Code-Along</span>
 
 **Timebox:** 15 minutes  
-**Persona:** Maya — Rental desk manager  
+**Persona:** Sam — NOC analyst  
 **You work in:** `lab/` (keep Quarkus running — hot reload)  
 **Files to edit:**
 
-- `lab/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java`
-- `lab/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/agents/TriageAgent.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/tools/TriageTool.java`
 
 !!! tip "Solution fallback"
     [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution) — open if stuck.
@@ -17,7 +17,7 @@
 
 ## The goal
 
-By the end of this exercise, returning a dirty car flips its status to `AT_CLEANING` and shows a tool call in the logs. Returning a clean car produces `CLEANING_NOT_REQUIRED` with no tool call.
+By the end of this exercise, processing an incident with a critical report flips its status to `TRIAGING` and shows a tool call in the logs. Processing an incident with a minor report produces `TRIAGE_NOT_REQUIRED` with no tool call.
 
 This exercise introduces the three-part `@Agent` anatomy: **interface declaration**, **@SystemMessage** (LLM policy), and **@ToolBox** (tool wiring).
 
@@ -31,37 +31,37 @@ export OPENAI_API_KEY=sk-your-lab-key-here
 ./mvnw quarkus:dev
 ```
 
-Open **http://localhost:8080** — you'll see the Fleet Status UI with 8 seeded cars but no agent behavior yet (returns will fail — that's expected, you haven't wired the agents).
+Open **http://localhost:8080** — you'll see the Incident Dashboard with 8 seeded incidents but no agent behavior yet (processing will fail — that's expected, you haven't wired the agents).
 
 ---
 
-## Step 1 — Implement `CleaningAgent` (5 min)
+## Step 1 — Implement `TriageAgent` (5 min)
 
-Open [`CleaningAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/CleaningAgent.java).
+Open [`TriageAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/TriageAgent.java).
 
 Replace the `// TODO` block with the following code **exactly**:
 
 ```java
 @SystemMessage("""
-    You handle intake for the cleaning department of a car rental company.
-    It is your job to submit a request to the provided requestCleaning function
-    to take action based on the provided feedback.
-    Be specific about what services are needed.
-    If no cleaning is needed based on the feedback, respond with "CLEANING_NOT_REQUIRED".
+    You handle intake for the triage department of an IT incident management system.
+    It is your job to submit a request to the provided requestTriage function
+    to take action based on the provided incident report.
+    Be specific about what triage actions are needed.
+    If no triage action is needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
     """)
 @UserMessage("""
-    Car Information:
-    Make: {carInfo.make}
-    Model: {carInfo.model}
-    Year: {carInfo.year}
-    Car Number: {carNumber}
+    Incident Information:
+    System: {incidentInfo.system}
+    Service: {incidentInfo.service}
+    Priority: P{incidentInfo.priority}
+    Incident Number: {incidentNumber}
 
-    Feedback: {feedback}
+    Report: {report}
     """)
-@Agent(description = "Cleaning specialist. Determines what cleaning services are needed.",
+@Agent(description = "Triage specialist. Determines initial triage and team assignment.",
        outputKey = "analysisResult")
-@ToolBox(CleaningTool.class)
-String processCleaning(CarInfo carInfo, Integer carNumber, String feedback);
+@ToolBox(TriageTool.class)
+String processTriage(IncidentInfo incidentInfo, Integer incidentNumber, String report);
 ```
 
 Add these imports at the top (below the existing ones):
@@ -80,50 +80,50 @@ import dev.langchain4j.service.UserMessage;
 
 ---
 
-## Step 2 — Implement `CleaningTool` (4 min)
+## Step 2 — Implement `TriageTool` (4 min)
 
-Open [`CleaningTool.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/tools/CleaningTool.java).
+Open [`TriageTool.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/tools/TriageTool.java).
 
 Add the following method inside the class (replace the `// TODO` block):
 
 ```java
-@Tool("Requests a cleaning with the specified options")
+@Tool("Requests initial triage with the specified options")
 @Transactional
-public String requestCleaning(
-        Integer carNumber,
-        String carMake,
-        String carModel,
-        Integer carYear,
-        boolean exteriorWash,
-        boolean interiorCleaning,
-        boolean detailing,
-        boolean waxing,
-        String requestText) {
+public String requestTriage(
+        Integer incidentNumber,
+        String system,
+        String service,
+        Integer priority,
+        boolean assignOnCall,
+        boolean notifyStakeholders,
+        boolean createWarRoom,
+        boolean linkRelatedIncidents,
+        String triageNotes) {
 
-    CarInfo carInfo = CarInfo.findById(carNumber);
-    if (carInfo != null) {
-        carInfo.status = CarStatus.AT_CLEANING;
-        carInfo.persist();
+    IncidentInfo incidentInfo = IncidentInfo.findById(incidentNumber);
+    if (incidentInfo != null) {
+        incidentInfo.status = IncidentStatus.TRIAGING;
+        incidentInfo.persist();
     }
 
     StringBuilder summary = new StringBuilder();
-    summary.append("Cleaning requested for ").append(carMake).append(" ")
-           .append(carModel).append(" (").append(carYear).append("), Car #")
-           .append(carNumber).append(":\n");
-    if (exteriorWash)    summary.append("- Exterior wash\n");
-    if (interiorCleaning) summary.append("- Interior cleaning\n");
-    if (detailing)       summary.append("- Detailing\n");
-    if (waxing)          summary.append("- Waxing\n");
-    if (requestText != null && !requestText.isEmpty())
-        summary.append("Notes: ").append(requestText);
+    summary.append("Triage requested for ").append(system).append("/")
+           .append(service).append(" (P").append(priority).append("), Incident #")
+           .append(incidentNumber).append(":\n");
+    if (assignOnCall)        summary.append("- Assign on-call engineer\n");
+    if (notifyStakeholders)  summary.append("- Notify stakeholders\n");
+    if (createWarRoom)       summary.append("- Create war room\n");
+    if (linkRelatedIncidents) summary.append("- Link related incidents\n");
+    if (triageNotes != null && !triageNotes.isEmpty())
+        summary.append("Notes: ").append(triageNotes);
 
-    Log.info("  └─ CleaningTool activated for car #" + carNumber);
+    Log.info("  └─ TriageTool activated for incident #" + incidentNumber);
     return summary.toString();
 }
 ```
 
-??? info "Why `@Transactional` here but not on `CleaningAgent`?"
-    `CarInfo.persist()` writes to the PostgreSQL database. JPA requires an active transaction for mutations. `CleaningAgent` is an LLM-backed interface (no JPA operations) — adding `@Transactional` there would have no effect and would mislead future readers.
+??? info "Why `@Transactional` here but not on `TriageAgent`?"
+    `IncidentInfo.persist()` writes to the PostgreSQL database. JPA requires an active transaction for mutations. `TriageAgent` is an LLM-backed interface (no JPA operations) — adding `@Transactional` there would have no effect and would mislead future readers.
 
 ??? info "Why `@ApplicationScoped` on the tool class?"
     Tools are CDI beans injected into the LLM call context. They must be scoped. `@ApplicationScoped` is the correct scope — tools hold no per-request state.
@@ -138,44 +138,44 @@ Before testing, trace the execution path in your head:
 
 ```mermaid
 sequenceDiagram
-    participant App as processCleaning()
+    participant App as processTriage()
     participant LLM as LLM
-    participant Tool as CleaningTool
+    participant Tool as TriageTool
 
-    App->>LLM: @UserMessage (car info + feedback)
-    LLM->>LLM: Decides: "needs cleaning"
-    LLM->>Tool: tool_call: requestCleaning(carNumber=5, ...)
-    Tool->>Tool: carInfo.status = AT_CLEANING
-    Tool-->>LLM: "Cleaning requested for Ford Focus..."
+    App->>LLM: @UserMessage (incident info + report)
+    LLM->>LLM: Decides: "needs triage"
+    LLM->>Tool: tool_call: requestTriage(incidentNumber=5, ...)
+    Tool->>Tool: incidentInfo.status = TRIAGING
+    Tool-->>LLM: "Triage requested for email-service/notification-api..."
     LLM-->>App: Final response → AgenticScope["analysisResult"]
 ```
 
-The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If feedback says "car looks fine", the LLM produces `CLEANING_NOT_REQUIRED` directly — no tool call.
+The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If the report says "false alarm, no action needed", the LLM produces `TRIAGE_NOT_REQUIRED` directly — no tool call.
 
 ---
 
 ## Step 4 — Test it (4 min)
 
-Open **http://localhost:8080** and return Car **#5** (Ford Focus, status: `RENTED`) with:
+Open **http://localhost:8080** and process Incident **#5** (email-service/notification-api, status: `OPEN`) with:
 
 ```
-Car has dog hair all over the back seat and muddy footwells
+Order confirmation emails failing for 30% of customers, bounce rate spiking
 ```
 
 **Expected terminal logs:**
 ```
-[dev.langchain4j.agentic] ← LLM: tool_call requestCleaning(carNumber=5, interiorCleaning=true, ...)
-  └─ CleaningTool activated for car #5
+[dev.langchain4j.agentic] ← LLM: tool_call requestTriage(incidentNumber=5, assignOnCall=true, ...)
+  └─ TriageTool activated for incident #5
 ```
 
-**Expected UI:** Car #5 status → `AT_CLEANING`
+**Expected UI:** Incident #5 status → `TRIAGING`
 
-Now return Car **#6** (Toyota Corolla, status: `RENTED`) with:
+Now process Incident **#6** (search-engine/product-search, status: `OPEN`) with:
 ```
-Car looks perfect, no issues at all
+False alarm, search relevance is back to normal after cache refresh
 ```
 
-**Expected:** Response contains `CLEANING_NOT_REQUIRED`; status stays `AVAILABLE`; **no** tool call in logs.
+**Expected:** Response contains `TRIAGE_NOT_REQUIRED`; status stays `RESOLVED`; **no** tool call in logs.
 
 ---
 
@@ -183,8 +183,8 @@ Car looks perfect, no issues at all
 
 ## :material-check-circle: Done when
 
-- [ ] Tool call visible in logs for dirty-car return; status = `AT_CLEANING`
-- [ ] No tool call for clean-car return; status = `AVAILABLE`
+- [ ] Tool call visible in logs for critical incident; status = `TRIAGING`
+- [ ] No tool call for false-alarm report; status = `RESOLVED`
 - [ ] You can explain from memory: why `@Transactional` on the tool but not the agent
 - [ ] You can explain from memory: what `outputKey` does and what breaks without it
 
