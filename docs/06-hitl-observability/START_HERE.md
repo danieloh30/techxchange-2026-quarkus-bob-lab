@@ -64,8 +64,8 @@ Complete checkout failure, all transactions failing, revenue loss confirmed at $
 ```
 
 UI shows **"Awaiting Approval"**:
-- **Approve** → status becomes `ESCALATED`
-- Repeat with same incident (reset DB or use Incident #3) → **Reject** → status becomes `IN_PROGRESS`
+- **Escalate to Management** → status becomes `ESCALATED`
+- Repeat with same incident (reset DB or use Incident #3) → **Keep at Team Level** → status becomes `IN_PROGRESS`
 
 <img src="../../images/hitl-approval-modal.png" alt="Human-in-the-loop approval modal" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
