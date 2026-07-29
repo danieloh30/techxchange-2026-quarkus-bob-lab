@@ -59,6 +59,3 @@ Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the s
 | `docs/` | These lab instructions (this site) |
 | `exercises/` | Completed Quarkus solution projects |
 
-## Upstream
-
-Exercise solutions are adapted from the community [Quarkus LangChain4j Workshop](https://github.com/quarkusio/quarkus-workshop-langchain4j). See [Attribution](ATTRIBUTION.md).

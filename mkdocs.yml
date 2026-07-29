@@ -89,7 +89,6 @@ nav:
       - "6. HITL + observability": 06-hitl-observability/START_HERE.md
       - "7. A2A": 07-a2a/START_HERE.md
   - Instructor guide: LAB_GUIDE.md
-  - Attribution: ATTRIBUTION.md
 
 extra_css:
   - stylesheets/extra.css
