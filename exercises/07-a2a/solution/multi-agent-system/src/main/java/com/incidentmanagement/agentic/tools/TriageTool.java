@@ -1,85 +1,47 @@
 package com.incidentmanagement.agentic.tools;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+
+import com.incidentmanagement.model.IncidentInfo;
+import com.incidentmanagement.model.IncidentStatus;
 import dev.langchain4j.agent.tool.Tool;
 import io.quarkus.logging.Log;
 
-/**
- * Tool for requesting triage operations on incidents.
- */
 @ApplicationScoped
 public class TriageTool {
 
-    /**
-     * Requests a triage action based on the provided parameters.
-     *
-     * @param incidentNumber The incident number
-     * @param incidentSystem The affected system
-     * @param incidentService The affected service
-     * @param incidentPriority The incident priority
-     * @param categorize Whether to categorize the incident
-     * @param assessImpact Whether to assess impact
-     * @param validatePriority Whether to validate priority
-     * @param assignTeam Whether to assign a response team
-     * @param requestText The triage request text
-     * @return A summary of the triage request
-     */
-    @Tool("Requests a triage action with the specified options")
+    @Tool("Requests initial triage with the specified options")
+    @Transactional
     public String requestTriage(
             Integer incidentNumber,
-            String incidentSystem,
-            String incidentService,
-            String incidentPriority,
-            boolean categorize,
-            boolean assessImpact,
-            boolean validatePriority,
-            boolean assignTeam,
-            String requestText) {
+            String system,
+            String service,
+            Integer priority,
+            boolean assignOnCall,
+            boolean notifyStakeholders,
+            boolean createWarRoom,
+            boolean linkRelatedIncidents,
+            String triageNotes) {
 
-        Log.info("  TriageAgent activated");
-        String result = generateTriageSummary(incidentNumber, incidentSystem, incidentService, incidentPriority,
-                                              categorize, assessImpact, validatePriority,
-                                              assignTeam, requestText);
-        Log.debug("TriageTool result: " + result);
-        return result;
-    }
-
-    private String generateTriageSummary(
-            Integer incidentNumber,
-            String incidentSystem,
-            String incidentService,
-            String incidentPriority,
-            boolean categorize,
-            boolean assessImpact,
-            boolean validatePriority,
-            boolean assignTeam,
-            String requestText) {
+        IncidentInfo incidentInfo = IncidentInfo.findById(incidentNumber);
+        if (incidentInfo != null) {
+            incidentInfo.status = IncidentStatus.TRIAGING;
+            incidentInfo.persist();
+        }
 
         StringBuilder summary = new StringBuilder();
-        summary.append("Triage requested for ").append(incidentSystem).append(" / ")
-               .append(incidentService).append(" [").append(incidentPriority).append("], Incident #")
+        summary.append("Triage requested for ").append(system).append("/")
+               .append(service).append(" (P").append(priority).append("), Incident #")
                .append(incidentNumber).append(":\n");
+        if (assignOnCall)        summary.append("- Assign on-call engineer\n");
+        if (notifyStakeholders)  summary.append("- Notify stakeholders\n");
+        if (createWarRoom)       summary.append("- Create war room\n");
+        if (linkRelatedIncidents) summary.append("- Link related incidents\n");
+        if (triageNotes != null && !triageNotes.isEmpty())
+            summary.append("Notes: ").append(triageNotes);
 
-        if (categorize) {
-            summary.append("- Categorize incident\n");
-        }
-
-        if (assessImpact) {
-            summary.append("- Assess impact\n");
-        }
-
-        if (validatePriority) {
-            summary.append("- Validate priority\n");
-        }
-
-        if (assignTeam) {
-            summary.append("- Assign response team\n");
-        }
-
-        if (requestText != null && !requestText.isEmpty()) {
-            summary.append("Additional notes: ").append(requestText);
-        }
-
+        Log.info("  └─ TriageTool activated for incident #" + incidentNumber);
         return summary.toString();
     }
 }

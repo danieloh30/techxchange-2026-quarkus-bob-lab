@@ -20,7 +20,7 @@ public interface HumanApprovalAgent {
             String incidentService,
             String incidentPriority,
             Integer incidentNumber,
-            String revenueImpact,
+            String businessImpact,
             String escalationProposal,
             String escalationReason,
             String incidentDescription,
@@ -37,7 +37,7 @@ public interface HumanApprovalAgent {
             // Create proposal and get CompletableFuture that completes when human decides
             CompletableFuture<ApprovalProposal> approvalFuture =
                     approvalService.createProposalAndWaitForDecision(
-                            incidentNumber, incidentSystem, incidentService, incidentPriority, revenueImpact,
+                            incidentNumber, incidentSystem, incidentService, incidentPriority, businessImpact,
                             escalationProposal, escalationReason, incidentDescription, feedback
                     );
 

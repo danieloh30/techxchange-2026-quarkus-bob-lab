@@ -4,49 +4,43 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
-/**
- * Agent that determines how to escalate an incident based on impact, priority, and severity.
- */
 public interface EscalationAgent {
 
     @SystemMessage("""
         You are an incident escalation specialist for an IT incident management system.
-        Your job is to determine the best escalation action based on the incident's impact, priority, and affected systems.
+        Your job is to determine the best escalation action based on the incident's impact,
+        severity, priority, and business consequences.
 
         Escalation Options:
-        - ESCALATE_TO_VP: Incident has severe business impact on revenue-critical systems
-        - ESCALATE_TO_CTO: Incident involves critical infrastructure failure or security breach
-        - KEEP_AT_TEAM_LEVEL: Incident can be handled by the current team
-        - RESOLVE: Incident is minor and can be resolved immediately
+        - ESCALATE_P1: Critical incident requiring VP/exec attention and war room
+        - ASSIGN_TEAM: Route to specific engineering team for resolution
+        - WORKAROUND: Apply temporary mitigation while root cause is investigated
+        - CLOSE: Incident resolved or no action needed
 
         Decision Criteria:
-        - If estimated revenue impact > $500,000: Consider ESCALATE_TO_VP or ESCALATE_TO_CTO
-        - If incident involves security breach or data loss: ESCALATE_TO_CTO
-        - If P1 on revenue-critical system with high impact: ESCALATE_TO_VP
-        - If impact is moderate and team can handle: KEEP_AT_TEAM_LEVEL
-        - If impact is minimal: RESOLVE
+        - If estimated revenue loss > $10,000/hr: Consider ESCALATE_P1 or ASSIGN_TEAM
+        - If P1 with cascading failures: ESCALATE_P1
+        - If P2 with contained impact: ASSIGN_TEAM
+        - If workaround available and impact is temporary: WORKAROUND
+        - If false alarm or already resolved: CLOSE
 
         Provide your recommendation with a clear explanation of the reasoning.
         """)
     @UserMessage("""
-        Determine the escalation path for this incident:
-        - System: {incidentSystem}
-        - Service: {incidentService}
-        - Priority: {incidentPriority}
+        Determine the escalation action for this incident:
+        - System: {system}
+        - Service: {service}
+        - Priority: P{priority}
         - Incident Number: {incidentNumber}
-        - Current Description: {incidentDescription}
-        - Estimated Revenue Impact: {revenueImpact}
-        - Incident Report: {feedback}
+        - Description: {incidentDescription}
+        - Business Impact Assessment: {businessImpact}
+        - Incident Report: {report}
 
-        Provide your escalation recommendation (ESCALATE_TO_VP/ESCALATE_TO_CTO/KEEP_AT_TEAM_LEVEL/RESOLVE) and explanation.
+        Provide your escalation recommendation (ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE) and explanation.
         """)
-    @Agent(outputKey = "escalationAction", description = "Incident escalation specialist. Determines how to escalate an incident based on impact and priority.")
-    String processEscalation(
-            String incidentSystem,
-            String incidentService,
-            String incidentPriority,
-            Integer incidentNumber,
-            String incidentDescription,
-            String revenueImpact,
-            String feedback);
+    @Agent(outputKey = "escalationAction",
+           description = "Incident escalation specialist. Determines escalation path based on impact and severity.")
+    String processEscalation(String system, String service, Integer priority,
+                              Integer incidentNumber, String incidentDescription,
+                              String businessImpact, String report);
 }

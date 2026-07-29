@@ -39,7 +39,7 @@ public class ApprovalProposal extends PanacheEntity {
     /**
      * Estimated revenue impact
      */
-    public String revenueImpact;
+    public String businessImpact;
 
     /**
      * Proposed escalation action (ESCALATE_TO_VP, ESCALATE_TO_CTO, KEEP_AT_TEAM_LEVEL)

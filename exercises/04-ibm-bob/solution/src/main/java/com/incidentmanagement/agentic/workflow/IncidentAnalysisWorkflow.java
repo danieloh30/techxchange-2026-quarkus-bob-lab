@@ -32,7 +32,7 @@ public interface IncidentAnalysisWorkflow {
             List<AnalysisTask> tasks,
             IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String feedback);
+            String report);
 
     /**
      * Output method that transforms the parallel analysis results into a structured object.

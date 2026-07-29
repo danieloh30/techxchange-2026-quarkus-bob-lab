@@ -31,10 +31,10 @@ public class IncidentManagementService {
      * This method runs asynchronously to handle workflow pauses for human approval.
      *
      * @param incidentNumber The incident number
-     * @param feedback The incident report details
+     * @param report The incident report details
      * @return Uni that completes with the result of the processing
      */
-    public Uni<String> processIncident(Integer incidentNumber, String feedback) {
+    public Uni<String> processIncident(Integer incidentNumber, String report) {
 
         return Uni.createFrom().item(() -> {
             IncidentInfo incidentInfo = findIncidentInfo(incidentNumber);
@@ -55,7 +55,7 @@ public class IncidentManagementService {
                     tasks,
                     incidentInfo,
                     incidentNumber,
-                    feedback);
+                    report);
 
             Log.info("ResolutionAgent updating...");
 

@@ -7,10 +7,6 @@ import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
-/**
- * Agent that analyzes incident processing results to determine the final resolution and action.
- * This is the final decision-maker that interprets all previous agent outputs.
- */
 public interface ResolutionAgent {
 
     @SystemMessage("""
@@ -23,29 +19,27 @@ public interface ResolutionAgent {
         }
 
         Rules:
-        - incidentAction: Check the ACTUAL EscalationAgent decision in supervisorDecision, not just the analysis
-        - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM/WORKAROUND (but NOT CLOSE) → ESCALATE
-        - Else if impactAnalysis ≠ "DIAGNOSTIC_NOT_REQUIRED" → INVESTIGATE
-        - Else if severityAnalysis ≠ "TRIAGE_NOT_REQUIRED" → TRIAGE
+        - Check the ACTUAL EscalationAgent decision in supervisorDecision, not just the analysis
+        - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM (but NOT CLOSE) → ESCALATE
+        - Else if resolutionAnalysis ≠ "ESCALATION_NOT_REQUIRED" → INVESTIGATE
+        - Else if severityAnalysis ≠ "SEVERITY_LOW" → TRIAGE
         - Else → RESOLVE
-        - IMPORTANT: If EscalationAgent decided CLOSE, do NOT assign ESCALATE - check investigation/triage instead
-        - resolution: Summarize the action and reason
+        - IMPORTANT: If EscalationAgent decided CLOSE, do NOT assign ESCALATE — check diagnostic/triage instead
+        - resolution: Summarize the action and reason in plain language
         """)
     @UserMessage("""
-            Incident: {incidentInfo.system} - {incidentInfo.service} [{incidentInfo.priority}] (#{incidentNumber})
+        Incident: P{incidentInfo.priority} {incidentInfo.system}/{incidentInfo.service} (#{incidentNumber})
 
-            Supervisor Decision: {supervisorDecision}
+        Supervisor Decision: {supervisorDecision}
 
-            Incident Analysis Results:
-            - Resolution: {incidentAnalysisResults.resolutionAnalysis}
-            - Impact: {incidentAnalysisResults.impactAnalysis}
-            - Severity: {incidentAnalysisResults.severityAnalysis}
-            """)
-    @Agent(description = "Final incident resolution analyzer. Determines the incident's resolution and action based on all analysis.",
-            outputKey = "incidentOutcome")
-    IncidentOutcome analyzeForResolution(
-            IncidentInfo incidentInfo,
-            Integer incidentNumber,
-            IncidentAnalysisResults incidentAnalysisResults,
-            String supervisorDecision);
+        Incident Analysis Results:
+        - Resolution: {incidentAnalysisResults.resolutionAnalysis}
+        - Impact: {incidentAnalysisResults.impactAnalysis}
+        - Severity: {incidentAnalysisResults.severityAnalysis}
+        """)
+    @Agent(description = "Final incident resolution analyzer. Determines the incident's outcome and action based on all analysis.",
+           outputKey = "incidentOutcome")
+    IncidentOutcome analyzeForResolution(IncidentInfo incidentInfo, Integer incidentNumber,
+                                          IncidentAnalysisResults incidentAnalysisResults,
+                                          String supervisorDecision);
 }

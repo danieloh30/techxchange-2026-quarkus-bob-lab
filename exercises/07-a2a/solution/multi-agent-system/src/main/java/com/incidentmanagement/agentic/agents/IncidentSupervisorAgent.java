@@ -5,85 +5,76 @@ import com.incidentmanagement.model.IncidentAnalysisResults;
 import dev.langchain4j.agentic.declarative.SupervisorAgent;
 import dev.langchain4j.agentic.declarative.SupervisorRequest;
 
-/**
- * Supervisor agent that orchestrates the entire incident processing workflow.
- * Coordinates analysis agents and action agents based on incident severity.
- * Implements human-in-the-loop pattern for high-impact incident escalations.
- */
 public interface IncidentSupervisorAgent {
 
     @SupervisorAgent(
-        outputKey = "supervisorDecision",
-        subAgents = {
-            ImpactAgent.class,
-            EscalationProposalAgent.class,
-            HumanApprovalAgent.class,
-            EscalationAgent.class,
-            DiagnosticAgent.class,
-            TriageAgent.class
-        }
-    )
-    String superviseIncidentProcessing(
-        IncidentInfo incidentInfo,
-        Integer incidentNumber,
-        String report,
-        IncidentAnalysisResults incidentAnalysisResults
-    );
+            outputKey = "supervisorDecision",
+            subAgents = {
+                    ImpactAgent.class,
+                    EscalationAgent.class,
+                    DiagnosticAgent.class,
+                    TriageAgent.class
+            })
+    String superviseIncidentProcessing(IncidentInfo incidentInfo, Integer incidentNumber,
+                                        IncidentAnalysisResults incidentAnalysisResults);
 
-    @SupervisorRequest()
-    static String request(
-        IncidentInfo incidentInfo,
-        Integer incidentNumber,
-        String report,
-        IncidentAnalysisResults incidentAnalysisResults
-    ) {
+    @SupervisorRequest
+    static String request(IncidentInfo incidentInfo, Integer incidentNumber,
+                          IncidentAnalysisResults incidentAnalysisResults) {
+
         boolean escalationRequired = incidentAnalysisResults.resolutionAnalysis() != null &&
-                                     incidentAnalysisResults.resolutionAnalysis().toUpperCase().contains("ESCALATION_REQUIRED");
+                incidentAnalysisResults.resolutionAnalysis().toUpperCase().contains("ESCALATION_REQUIRED");
 
         String noEscalationMessage = """
-            Escalation is not required.
-            Proceed with normal investigation and triage workflow.
-            If investigation or triage is required, invoke the appropriate agents.
+                No escalation has been requested.
+
+                INSTRUCTIONS:
+                - DO NOT invoke ImpactAgent
+                - DO NOT invoke EscalationAgent
+                - Only invoke DiagnosticAgent if root cause analysis needed
+                - Only invoke TriageAgent if re-triage needed
                 """;
 
         String escalationMessage = """
-           ESCALATION_REQUIRED
+                The incident requires escalation.
 
-           Follow these steps:
+                STEP 1: Invoke ImpactAgent to assess business impact
+                STEP 2: Invoke EscalationAgent to decide escalation action (ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE)
+                STEP 3: If EscalationAgent decides CLOSE:
+                        - Invoke DiagnosticAgent if root cause analysis needed
+                        - Invoke TriageAgent if re-triage needed
 
-           1. Get revenue impact from ImpactAgent (keep $ format)
-           2. IF impact > $15,000 (HIGH-IMPACT):
-              - Invoke EscalationProposalAgent -> HumanApprovalAgent (workflow pauses)
-              - APPROVED: Use AI recommendation -> CLOSE->"RESOLVE_INCIDENT", ESCALATE->"ESCALATE_INCIDENT"
-              - REJECTED: Opposite of AI -> CLOSE->"ESCALATE_INCIDENT", ESCALATE->"RESOLVE_INCIDENT"
-           3. IF impact <= $15,000 (LOW-IMPACT):
-              - Invoke EscalationAgent directly
-              - CLOSE->"RESOLVE_INCIDENT", ESCALATE_P1/ASSIGN_TEAM->"ESCALATE_INCIDENT"
-           4. IF "RESOLVE_INCIDENT": Invoke DiagnosticAgent/TriageAgent as needed
+                IMPORTANT: When invoking EscalationAgent:
+                - Pass businessImpact as a STRING with the full assessment
+                - Use the EXACT format from ImpactAgent's response
 
-           CRITICAL: End with RESOLVE_INCIDENT or ESCALATE_INCIDENT
-           """;
+                Follow the decision logic in your system message carefully.
+                """;
 
-        return """
-            You are an incident supervisor for an IT incident management system. You coordinate action agents based on incident analysis.
+        return String.format("""
+                You are an incident supervisor for an IT incident management system. You coordinate action agents based on incident analysis.
 
-            The incident has already been analyzed and you have these inputs:
-            - severityAnalysis: What severity assessment was made (or "SEVERITY_LOW")
-            - impactAnalysis: What business impact was found (or "IMPACT_MINIMAL")
-            - resolutionAnalysis: Whether critical issues require escalation (or "ESCALATION_NOT_REQUIRED")
+                The incident has already been analyzed and you have these inputs:
+                - severityAnalysis: Severity classification (or "SEVERITY_LOW")
+                - impactAnalysis: Business impact assessment (or "IMPACT_MINIMAL")
+                - resolutionAnalysis: Whether critical issues require escalation (or "ESCALATION_NOT_REQUIRED")
 
-            Your job is to invoke the appropriate ACTION agents for this incident
+                Your job is to invoke the appropriate ACTION agents for this incident.
 
-            Incident: """ + incidentInfo.priority + " - " + incidentInfo.system + " / " + incidentInfo.service + " (#" + incidentNumber + ")" + """
+                Incident: P%d %s/%s (#%d)
+                Current Description: %s
 
-            Current Description: """ + incidentInfo.description + """
+                Severity Analysis: %s
+                Impact Analysis: %s
 
-            Report: """ + report + """
+                In particular, you have to follow these steps:
 
-            Severity Analysis: """ + incidentAnalysisResults.severityAnalysis() + """
-
-            Impact Analysis: """ + incidentAnalysisResults.impactAnalysis() + """
-
-            Resolution Analysis: """ + (escalationRequired ? escalationMessage : noEscalationMessage);
+                %s
+                """,
+                incidentInfo.priority, incidentInfo.system, incidentInfo.service,
+                incidentNumber, incidentInfo.description,
+                incidentAnalysisResults.severityAnalysis(),
+                incidentAnalysisResults.impactAnalysis(),
+                escalationRequired ? escalationMessage : noEscalationMessage);
     }
 }

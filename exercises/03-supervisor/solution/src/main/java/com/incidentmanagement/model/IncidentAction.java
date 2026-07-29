@@ -3,7 +3,7 @@ package com.incidentmanagement.model;
 /**
  * Enum representing the type of possible incident actions for incident processing.
  */
-public enum IncidentAssignment {
+public enum IncidentAction {
     ESCALATE,    // Incident needs to be escalated to higher authority
     INVESTIGATE, // Incident needs diagnostic investigation
     TRIAGE,      // Incident needs initial triage assessment
