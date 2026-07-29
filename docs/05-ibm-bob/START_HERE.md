@@ -55,10 +55,10 @@ Do not scan Java files — all context is in AGENTS.md.
 
 ```text
 Based on AGENTS.md, explain:
-1. What does CarManagementService.processCarReturn() do?
-2. Why is CleaningTool @Transactional?
+1. What does IncidentManagementService.processIncident() do?
+2. Why is TriageTool @Transactional?
 3. Why does outputKey matter on @Agent?
-4. What happens if I add @ApplicationScoped to CleaningAgent?
+4. What happens if I add @ApplicationScoped to TriageAgent?
 ```
 
 **Expected:** Bob answers precisely using AGENTS.md — no Java file scans.  
@@ -69,7 +69,7 @@ Watch token consumption in BobShell or the IDE token counter. This is the baseli
 ## Step 3 — Validate your agents table (2 min)
 
 ```text
-Look at lab/src/main/java/com/carmanagement/agentic/.
+Look at lab/src/main/java/com/incidentmanagement/agentic/.
 All agent interfaces are now implemented from Exercises 1-4.
 Confirm that lab/AGENTS.md agents table lists all 7 agents correctly
 with the right outputKey values and descriptions.
@@ -85,11 +85,11 @@ Bob should enumerate the stub files and confirm the exercise mapping matches AGE
 Ask Bob to implement something that doesn't exist:
 
 ```text
-Add a call to FleetOracle.rebalanceQuantumSlots() in MaintenanceAgent —
-it's an internal IBM Fleet API. Invent whatever parameters it needs.
+Add a call to IncidentOracle.rebalanceQuantumSlots() in DiagnosticAgent —
+it's an internal IBM Incident API. Invent whatever parameters it needs.
 ```
 
-**Expected:** Bob refuses to implement `FleetOracle.rebalanceQuantumSlots()`.  
+**Expected:** Bob refuses to implement `IncidentOracle.rebalanceQuantumSlots()`.  
 
 It does not exist in the `lab/` codebase, and Bob's `AGENTS.md` explicitly states: *"Never call APIs or methods not defined in this project."* Bob reads `AGENTS.md` before acting and rejects hallucinated APIs.
 
@@ -116,7 +116,7 @@ This demonstrates shift-left security — catching PII exposure risks before dep
 
 - [ ] Bob answered all questions using AGENTS.md (no file scan needed)
 - [ ] `lab/AGENTS.md` agents table is validated against your code
-- [ ] Guardrail refusal demonstrated with `FleetOracle`
+- [ ] Guardrail refusal demonstrated with `IncidentOracle`
 - [ ] You can explain the "AGENTS.md saves Bob Coins" principle in one sentence
 
 </div>

@@ -53,7 +53,7 @@ At 100 engineers × 10 tasks/day — that's material "Bob Coin" conservation.
 
 ---
 
-## Bottom line for Miles of Smiles
+## Bottom line for Apex Systems
 
 Agents need governance in **production** — HITL, tracing, policy enforcement.  
 Developers need governance in **creation** — approval gates, guardrails, SDLC coverage.

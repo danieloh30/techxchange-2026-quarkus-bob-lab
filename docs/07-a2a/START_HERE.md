@@ -1,9 +1,9 @@
-# Exercise 7 — A2A: Distributed Pricing Agent
+# Exercise 7 — A2A: Distributed Impact Assessment Agent
 
 <span class="badge badge--run-read">Run + Read</span>
 
 **Timebox:** 10 minutes  
-**Persona:** Riley — Pricing team lead  
+**Persona:** Riley — SRE team lead  
 **You work in:** `exercises/07-a2a/solution/` (run + read)
 
 !!! tip "Reference solution"
@@ -13,9 +13,9 @@
 
 ## The problem
 
-In Exercise 4, `PricingAgent` ran inside the main app — same process, same release cycle. But Riley's pricing team needs independent ownership: their own repo, their own release cadence, and the ability to serve other IBM systems beyond Miles of Smiles.
+In Exercise 4, `ImpactAgent` ran inside the main app — same process, same release cycle. But Riley's SRE team needs independent ownership: their own repo, their own release cadence, and the ability to serve other IBM systems beyond Apex Systems.
 
-Solution: convert `PricingAgent` into an **Agent-to-Agent (A2A)** remote service.
+Solution: convert `ImpactAgent` into an **Agent-to-Agent (A2A)** remote service.
 
 ---
 
@@ -23,7 +23,7 @@ Solution: convert `PricingAgent` into an **Agent-to-Agent (A2A)** remote service
 
 Stop any running Quarkus process first (`Ctrl+C`).
 
-=== "Terminal 1 — pricing service (start first)"
+=== "Terminal 1 — impact assessment service (start first)"
 
     ```bash
     cd exercises/07-a2a/solution/remote-a2a-agent
@@ -45,10 +45,10 @@ curl http://localhost:8888/.well-known/agent.json
 Expected:
 ```json
 {
-  "name": "pricing-agent",
-  "description": "Estimates car market value for fleet disposition decisions",
+  "name": "impact-agent",
+  "description": "Estimates business impact and SLA cost for incident escalation decisions",
   "url": "http://localhost:8888/a2a",
-  "capabilities": ["pricing", "valuation"]
+  "capabilities": ["impact-assessment", "sla-analysis"]
 }
 ```
 
@@ -59,18 +59,18 @@ Expected:
 ```mermaid
 flowchart LR
     subgraph main[":8080 — Main App"]
-        CPW["CarProcessingWorkflow"] --> FSA["FleetSupervisorAgent"]
-        FSA --> PA["PricingAgent<br/>@A2AClientAgent"]
+        IPW["IncidentProcessingWorkflow"] --> ISA["IncidentSupervisorAgent"]
+        ISA --> IA["ImpactAgent<br/>@A2AClientAgent"]
     end
 
-    PA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
+    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
 
-    subgraph remote[":8888 — Remote Pricing"]
-        AE["AgentExecutor"] --> RPA["PricingAgent<br/>(local LLM call)"]
-        RPA --> LLM["LLM → $10,710"]
+    subgraph remote[":8888 — Remote Impact Assessment"]
+        AE["AgentExecutor"] --> RIA["ImpactAgent<br/>(local LLM call)"]
+        RIA --> LLM["LLM → HIGH / $50k/hr"]
     end
 
-    LLM -->|"Task result"| PA
+    LLM -->|"Task result"| IA
 ```
 
 **A2A concepts:**
@@ -86,16 +86,16 @@ flowchart LR
 
 ## Try it
 
-Return a car that requires valuation + disposition:
+Process an incident that requires impact assessment + escalation:
 ```text
-High-mileage vehicle, transmission slipping, market value uncertain
+Complete service outage, all API endpoints returning 503, cascading failures across dependent services
 ```
 
 Correlate logs across **both** processes:
 - **Client (8080):** `[A2AClient] sending task to http://localhost:8888/a2a`
-- **Remote (8888):** `[AgentExecutor] received task, invoking PricingAgent`
-- **Remote (8888):** `[PricingAgent] estimated value: $7,200`
-- **Client (8080):** `[A2AClient] task completed, result: $7,200`
+- **Remote (8888):** `[AgentExecutor] received task, invoking ImpactAgent`
+- **Remote (8888):** `[ImpactAgent] Business Impact: HIGH, Revenue Loss: $50,000/hr`
+- **Client (8080):** `[A2AClient] task completed, result: HIGH / $50,000/hr`
 
 ---
 
@@ -107,7 +107,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 |--|-----|-----|
 | **What crosses the wire** | Tool call (function + typed args) | Agent task (goal + natural language) |
 | **Who reasons** | Local LLM uses remote tool | Remote LLM reasons independently |
-| **Team ownership** | Shared capability (weather, search, DB lookup) | Autonomous team agent (pricing, legal review) |
+| **Team ownership** | Shared capability (weather, search, DB lookup) | Autonomous team agent (impact assessment, legal review) |
 | **State** | Stateless per call | Optionally stateful (task lifecycle) |
 | **Best for** | Shared functionality any agent can call | Delegated decision-making by another team |
 | **Quarkus annotation** | `@McpToolBox("name")` | `@A2AClientAgent` |
@@ -125,7 +125,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 |--------|-------------|-----------------|
 | Latency | In-process | +HTTP round-trip |
 | Ownership | Shared codebase | Independent repo + release |
-| Scaling | Scale whole app | Scale pricing service independently |
+| Scaling | Scale whole app | Scale impact service independently |
 | Failure mode | Shared crash domain | Network partition risk |
 | Reuse | Single app | Any A2A-compatible client |
 
@@ -135,7 +135,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 
 ## :material-check-circle: Done when
 
-- [ ] A2A: pricing ran in `:8888` (confirmed in remote process logs)
+- [ ] A2A: impact assessment ran in `:8888` (confirmed in remote process logs)
 - [ ] AgentCard verified via `curl`
 - [ ] You can contrast MCP vs A2A in one sentence each
 - [ ] You can explain when to keep an agent local vs make it remote

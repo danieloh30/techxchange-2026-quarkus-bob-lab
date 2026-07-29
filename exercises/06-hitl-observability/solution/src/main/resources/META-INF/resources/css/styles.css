@@ -1,4 +1,4 @@
-/* Car Management UI Styles */
+/* Incident Management UI Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -114,6 +114,37 @@ td form {
     }
 }
 
+/* Priority badges */
+.priority-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 0.85em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 4px;
+    color: white;
+}
+
+.priority-p1 {
+    background-color: #d32f2f; /* Red */
+}
+
+.priority-p2 {
+    background-color: #f57c00; /* Orange */
+}
+
+.priority-p3 {
+    background-color: #fbc02d; /* Yellow */
+    color: #333;
+}
+
+.priority-p4 {
+    background-color: #388e3c; /* Green */
+}
+
 /* Status pills */
 .status-pill {
     display: inline-block;
@@ -128,40 +159,40 @@ td form {
     color: white;
 }
 
-.status-pill-rented {
+.status-pill-open {
     background-color: #ff9800; /* Orange */
 }
 
-.status-pill-cleaning {
+.status-pill-triaging {
     background-color: #03a9f4; /* Blue */
 }
 
-.status-pill-maintenance {
+.status-pill-in-progress {
     background-color: #f44336; /* Red */
 }
 
-.status-pill-available {
+.status-pill-resolved {
     background-color: #4caf50; /* Green */
 }
 
-.status-pill-disposition {
+.status-pill-escalated {
     background-color: #9c27b0; /* Purple */
 }
 
 /* Section background colors matching status colors */
-#rental-return-section {
+#open-section {
     border-left: 5px solid #ffecb3;
 }
 
-#cleaning-section {
+#triaging-section {
     border-left: 5px solid #b3e0ff;
 }
 
-#maintenance-section {
+#in-progress-section {
     border-left: 5px solid #ffb3b3;
 }
 
-#disposition-section {
+#escalated-section {
     border-left: 5px solid #e1bee7;
 }
 
@@ -204,15 +235,15 @@ td form {
 }
 
 /* Tab content border colors */
-#rental-return-section.tab-content {
+#open-section.tab-content {
     border-top: 3px solid #ffecb3;
 }
 
-#cleaning-section.tab-content {
+#triaging-section.tab-content {
     border-top: 3px solid #b3e0ff;
 }
 
-#maintenance-section.tab-content {
+#in-progress-section.tab-content {
     border-top: 3px solid #ffb3b3;
 }
 
@@ -233,11 +264,11 @@ td form {
 }
 
 .sort-asc .sort-icon::after {
-    content: "↑";
+    content: "^";
 }
 
 .sort-desc .sort-icon::after {
-    content: "↓";
+    content: "v";
 }
 
 .sort-asc .sort-icon, .sort-desc .sort-icon {

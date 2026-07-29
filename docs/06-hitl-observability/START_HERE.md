@@ -5,7 +5,7 @@
 **Timebox:** 10 minutes  
 **Persona:** Alex — Compliance officer  
 **You work in:** `exercises/06-hitl-observability/solution` (run + read — HITL is pre-built)  
-**Learn by:** reading `DispositionProposalAgent` + `HumanApprovalAgent`, running the UI, reading OTel spans
+**Learn by:** reading `EscalationProposalAgent` + `HumanApprovalAgent`, running the UI, reading OTel spans
 
 !!! tip "Reference solution"
     [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution)
@@ -14,8 +14,8 @@
 
 ## Why HITL is non-negotiable in enterprise
 
-The compliance rule: **no autonomous disposition of vehicles worth > $15,000**.  
-Without a gate, the supervisor you built in Exercise 4 would SCRAP a $42,000 BMW based purely on LLM reasoning.  
+The compliance rule: **no autonomous escalation of P1/P2 incidents on revenue-critical systems**.  
+Without a gate, the supervisor you built in Exercise 4 would ESCALATE a P1 payment-gateway outage based purely on LLM reasoning.  
 With `@HumanInTheLoop`, the system proposes and pauses — a human approves or rejects.
 
 ---
@@ -32,46 +32,46 @@ cd exercises/06-hitl-observability/solution
 Wait for the LGTM stack:
 ```
 DevServices for Observability started — Grafana: http://localhost:3000
-car-management started in ~4s
+incident-management started in ~4s
 ```
 
 ---
 
 ## Read the HITL pattern (3 min)
 
-Open [`DispositionProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/carmanagement/agentic/agents/DispositionProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/carmanagement/agentic/agents/HumanApprovalAgent.java).
+Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java).
 
 ```mermaid
 flowchart TD
-    FSA["FleetSupervisorAgent<br/>(disposition required)"] --> DPA
-    DPA["DispositionProposalAgent<br/>proposed_action=SCRAP"] --> HITL
+    ISA["IncidentSupervisorAgent<br/>(escalation required)"] --> EPA
+    EPA["EscalationProposalAgent<br/>proposed_action=ESCALATE_P1"] --> HITL
     HITL{"@HumanInTheLoop gate<br/>UI: Awaiting Approval"}
-    HITL -->|APPROVED| PD["PENDING_DISPOSITION"]
-    HITL -->|REJECTED| IM["IN_MAINTENANCE<br/>(reassessment)"]
+    HITL -->|APPROVED| ESC["ESCALATED"]
+    HITL -->|REJECTED| INV["IN_PROGRESS<br/>(reassessment)"]
 
     style HITL fill:#ff9800,color:#fff
-    style PD fill:#4caf50,color:#fff
-    style IM fill:#2196f3,color:#fff
+    style ESC fill:#4caf50,color:#fff
+    style INV fill:#2196f3,color:#fff
 ```
 
 ---
 
 ## Test the HITL gate (3 min)
 
-Return Car **#1** (Mercedes-Benz C-Class) with:
+Process Incident **#1** (payment-gateway/checkout-api, P2) with:
 ```text
-Major collision damage, airbags deployed, frame is bent, repair cost exceeds value
+Complete checkout failure, all transactions failing, revenue loss confirmed at $50k/hr
 ```
 
 UI shows **"Awaiting Approval"**:
-- **Approve** → status becomes `PENDING_DISPOSITION`
-- Repeat with same car (reset DB or use Car #3 Audi) → **Reject** → status becomes `IN_MAINTENANCE`
+- **Approve** → status becomes `ESCALATED`
+- Repeat with same incident (reset DB or use Incident #3) → **Reject** → status becomes `IN_PROGRESS`
 
 ---
 
 ## Read OTel spans in Grafana (3 min)
 
-Open **http://localhost:3000** → Explore → Tempo → service `car-management`.
+Open **http://localhost:3000** → Explore → Tempo → service `incident-management`.
 
 Find spans and read:
 
@@ -85,7 +85,7 @@ Find spans and read:
 !!! warning "Production caution"
     `include-prompt=true` exports full prompt text to your tracing backend. This can include PII from `@UserMessage` templates. Disable or redact before production.
 
-**FinOps thought experiment:** 500 car returns/day × avg 1,500 input tokens × gpt-4o pricing = ~$15/day.  
+**FinOps thought experiment:** 500 incidents/day × avg 1,500 input tokens × gpt-4o pricing = ~$15/day.  
 An unbounded `@UserMessage` without AGENTS.md discipline can double input tokens → $30/day.  
 Tracing is how you catch that before the bill arrives.
 
@@ -95,8 +95,8 @@ Tracing is how you catch that before the bill arrives.
 
 ## :material-check-circle: Done when
 
-- [ ] HITL gate blocked disposition on a high-value car
-- [ ] HITL gate allowed disposition after approval
+- [ ] HITL gate blocked escalation on a critical incident
+- [ ] HITL gate allowed escalation after approval
 - [ ] At least one `gen_ai.usage.input_tokens` span found in Grafana/Tempo
 - [ ] You can explain `include-prompt=true` trade-off (compliance value vs PII risk)
 

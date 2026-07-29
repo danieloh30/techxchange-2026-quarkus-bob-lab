@@ -1,6 +1,6 @@
-# AGENTS.md — Miles of Smiles Fleet Management
+# AGENTS.md — Apex Systems Incident Management
 
-> **Exercise 1 task:** You will build this file with IBM Bob before writing any Java code.
+> **Exercise 5 task:** You will build this file with IBM Bob before writing any Java code.
 > Bob reads this file on every request — it replaces codebase scanning and saves 2,000–5,000
 > tokens per complex task. Keep it accurate as you add agents through the exercises.
 >
@@ -14,12 +14,12 @@
 | Field | Value |
 |-------|-------|
 | Name | `techxchange-2026-quarkus-bob-lab` |
-| Story | Miles of Smiles fleet management (IBM TechXchange 2026) |
+| Story | Apex Systems incident management (IBM TechXchange 2026) |
 | Runtime | IBM Enterprise Build of Quarkus 3.37.4 / Java 25 |
 | AI extension | `quarkus-langchain4j` 1.12.0 |
 | LLM | OpenAI `gpt-4o` via `${OPENAI_API_KEY}`; temperature = 0 |
 | Build | Maven (`./mvnw`) |
-| Main package | `com.carmanagement` |
+| Main package | `com.incidentmanagement` |
 | Port | 8080 |
 
 ---
@@ -59,7 +59,7 @@ public class MyTool {
 3. **`@ToolBox` only** — no constructor injection of tools into agent interfaces.
 4. **`outputKey` is mandatory** on every agent used inside `@SequenceAgent` or `@SupervisorAgent`.
 5. **`@Transactional` is mandatory** on any tool method that calls `entity.persist()`.
-6. **Never log full customer feedback text** — PII risk. Log only car number and status.
+6. **Never log full incident report strings** — PII risk. Log only incident number and status.
 7. **No secrets in `@SystemMessage` / `@UserMessage`** — use `application.properties` vars.
 8. **Approval gate first** — propose diff and wait for approval before writing files.
 9. **Tests are required** — every agent/tool change needs a `@QuarkusTest`.
@@ -71,13 +71,13 @@ public class MyTool {
 
 | Type | Fields / Values |
 |------|----------------|
-| `CarInfo` (Panache entity) | `id` (Long), `make`, `model`, `year`, `condition`, `status` |
-| `CarStatus` (enum) | `RENTED`, `AVAILABLE`, `AT_CLEANING`, `IN_MAINTENANCE`, `PENDING_DISPOSITION` |
-| `CarAssignment` (enum) | `DISPOSITION`, `MAINTENANCE`, `CLEANING`, `NONE` |
-| `FeedbackTask` (record) | `feedbackType` (`FeedbackType`), `systemInstructions` — factory methods: `FeedbackTask.cleaning()`, `.maintenance()`, `.disposition()` |
-| `FeedbackType` (enum) | `CLEANING`, `MAINTENANCE`, `DISPOSITION` |
-| `FeedbackAnalysisResults` (record) | `cleaningAnalysis`, `maintenanceAnalysis`, `dispositionAnalysis` |
-| `CarConditions` (record) | `generalCondition` (String), `carAssignment` (CarAssignment) |
+| `IncidentInfo` (Panache entity) | `id` (Long), `system` (column: system_name), `service`, `priority`, `description`, `status` |
+| `IncidentStatus` (enum) | `OPEN`, `TRIAGING`, `IN_PROGRESS`, `ESCALATED`, `RESOLVED` |
+| `IncidentAction` (enum) | `ESCALATE`, `INVESTIGATE`, `TRIAGE`, `RESOLVE` |
+| `AnalysisTask` (record) | `analysisType` (`AnalysisType`), `systemInstructions` — factory methods: `AnalysisTask.severity()`, `.impact()`, `.resolution()` |
+| `AnalysisType` (enum) | `SEVERITY`, `IMPACT`, `RESOLUTION` |
+| `IncidentAnalysisResults` (record) | `severityAnalysis`, `impactAnalysis`, `resolutionAnalysis` |
+| `IncidentOutcome` (record) | `resolution` (String), `incidentAction` (IncidentAction) |
 
 ---
 
@@ -85,24 +85,24 @@ public class MyTool {
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `POST` | `/car-management/return/{carNumber}` | Trigger car return workflow |
-| `GET` | `/cars` | List all cars |
-| `GET` | `/cars/{id}` | Single car by ID |
+| `POST` | `/incident-management/process/{incidentNumber}` | Trigger incident processing workflow |
+| `GET` | `/incidents` | List all incidents |
+| `GET` | `/incidents/{id}` | Single incident by ID |
 
 ---
 
-## Seeded fleet (import.sql)
+## Seeded incidents (import.sql)
 
-| ID | Make | Model | Year | Initial status |
-|----|------|-------|------|---------------|
-| 1 | Mercedes-Benz | C-Class | 2024 | RENTED |
-| 2 | BMW | X5 | 2025 | IN_MAINTENANCE |
-| 3 | Audi | Q4 | 2025 | RENTED |
-| 4 | Nissan | Altima | 2018 | AT_CLEANING |
-| 5 | Ford | Focus | 2014 | RENTED |
-| 6 | Toyota | Corolla | 2023 | RENTED |
-| 7 | Honda | Civic | 2022 | RENTED |
-| 8 | Ford | F-150 | 2024 | IN_MAINTENANCE |
+| # | System | Service | Priority | Initial status |
+|---|--------|---------|----------|---------------|
+| 1 | payment-gateway | checkout-api | P2 | OPEN |
+| 2 | auth-service | user-login | P1 | IN_PROGRESS |
+| 3 | inventory-db | stock-sync | P3 | OPEN |
+| 4 | cdn-edge | static-assets | P4 | TRIAGING |
+| 5 | email-service | notification-api | P2 | OPEN |
+| 6 | search-engine | product-search | P3 | OPEN |
+| 7 | monitoring | alerting-api | P2 | OPEN |
+| 8 | api-gateway | rate-limiter | P1 | IN_PROGRESS |
 
 ---
 
@@ -110,13 +110,13 @@ public class MyTool {
 
 | Interface | File | Role | outputKey | Exercise |
 |-----------|------|------|-----------|---------|
-| `CleaningAgent` | `agents/CleaningAgent.java` | Requests cleaning via `CleaningTool` | `analysisResult` | Ex 2 |
-| `MaintenanceAgent` | `agents/MaintenanceAgent.java` | Returns maintenance plan (no tool) | `analysisResult` | Ex 3 |
-| `FeedbackAnalysisAgent` | `agents/FeedbackAnalysisAgent.java` | Parameterized; classifies by task type | `feedbackAnalysis` | Ex 4 |
-| `PricingAgent` | `agents/PricingAgent.java` | Estimates vehicle market value | `carValue` | Ex 5 |
-| `DispositionAgent` | `agents/DispositionAgent.java` | Decides SCRAP/SELL/DONATE/KEEP | `dispositionAction` | Ex 5 |
-| `CarConditionFeedbackAgent` | `agents/CarConditionFeedbackAgent.java` | Final CarConditions (typed return) | `carConditions` | Ex 5 |
-| `FleetSupervisorAgent` | `agents/FleetSupervisorAgent.java` | `@SupervisorAgent` orchestrator | `supervisorDecision` | Ex 5 |
+| `TriageAgent` | `agents/TriageAgent.java` | Requests triage via `TriageTool` | `analysisResult` | Ex 1 |
+| `DiagnosticAgent` | `agents/DiagnosticAgent.java` | Returns diagnostic plan (no tool) | `analysisResult` | Ex 2 |
+| `IncidentAnalysisAgent` | `agents/IncidentAnalysisAgent.java` | Parameterized; classifies by task type | `incidentAnalysis` | Ex 3 |
+| `ImpactAgent` | `agents/ImpactAgent.java` | Estimates business impact and SLA cost | `businessImpact` | Ex 4 |
+| `EscalationAgent` | `agents/EscalationAgent.java` | Decides ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE | `escalationAction` | Ex 4 |
+| `ResolutionAgent` | `agents/ResolutionAgent.java` | Final IncidentOutcome (typed return) | `incidentOutcome` | Ex 4 |
+| `IncidentSupervisorAgent` | `agents/IncidentSupervisorAgent.java` | `@SupervisorAgent` orchestrator | `supervisorDecision` | Ex 4 |
 
 ---
 
@@ -124,5 +124,5 @@ public class MyTool {
 
 | Interface | Annotation | Sub-agents | Exercise |
 |-----------|------------|------------|---------|
-| `FeedbackAnalysisWorkflow` | `@ParallelMapperAgent` | `FeedbackAnalysisAgent` × 3 tasks | Ex 4 |
-| `CarProcessingWorkflow` | `@SequenceAgent` | `FeedbackAnalysisWorkflow` → `FleetSupervisorAgent` → `CarConditionFeedbackAgent` | Ex 5 |
+| `IncidentAnalysisWorkflow` | `@ParallelMapperAgent` | `IncidentAnalysisAgent` × 3 tasks | Ex 3 |
+| `IncidentProcessingWorkflow` | `@SequenceAgent` | `IncidentAnalysisWorkflow` → `IncidentSupervisorAgent` → `ResolutionAgent` | Ex 4 |

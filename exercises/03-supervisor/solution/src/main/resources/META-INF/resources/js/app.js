@@ -1,17 +1,17 @@
-// Car Management UI JavaScript
+// Incident Management UI JavaScript
 
 // Global variables for sorting and filtering
 let currentSortColumn = 'id';
 let currentSortDirection = 'asc';
-let carsData = []; // Store the cars data globally for sorting
+let incidentsData = []; // Store the incidents data globally for sorting
 let currentFilterText = '';
 let currentFilterField = 'all';
-let lastUpdatedCarId = null; // Track the last updated car for highlighting
+let lastUpdatedIncidentId = null; // Track the last updated incident for highlighting
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Load all cars and populate the tables
-    loadAllCars();
+    // Load all incidents and populate the tables
+    loadAllIncidents();
 
     // Add event listeners for form submissions
     setupEventListeners();
@@ -20,28 +20,28 @@ document.addEventListener('DOMContentLoaded', function() {
     setupSorting();
 });
 
-// Function to load all cars from the API
-function loadAllCars() {
-    fetch('/cars')
+// Function to load all incidents from the API
+function loadAllIncidents() {
+    fetch('/incidents')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
-        .then(cars => {
-            // Store cars data globally for sorting
-            carsData = cars;
+        .then(incidents => {
+            // Store incidents data globally for sorting
+            incidentsData = incidents;
 
             // Sort the data if a sort is active
-            sortCars();
+            sortIncidents();
 
-            // Process the cars data
-            populateFleetStatusTable(carsData);
+            // Process the incidents data
+            populateIncidentStatusTable(incidentsData);
         })
         .catch(error => {
-            console.error('Error fetching cars:', error);
-            displayError('Failed to load car data. Please try again later.');
+            console.error('Error fetching incidents:', error);
+            displayError('Failed to load incident data. Please try again later.');
         });
 }
 
@@ -66,8 +66,8 @@ function setupSorting() {
             updateSortHeaders();
 
             // Sort and redisplay data
-            sortCars();
-            populateFleetStatusTable(carsData);
+            sortIncidents();
+            populateIncidentStatusTable(incidentsData);
         });
     });
 }
@@ -86,9 +86,9 @@ function updateSortHeaders() {
     }
 }
 
-// Function to sort cars based on current sort settings
-function sortCars() {
-    carsData.sort((a, b) => {
+// Function to sort incidents based on current sort settings
+function sortIncidents() {
+    incidentsData.sort((a, b) => {
         let valueA, valueB;
 
         // Handle special case for status which needs to be displayed text
@@ -101,7 +101,7 @@ function sortCars() {
         }
 
         // Handle numeric values
-        if (currentSortColumn === 'id' || currentSortColumn === 'year') {
+        if (currentSortColumn === 'id') {
             valueA = Number(valueA) || 0;
             valueB = Number(valueB) || 0;
         }
@@ -117,19 +117,19 @@ function sortCars() {
     });
 }
 
-// Function to filter cars based on current filter settings
-function filterCars() {
+// Function to filter incidents based on current filter settings
+function filterIncidents() {
     if (!currentFilterText) {
-        return carsData; // Return all cars if no filter text
+        return incidentsData; // Return all incidents if no filter text
     }
 
-    return carsData.filter(car => {
+    return incidentsData.filter(incident => {
         // Convert filter text to lowercase for case-insensitive comparison
         const filterText = currentFilterText.toLowerCase();
 
         // If filtering on a specific field
         if (currentFilterField !== 'all') {
-            let fieldValue = car[currentFilterField];
+            let fieldValue = incident[currentFilterField];
 
             // Handle special case for status which needs to be displayed text
             if (currentFilterField === 'status') {
@@ -142,52 +142,52 @@ function filterCars() {
 
         // If filtering across all fields
         return (
-            String(car.id).toLowerCase().includes(filterText) ||
-            car.make.toLowerCase().includes(filterText) ||
-            car.model.toLowerCase().includes(filterText) ||
-            String(car.year).toLowerCase().includes(filterText) ||
-            (car.condition && car.condition.toLowerCase().includes(filterText)) ||
-            getStatusDisplay(car.status).toLowerCase().includes(filterText)
+            String(incident.id).toLowerCase().includes(filterText) ||
+            incident.system.toLowerCase().includes(filterText) ||
+            incident.service.toLowerCase().includes(filterText) ||
+            incident.priority.toLowerCase().includes(filterText) ||
+            (incident.description && incident.description.toLowerCase().includes(filterText)) ||
+            getStatusDisplay(incident.status).toLowerCase().includes(filterText)
         );
     });
 }
 
-// Function to populate the Fleet Status table
-function populateFleetStatusTable(cars) {
-    const tableBody = document.getElementById('fleet-status-table-body');
+// Function to populate the Incident Status table
+function populateIncidentStatusTable(incidents) {
+    const tableBody = document.getElementById('incident-status-table-body');
     tableBody.innerHTML = ''; // Clear existing rows
 
     // Apply filter if there's filter text
-    const filteredCars = currentFilterText ? filterCars() : cars;
+    const filteredIncidents = currentFilterText ? filterIncidents() : incidents;
 
-    if (filteredCars.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7">No cars match your filter criteria</td></tr>';
+    if (filteredIncidents.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7">No incidents match your filter criteria</td></tr>';
         return;
     }
 
-    filteredCars.forEach(car => {
+    filteredIncidents.forEach(incident => {
         const row = document.createElement('tr');
 
         // Highlight the row if it was just updated
-        if (car.id === lastUpdatedCarId) {
+        if (incident.id === lastUpdatedIncidentId) {
             row.classList.add('highlight-row');
             // Clear the highlight after animation completes
             setTimeout(() => {
-                lastUpdatedCarId = null;
+                lastUpdatedIncidentId = null;
             }, 3000);
         }
 
-        // Get status pill class based on car status
-        const statusPillClass = getStatusPillClass(car.status);
+        // Get status pill class based on incident status
+        const statusPillClass = getStatusPillClass(incident.status);
 
         // Build action cell based on status
         let actionCell = '';
-        if (car.status === 'RENTED' || car.status === 'AT_CLEANING' || car.status === 'IN_MAINTENANCE') {
+        if (incident.status === 'OPEN' || incident.status === 'TRIAGING' || incident.status === 'IN_PROGRESS') {
             actionCell = `
                 <td>
-                    <form onsubmit="processFeedback(event, ${car.id}, '${car.status}')">
-                        <input type="text" class="feedback-input" id="feedback-${car.id}" placeholder="Enter feedback">
-                        <button type="submit" class="return-button">Return</button>
+                    <form onsubmit="processReport(event, ${incident.id}, '${incident.status}')">
+                        <input type="text" class="feedback-input" id="report-${incident.id}" placeholder="Enter report">
+                        <button type="submit" class="return-button">Process</button>
                     </form>
                 </td>`;
         } else {
@@ -195,12 +195,12 @@ function populateFleetStatusTable(cars) {
         }
 
         row.innerHTML = `
-            <td>${car.id}</td>
-            <td>${car.make}</td>
-            <td>${car.model}</td>
-            <td>${car.year}</td>
-            <td>${car.condition || 'N/A'}</td>
-            <td><span class="status-pill ${statusPillClass}">${getStatusDisplay(car.status)}</span></td>
+            <td>${incident.id}</td>
+            <td>${incident.system}</td>
+            <td>${incident.service}</td>
+            <td>${incident.priority}</td>
+            <td>${incident.description || 'N/A'}</td>
+            <td><span class="status-pill ${statusPillClass}">${getStatusDisplay(incident.status)}</span></td>
             ${actionCell}
         `;
 
@@ -208,10 +208,10 @@ function populateFleetStatusTable(cars) {
     });
 }
 
-// Function to process feedback and return a car
-function processFeedback(event, carId, status) {
+// Function to process report and update an incident
+function processReport(event, incidentId, status) {
     event.preventDefault();
-    const feedback = document.getElementById(`feedback-${carId}`).value;
+    const report = document.getElementById(`report-${incidentId}`).value;
     const button = event.target.querySelector('button');
 
     button.disabled = true;
@@ -220,79 +220,79 @@ function processFeedback(event, carId, status) {
     button.textContent = 'Processing...';
 
     const statusLabels = {
-        'RENTED': 'rental',
-        'AT_CLEANING': 'cleaning',
-        'IN_MAINTENANCE': 'maintenance'
+        'OPEN': 'open',
+        'TRIAGING': 'triage',
+        'IN_PROGRESS': 'investigation'
     };
 
-    fetch(`/car-management/return/${carId}?feedback=${encodeURIComponent(feedback)}`, { method: 'POST' })
+    fetch(`/incident-management/process/${incidentId}?report=${encodeURIComponent(report)}`, { method: 'POST' })
     .then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.text();
     })
     .then(data => {
-        lastUpdatedCarId = carId;
-        showNotification(`Car successfully returned from ${statusLabels[status]}`);
-        loadAllCars();
+        lastUpdatedIncidentId = incidentId;
+        showNotification(`Incident successfully processed from ${statusLabels[status]}`);
+        loadAllIncidents();
     })
     .catch(error => {
-        console.error(`Error returning car from ${statusLabels[status]}:`, error);
-        displayError(`Failed to process ${statusLabels[status]} return. Please try again.`);
+        console.error(`Error processing incident from ${statusLabels[status]}:`, error);
+        displayError(`Failed to process incident. Please try again.`);
         button.disabled = false;
         button.classList.remove('loading');
         button.textContent = originalText;
     });
 }
 
-// Helper function to get CSS class based on car status
+// Helper function to get CSS class based on incident status
 function getStatusClass(status) {
     switch(status) {
-        case 'RENTED':
-            return 'status-rented';
-        case 'AT_CLEANING':
-            return 'status-cleaning';
-        case 'IN_MAINTENANCE':
-            return 'status-maintenance';
-        case 'AVAILABLE':
-            return 'status-available';
-        case 'PENDING_DISPOSITION':
-            return 'status-disposition';
+        case 'OPEN':
+            return 'status-open';
+        case 'TRIAGING':
+            return 'status-triaging';
+        case 'IN_PROGRESS':
+            return 'status-in-progress';
+        case 'RESOLVED':
+            return 'status-resolved';
+        case 'ESCALATED':
+            return 'status-escalated';
         default:
             return '';
     }
 }
 
-// Helper function to get status pill class based on car status
+// Helper function to get status pill class based on incident status
 function getStatusPillClass(status) {
     switch(status) {
-        case 'RENTED':
-            return 'status-pill-rented';
-        case 'AT_CLEANING':
-            return 'status-pill-cleaning';
-        case 'IN_MAINTENANCE':
-            return 'status-pill-maintenance';
-        case 'AVAILABLE':
-            return 'status-pill-available';
-        case 'PENDING_DISPOSITION':
-            return 'status-pill-disposition';
+        case 'OPEN':
+            return 'status-pill-open';
+        case 'TRIAGING':
+            return 'status-pill-triaging';
+        case 'IN_PROGRESS':
+            return 'status-pill-in-progress';
+        case 'RESOLVED':
+            return 'status-pill-resolved';
+        case 'ESCALATED':
+            return 'status-pill-escalated';
         default:
             return '';
     }
 }
 
-// Helper function to get display text for car status
+// Helper function to get display text for incident status
 function getStatusDisplay(status) {
     switch(status) {
-        case 'RENTED':
-            return 'Rented';
-        case 'AT_CLEANING':
-            return 'At Cleaning';
-        case 'IN_MAINTENANCE':
-            return 'In Maintenance';
-        case 'AVAILABLE':
-            return 'Available to Rent';
-        case 'PENDING_DISPOSITION':
-            return 'Pending Disposition';
+        case 'OPEN':
+            return 'Open';
+        case 'TRIAGING':
+            return 'Triaging';
+        case 'IN_PROGRESS':
+            return 'In Progress';
+        case 'RESOLVED':
+            return 'Resolved';
+        case 'ESCALATED':
+            return 'Escalated';
         default:
             return status;
     }
@@ -303,15 +303,15 @@ function setupEventListeners() {
     // Add refresh button event listener
     const refreshButton = document.getElementById('refresh-button');
     if (refreshButton) {
-        refreshButton.addEventListener('click', loadAllCars);
+        refreshButton.addEventListener('click', loadAllIncidents);
     }
 
     // Add filter input event listener
-    const filterInput = document.getElementById('fleet-filter');
+    const filterInput = document.getElementById('incident-filter');
     if (filterInput) {
         filterInput.addEventListener('input', function() {
             currentFilterText = this.value;
-            populateFleetStatusTable(carsData);
+            populateIncidentStatusTable(incidentsData);
         });
     }
 
@@ -320,7 +320,7 @@ function setupEventListeners() {
     if (filterField) {
         filterField.addEventListener('change', function() {
             currentFilterField = this.value;
-            populateFleetStatusTable(carsData);
+            populateIncidentStatusTable(incidentsData);
         });
     }
 
@@ -328,7 +328,7 @@ function setupEventListeners() {
     const clearFilterButton = document.getElementById('clear-filter');
     if (clearFilterButton) {
         clearFilterButton.addEventListener('click', function() {
-            const filterInput = document.getElementById('fleet-filter');
+            const filterInput = document.getElementById('incident-filter');
             const filterField = document.getElementById('filter-field');
 
             // Reset filter values
@@ -340,7 +340,7 @@ function setupEventListeners() {
             if (filterField) filterField.value = 'all';
 
             // Refresh table
-            populateFleetStatusTable(carsData);
+            populateIncidentStatusTable(incidentsData);
         });
     }
 }

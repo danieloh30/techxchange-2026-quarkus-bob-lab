@@ -12,13 +12,13 @@
 | Block | Time | Cumulative | Focus |
 |-------|------|------------|-------|
 | Intro presentation | 10 min | :10 | Story, architecture, what you will build |
-| Exercise 1 | 15 min | :25 | **Code-along** — `CleaningAgent` + `CleaningTool` (your first agent) |
-| Exercise 2 | 10 min | :35 | **Code-along** — `MaintenanceAgent` + live `@SystemMessage` tuning |
+| Exercise 1 | 15 min | :25 | **Code-along** — `TriageAgent` + `TriageTool` (your first agent) |
+| Exercise 2 | 10 min | :35 | **Code-along** — `DiagnosticAgent` + live `@SystemMessage` tuning |
 | Exercise 3 | 10 min | :45 | **Code-along** — `@ParallelMapperAgent` + `@Output` + `AgenticScope` |
-| Exercise 4 | 15 min | :60 | **Code-along** — full supervisor pipeline: pricing, disposition, sequence |
+| Exercise 4 | 15 min | :60 | **Code-along** — full supervisor pipeline: impact, escalation, sequence |
 | Exercise 5 | 10 min | :70 | **IBM Bob** + `AGENTS.md` — govern and document what you built |
 | Exercise 6 | 10 min | :80 | Human-in-the-loop + OpenTelemetry observability |
-| Exercise 7 | 10 min | :90 | A2A — distributed pricing agent |
+| Exercise 7 | 10 min | :90 | A2A — distributed impact assessment agent |
 
 !!! note "How this lab works"
     **Working project:** `lab/` — a single Quarkus starter you build incrementally across Exercises 1–4.  
@@ -28,7 +28,7 @@
     Reference solutions in `exercises/` are fallbacks — linked at the top of each exercise guide.
 
 !!! info "Base content"
-    Adapted from the [Quarkus LangChain4j Workshop](https://quarkus.io/quarkus-workshop-langchain4j/) (Miles of Smiles fleet management), extended with IBM Bob, AGENTS.md cost-efficiency techniques, enterprise narrative, and production concerns (HITL, observability, A2A).
+    Adapted from the [Quarkus LangChain4j Workshop](https://quarkus.io/quarkus-workshop-langchain4j/) (community workshop), extended with IBM Bob, AGENTS.md cost-efficiency techniques, enterprise narrative, and production concerns (HITL, observability, A2A).
 
 ---
 
@@ -88,18 +88,18 @@ exercises/                            # Completed Quarkus solution projects
 
 ## Slide narrative for instructors
 
-### The company: Miles of Smiles
+### The company: Apex Systems
 
-**Miles of Smiles** is a mid-size car rental company with hundreds of vehicles across airport and city locations. Fleet operations are chaotic. Every returned car generates free-text feedback from rental desks, cleaning crews, and maintenance bays. Today that feedback lives in sticky notes, chat threads, and tribal knowledge.
+**Apex Systems** is a mid-size enterprise IT services company managing infrastructure across data centers and cloud regions. The NOC (Network Operations Center) receives free-text incident reports from monitoring tools, tickets, and on-call engineers. Today those reports live in chat threads, email chains, and tribal knowledge.
 
-Last quarter's incident report:
-- Three expensive vehicles were **scrapped without a formal review** — $80k lost
-- Two others **sat in AT_CLEANING for 3 days** when a quick wash was all they needed
-- Fleet managers cannot see *why* a car moved `RENTED → AT_CLEANING → IN_MAINTENANCE → AVAILABLE` or whether it should have been dispositioned (`SCRAP` / `SELL` / `DONATE` / `KEEP`)
+Last quarter's post-mortem:
+- Three P1 outages lasted **4+ hours due to P3 misclassification** — $200k revenue loss
+- Two incidents were **escalated to the wrong engineering team**, wasting 40 engineer-hours
+- Service managers cannot see *why* an incident was routed `OPEN → TRIAGING → IN_PROGRESS → RESOLVED` or whether it should have been escalated (`ESCALATE_P1` / `ASSIGN_TEAM` / `WORKAROUND` / `CLOSE`)
 
 Leadership mandate:
 
-> **Automate fleet decisions with AI agents — without losing enterprise control.**
+> **Automate incident triage and routing with AI agents — without losing enterprise control.**
 
 ### Why agentic AI (not "just a chatbot")
 
@@ -111,11 +111,11 @@ Leadership mandate:
 | No memory between calls | Scope / context across workflow |
 | Single model | Composed specialists |
 
-Miles of Smiles needs systems that:
+Apex Systems needs systems that:
 
-1. **Reason** over messy natural-language feedback ("dog hair," "check engine light," "totaled front bumper")
-2. **Act** by calling enterprise tools (update status, request cleaning, estimate value)
-3. **Collaborate** across specialized roles (cleaning, maintenance, pricing, disposition)
+1. **Reason** over messy natural-language incident reports ("503 errors," "auth failure," "cascading outage")
+2. **Act** by calling enterprise tools (update status, request triage, assess impact)
+3. **Collaborate** across specialized roles (triage, diagnostic, impact, escalation)
 4. **Pause** for humans on high-stakes outcomes — compliance requires it
 5. **Scale** across teams via open protocols (A2A) without copy-pasting logic
 
@@ -123,33 +123,33 @@ Miles of Smiles needs systems that:
 
 | # | Persona | Pain point | Pattern you learn |
 |---|---------|-----------|-------------------|
-| 1 | **Maya** — Rental desk | Free-text returns pile up; status is manual | First agents + `@ToolBox` |
-| 2 | **Chris** — Ops lead | Cleaning *and* maintenance must be decided fast | `@SystemMessage` as policy |
+| 1 | **Sam** — NOC analyst | Free-text reports pile up; triage is manual | First agents + `@ToolBox` |
+| 2 | **Chris** — Ops lead | Diagnostic decisions need policy, not code | `@SystemMessage` as policy |
 | 3 | **Chris** — Ops lead | Three analyses must run concurrently | `@ParallelMapperAgent` |
-| 4 | **Priya** — Fleet manager | Severe damage needs adaptive disposition | `@SupervisorAgent` orchestration |
+| 4 | **Priya** — IT service mgr | Critical incidents need adaptive escalation | `@SupervisorAgent` orchestration |
 | 5 | **Jordan** — Java platform engineer | Must ship governed code; copilots hallucinate | **IBM Bob** + AGENTS.md |
-| 6 | **Alex** — Compliance officer | High-value cars need approval + audit trail | **HITL** + OpenTelemetry |
-| 7 | **Riley** — Pricing team | Valuation is a separate service/team | **A2A** remote pricing agent |
+| 6 | **Alex** — Compliance officer | P1 incidents need approval + audit trail | **HITL** + OpenTelemetry |
+| 7 | **Riley** — SRE lead | Impact assessment is a separate team | **A2A** remote impact agent |
 
 ### Architecture you will grow into
 
 ```mermaid
 flowchart TD
-    CR["Car Return"] --> CPW
+    IR["Incident Report"] --> IPW
 
-    subgraph main["Miles of Smiles Car Management (Quarkus :8080)"]
-        CPW["CarProcessingWorkflow<br/>@SequenceAgent"]
-        CPW --> FAW["FeedbackAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
-        CPW --> FSA["FleetSupervisorAgent<br/>@SupervisorAgent"]
-        CPW --> CCFA["CarConditionFeedbackAgent"]
+    subgraph main["Apex Systems Incident Management (Quarkus :8080)"]
+        IPW["IncidentProcessingWorkflow<br/>@SequenceAgent"]
+        IPW --> IAW["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
+        IPW --> ISA["IncidentSupervisorAgent<br/>@SupervisorAgent"]
+        IPW --> RA["ResolutionAgent"]
 
-        FSA --> CA["CleaningAgent<br/>@ToolBox"]
-        FSA --> MA["MaintenanceAgent"]
-        FSA --> DA["DispositionAgent<br/>+ HITL gate"]
-        FSA --> PA["PricingAgent"]
+        ISA --> TA["TriageAgent<br/>@ToolBox"]
+        ISA --> DA["DiagnosticAgent"]
+        ISA --> EA["EscalationAgent<br/>+ HITL gate"]
+        ISA --> IA["ImpactAgent"]
     end
 
-    PA -->|"A2A"| RA[":8888<br/>Remote Pricing"]
+    IA -->|"A2A"| RIA[":8888<br/>Remote Impact Assessment"]
 ```
 
 ### IBM stack for this lab
@@ -178,16 +178,16 @@ After 80 minutes you will be able to:
 
 ---
 
-## Exercise 1 — Your First Agent: CleaningAgent + CleaningTool (~15 min)
+## Exercise 1 — Your First Agent: TriageAgent + TriageTool (~15 min)
 
-**Story:** Maya at the rental desk returns cars with free-text notes. The system must decide: clean or put back on the lot?
+**Story:** Sam at the NOC processes incoming incident reports. The system must decide: triage and assign, or mark as no action needed?
 
 **You work in:** `lab/` — start Quarkus here and keep it running.
 
 **Goals**
 
 - Declare your first `@Agent` interface: `@SystemMessage`, `@UserMessage`, `@ToolBox`
-- Implement `CleaningTool.requestCleaning()` with `@Transactional` + JPA mutation
+- Implement `TriageTool.requestTriage()` with `@Transactional` + JPA mutation
 - Understand the agent loop: LLM decides → tool executes → LLM resumes
 
 ### 1.1 Start the lab project
@@ -198,7 +198,7 @@ export OPENAI_API_KEY=sk-your-lab-key-here
 ./mvnw quarkus:dev
 ```
 
-Open http://localhost:8080 — Fleet Status grid at the top; **Return** button in the Action column. Returns will fail — no agents are wired yet. That's Exercise 1.
+Open http://localhost:8080 — Incident Dashboard with 8 seeded incidents; **Process** button in the Action column. Processing will fail — no agents are wired yet. That's Exercise 1.
 
 ### 1.2 Open the exercise guide
 
@@ -208,28 +208,28 @@ The guide shows you the exact code to type into each stub file and explains ever
 
 ### 1.3 Hands-on checks
 
-**Test 1 — Dirty car (tool should be called)**
+**Test 1 — Critical incident (tool should be called)**
 
-Return Car #5 (Ford Focus) with:
+Process Incident #5 (email-service/notification-api) with:
 ```text
-Car has dog hair all over the back seat
+Order confirmation emails failing for 30% of customers, bounce rate spiking
 ```
 
 Expected result:
-- Status → `AT_CLEANING`
-- Logs show `CleaningTool` called with `interiorCleaning=true`
+- Status → `TRIAGING`
+- Logs show `TriageTool` called with `assignOnCall=true`
 
-**Test 2 — Clean car (tool should NOT be called)**
+**Test 2 — False alarm (tool should NOT be called)**
 
-Return Car #6 (Toyota Corolla) with:
+Process Incident #6 (search-engine/product-search) with:
 ```text
-Car looks good, no issues
+False alarm, search relevance is back to normal after cache refresh
 ```
 
 Expected result:
-- Response contains `CLEANING_NOT_REQUIRED`
-- Status stays `AVAILABLE`
-- No `CleaningTool` log line
+- Response contains `TRIAGE_NOT_REQUIRED`
+- Status stays `RESOLVED`
+- No `TriageTool` log line
 
 ### 1.4 Checkpoint
 
@@ -242,15 +242,15 @@ Expected result:
 
 ---
 
-## Exercise 2 — MaintenanceAgent + @SystemMessage as Policy (~10 min)
+## Exercise 2 — DiagnosticAgent + @SystemMessage as Policy (~10 min)
 
-**Story:** Chris (ops) needs to go beyond cleaning decisions — cars also need maintenance plans. He wants to understand how `@SystemMessage` threshold changes affect agent behavior without redeploying.
+**Story:** Chris (ops) needs to go beyond triage decisions — incidents also need root cause analysis. He wants to understand how `@SystemMessage` threshold changes affect agent behavior without redeploying.
 
 **You work in:** `lab/` (keep Quarkus running)
 
 **Goals**
 
-- Declare `MaintenanceAgent` — same `@Agent` pattern, but text-only output (no `@ToolBox`)
+- Declare `DiagnosticAgent` — same `@Agent` pattern, but text-only output (no `@ToolBox`)
 - Live `@SystemMessage` experiment: see how changing a string changes agent policy
 
 ### 2.1 Open the exercise guide
@@ -271,14 +271,14 @@ The guide walks you through the `@SystemMessage` content to type, the tuning exp
 
 ## Exercise 3 — Parallel Workflow: @ParallelMapperAgent (~10 min)
 
-**Story:** Chris needs cleaning, maintenance, AND disposition analysis — all three running concurrently to cut latency. One interface, three concurrent LLM calls, dynamic `@SystemMessage` per task.
+**Story:** Chris needs severity, impact, AND resolution analysis — all three running concurrently to cut latency. One interface, three concurrent LLM calls, dynamic `@SystemMessage` per task.
 
 **You work in:** `lab/` (keep Quarkus running)
 
 **Goals**
 
-- Declare `FeedbackAnalysisAgent` with dynamic `@SystemMessage("{task.systemInstructions}")`
-- Declare `FeedbackAnalysisWorkflow` with `@ParallelMapperAgent` + `@Output` aggregation
+- Declare `IncidentAnalysisAgent` with dynamic `@SystemMessage("{task.systemInstructions}")`
+- Declare `IncidentAnalysisWorkflow` with `@ParallelMapperAgent` + `@Output` aggregation
 - Understand `AgenticScope` data flow: how results flow from parallel workers to downstream agents
 
 ### 3.1 Open the exercise guide
@@ -309,16 +309,16 @@ The guide shows the exact code for both files and explains why `itemsProvider`, 
 
 ## Exercise 4 — Full Supervisor Pipeline (~15 min)
 
-**Story:** Priya (fleet), Riley (pricing), and Maya (cleaning) all need to work together on a single car return. A `@SupervisorAgent` decides which specialists to invoke. A `@SequenceAgent` chains the whole pipeline. Policy lives in prose, not `if/else`.
+**Story:** Priya (IT service mgr), Riley (SRE), and Sam (NOC) all need to work together on a single incident. A `@SupervisorAgent` decides which specialists to invoke. A `@SequenceAgent` chains the whole pipeline. Policy lives in prose, not `if/else`.
 
 **You work in:** `lab/` (keep Quarkus running)
 
 **Goals**
 
-- Implement `PricingAgent`, `DispositionAgent`, `CarConditionFeedbackAgent`
-- Implement `FleetSupervisorAgent` with `@SupervisorAgent` + `@SupervisorRequest`
-- Implement `CarProcessingWorkflow` with `@SequenceAgent` + `@Output`
-- Verify all three test paths: clean return, dirty return, severe damage + disposition
+- Implement `ImpactAgent`, `EscalationAgent`, `ResolutionAgent`
+- Implement `IncidentSupervisorAgent` with `@SupervisorAgent` + `@SupervisorRequest`
+- Implement `IncidentProcessingWorkflow` with `@SequenceAgent` + `@Output`
+- Verify all three test paths: minor incident, needs triage, critical escalation
 
 ### 4.1 Open the exercise guide
 
@@ -339,10 +339,10 @@ The guide provides exact code for all five files with step-by-step annotations a
 
 | ✓ | You can explain… |
 |---|-----------------|
-| ☐ | Full pipeline: `CarProcessingWorkflow` → `FeedbackAnalysisWorkflow` → `FleetSupervisorAgent` → `CarConditionFeedbackAgent` |
+| ☐ | Full pipeline: `IncidentProcessingWorkflow` → `IncidentAnalysisWorkflow` → `IncidentSupervisorAgent` → `ResolutionAgent` |
 | ☐ | Why policy lives in `@SupervisorRequest` not in `if/else` Java |
-| ☐ | Why `CarConditionFeedbackAgent` returns `CarConditions` (record) not `String` |
-| ☐ | Why the supervisor test path skips `CleaningAgent` for severe damage |
+| ☐ | Why `ResolutionAgent` returns `IncidentOutcome` (record) not `String` |
+| ☐ | Why the supervisor test path skips `TriageAgent` for critical escalation |
 
 ---
 
@@ -376,7 +376,7 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 | ✓ | You can explain… |
 |---|-----------------|
 | ☐ | What AGENTS.md saves (2,000–5,000 tokens per complex request) |
-| ☐ | Why Bob refused `FleetOracle.rebalanceQuantumSlots()` |
+| ☐ | Why Bob refused `IncidentOracle.rebalanceQuantumSlots()` |
 | ☐ | How AGENTS.md rules prevent wrong CDI scopes and missing `outputKey` |
 | ☐ | The parallel between runtime governance (HITL) and dev-time governance (Bob approval gates) |
 
@@ -384,11 +384,11 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 
 ## Exercise 6 — Human-in-the-Loop + Observability (~10 min)
 
-**Story:** Alex in compliance is firm: no autonomous disposition of vehicles worth more than **$15,000**. Every LLM call must be traceable for cost auditing and SOX-style event logs. This exercise wires the approval gate and turns on OpenTelemetry tracing.
+**Story:** Alex in compliance is firm: no autonomous escalation of **P1/P2 incidents on revenue-critical systems**. Every LLM call must be traceable for cost auditing and SOX-style event logs. This exercise wires the approval gate and turns on OpenTelemetry tracing.
 
 **Goals**
 
-- Two-phase HITL: `DispositionProposalAgent` → human approve/reject → execute or fallback
+- Two-phase HITL: `EscalationProposalAgent` → human approve/reject → execute or fallback
 - Enable `gen_ai.*` OpenTelemetry spans for LangChain4j calls
 - Read Grafana/LGTM for LLM call latency, token counts, and HITL wait time
 
@@ -400,11 +400,11 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 
 ```mermaid
 flowchart TD
-    CR["Car return<br/>(value > $15k AND severe damage)"] --> DPA
-    DPA["DispositionProposalAgent<br/>proposed_action=SCRAP"] --> HITL
+    IR["Incident report<br/>(P1/P2 on revenue-critical system)"] --> EPA
+    EPA["EscalationProposalAgent<br/>proposed_action=ESCALATE_P1"] --> HITL
     HITL{"@HumanInTheLoop gate"}
-    HITL -->|APPROVED| EXEC["Execute disposition<br/>(SCRAP/SELL/DONATE)"]
-    HITL -->|REJECTED| FALL["Fallback: KEEP<br/>→ IN_MAINTENANCE"]
+    HITL -->|APPROVED| EXEC["Execute escalation<br/>(ESCALATE_P1/ASSIGN_TEAM)"]
+    HITL -->|REJECTED| FALL["Fallback: CLOSE<br/>→ IN_PROGRESS"]
 
     style HITL fill:#ff9800,color:#fff
     style EXEC fill:#4caf50,color:#fff
@@ -422,7 +422,7 @@ flowchart TD
 | `langchain4j.hitl.status` | `PENDING` / `APPROVED` / `REJECTED` |
 | `duration` | End-to-end latency including LLM round-trips |
 
-**FinOps framing:** At 1,000 dispositions/day with avg 500 tokens/call and GPT-4o pricing, uncontrolled prompt sizes (e.g., not using `AGENTS.md`) could mean $40–$80/day in unnecessary context tokens. Tracing makes this visible.
+**FinOps framing:** At 1,000 incidents/day with avg 500 tokens/call and GPT-4o pricing, uncontrolled prompt sizes (e.g., not using `AGENTS.md`) could mean $40–$80/day in unnecessary context tokens. Tracing makes this visible.
 
 ### 6.4 Checkpoint
 
@@ -435,13 +435,13 @@ flowchart TD
 
 ---
 
-## Exercise 7 — A2A: Distributed Pricing Agent (~10 min)
+## Exercise 7 — A2A: Distributed Impact Assessment Agent (~10 min)
 
-**Story:** Riley's pricing team must own vehicle valuation as an independent service. It needs a separate release cycle, independent scalability, and the ability to be reused by other IBM systems beyond Miles of Smiles. Solution: convert `PricingAgent` into an **Agent-to-Agent (A2A)** remote service.
+**Story:** Riley's SRE team must own business impact assessment as an independent service. It needs a separate release cycle, independent scalability, and the ability to be reused by other IBM systems beyond Apex Systems. Solution: convert `ImpactAgent` into an **Agent-to-Agent (A2A)** remote service.
 
 **Goals**
 
-- Run main app (`:8080`) + pricing A2A service (`:8888`) as separate processes
+- Run main app (`:8080`) + impact assessment A2A service (`:8888`) as separate processes
 - `@A2AClientAgent` on the caller side — local interface, remote execution
 - **AgentCard**, **AgentExecutor**, **Task** vs **Message** semantics
 - Trace cross-service call in logs — correlate client request ID with remote executor
@@ -455,18 +455,18 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph main[":8080 — Main App"]
-        CPW["CarProcessingWorkflow"] --> FSA["FleetSupervisorAgent"]
-        FSA --> PA["PricingAgent<br/>@A2AClientAgent"]
+        IPW["IncidentProcessingWorkflow"] --> ISA["IncidentSupervisorAgent"]
+        ISA --> IA["ImpactAgent<br/>@A2AClientAgent"]
     end
 
-    PA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
+    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
 
-    subgraph remote[":8888 — Remote Pricing"]
-        AE["AgentExecutor"] --> RPA["PricingAgent<br/>(local LLM call)"]
-        RPA --> LLM["LLM → $10,710"]
+    subgraph remote[":8888 — Remote Impact Assessment"]
+        AE["AgentExecutor"] --> RIA["ImpactAgent<br/>(local LLM call)"]
+        RIA --> LLM["LLM → HIGH / $50k/hr"]
     end
 
-    LLM -->|"Task result"| PA
+    LLM -->|"Task result"| IA
 ```
 
 ### 7.3 MCP vs A2A
@@ -475,7 +475,7 @@ flowchart LR
 |--|-----|-----|
 | What travels | **Tool calls** (functions with typed args) | **Agent tasks** (goals with natural-language input) |
 | Who reasons | Local LLM uses remote tool | Remote LLM reasons independently |
-| Team ownership | Shared capability (weather, search) | Autonomous team agent (pricing, legal review) |
+| Team ownership | Shared capability (weather, search) | Autonomous team agent (impact assessment, legal review) |
 | Best for | Shared functionality | Delegated decision-making |
 | Quarkus annotation | `@McpToolBox("name")` | `@A2AClientAgent` |
 
@@ -494,7 +494,7 @@ flowchart LR
 
 ## What you built
 
-A production-shaped **agentic fleet platform** on IBM Enterprise Build of Quarkus:
+A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus:
 
 | # | Pattern | IBM tech | Business value |
 |---|---------|----------|----------------|
@@ -554,10 +554,10 @@ Your answer directly shapes next year's lab content.
 | Min | Clock | Activity | Risk if running long |
 |-----|-------|----------|----------------------|
 | 0–10 | :00–:10 | Intro — story + architecture + stack | Trim architecture diagram walk |
-| 10–25 | :10–:25 | Ex 1 — First agent (CleaningAgent + CleaningTool) | Skip clean-car test; just show dirty-car path |
-| 25–35 | :25–:35 | Ex 2 — MaintenanceAgent + @SystemMessage tuning | Skip tuning experiment; just implement MaintenanceAgent |
+| 10–25 | :10–:25 | Ex 1 — First agent (TriageAgent + TriageTool) | Skip false-alarm test; just show critical-incident path |
+| 25–35 | :25–:35 | Ex 2 — DiagnosticAgent + @SystemMessage tuning | Skip tuning experiment; just implement DiagnosticAgent |
 | 35–45 | :35–:45 | Ex 3 — Parallel workflow (@ParallelMapperAgent) | Skip Dev UI CDI bean check |
-| 45–60 | :45–:60 | Ex 4 — Full supervisor pipeline | Skip Path 1 (clean return); keep Paths 2+3 |
+| 45–60 | :45–:60 | Ex 4 — Full supervisor pipeline | Skip Path 1 (minor incident); keep Paths 2+3 |
 | 60–70 | :60–:70 | Ex 5 — IBM Bob + AGENTS.md | Keep guardrail demo; skip security audit |
 | 70–80 | :70–:80 | Ex 6 — HITL + observability | Skip Grafana span deep-dive; just show HITL approve/reject |
 | 80–90 | :80–:90 | Ex 7 — A2A | Skip trade-offs table discussion; just correlate logs |
@@ -574,7 +574,7 @@ Your answer directly shapes next year's lab content.
 | Port in use | Prior process still running | `lsof -i :8080` (or `:8888`); `kill -9 <pid>` |
 | Agent never calls tools | `@Tool` desc too vague, `@ToolBox` missing, or `@SystemMessage` too permissive | Tighten `@SystemMessage`; verify `@ToolBox(WidgetTool.class)` annotation |
 | `outputKey` resolution error | Missing `outputKey` on a workflow agent | Every agent used inside `@SequenceAgent` or `@SupervisorAgent` needs `@Agent(outputKey="...")` |
-| A2A timeout | Pricing service not started first | Start `:8888` before `:8080`; verify `GET http://localhost:8888/.well-known/agent.json` |
+| A2A timeout | Impact assessment service not started first | Start `:8888` before `:8080`; verify `GET http://localhost:8888/.well-known/agent.json` |
 | Supervisor invokes wrong agents | `@SupervisorRequest` prompt ambiguous | Add explicit `DO NOT invoke X` instructions for negative cases |
 | Bob invents APIs | AGENTS.md not loaded | Explicitly instruct Bob: "Read AGENTS.md before answering" |
 | Bob unavailable | Network / seats | Use `docs/05-ibm-bob/FALLBACK.md`; continue with remaining exercises |
@@ -588,7 +588,7 @@ Your answer directly shapes next year's lab content.
 
 **Abstract:**
 
-Enterprise AI is moving beyond chatbots. In this 90-minute hands-on lab, you will build a production-shaped agentic fleet-management system using the **IBM Enterprise Build of Quarkus** and **Quarkus LangChain4j**, then use **IBM Bob** to govern and document that system.
+Enterprise AI is moving beyond chatbots. In this 90-minute hands-on lab, you will build a production-shaped agentic incident management system using the **IBM Enterprise Build of Quarkus** and **Quarkus LangChain4j**, then use **IBM Bob** to govern and document that system.
 
 You will implement the core agentic workflow patterns (sequence, parallel, supervisor), decompose a monolithic agent into an independently owned service via **A2A**, and add human-in-the-loop gates with **OpenTelemetry** tracing for compliance and FinOps visibility.
 

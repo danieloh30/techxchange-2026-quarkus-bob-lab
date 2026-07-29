@@ -3,15 +3,15 @@
 <span class="badge badge--code-along">Code-Along</span>
 
 **Timebox:** 15 minutes  
-**Personas:** Priya (fleet), Riley (pricing), Maya (cleaning)  
+**Personas:** Priya (IT service mgr), Riley (SRE lead), Sam (NOC analyst)  
 **You work in:** `lab/` (keep Quarkus running)  
 **Files to edit:**
 
-- `lab/src/main/java/com/carmanagement/agentic/agents/PricingAgent.java`
-- `lab/src/main/java/com/carmanagement/agentic/agents/DispositionAgent.java`
-- `lab/src/main/java/com/carmanagement/agentic/agents/CarConditionFeedbackAgent.java`
-- `lab/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java`
-- `lab/src/main/java/com/carmanagement/agentic/workflow/CarProcessingWorkflow.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/agents/ImpactAgent.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/agents/EscalationAgent.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/agents/ResolutionAgent.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentSupervisorAgent.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java`
 
 !!! tip "Solution fallback"
     [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution) — open if stuck.
@@ -20,76 +20,75 @@
 
 ## The goal
 
-Complete the full multi-agent pipeline. After this exercise, a single `POST /car-management/return/{id}` triggers:
+Complete the full multi-agent pipeline. After this exercise, a single `POST /incident-management/process/{id}` triggers:
 
 ```mermaid
 flowchart TD
-    CPW["CarProcessingWorkflow<br/>@SequenceAgent"] --> FAW
-    CPW --> FSA
-    CPW --> CCFA
+    IPW["IncidentProcessingWorkflow<br/>@SequenceAgent"] --> IAW
+    IPW --> ISA
+    IPW --> RA
 
-    FAW["FeedbackAnalysisWorkflow<br/>@ParallelMapperAgent × 3<br/><i>done in Ex 3</i>"]
-    FAW --> |FeedbackAnalysisResults| FSA
+    IAW["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3<br/><i>done in Ex 3</i>"]
+    IAW --> |IncidentAnalysisResults| ISA
 
-    FSA["FleetSupervisorAgent<br/>@SupervisorAgent"]
-    FSA --> |LLM decides| PA["PricingAgent"]
-    FSA --> |LLM decides| DA["DispositionAgent"]
-    FSA --> |LLM decides| MA["MaintenanceAgent"]
-    FSA --> |LLM decides| CA["CleaningAgent"]
+    ISA["IncidentSupervisorAgent<br/>@SupervisorAgent"]
+    ISA --> |LLM decides| IA["ImpactAgent"]
+    ISA --> |LLM decides| EA["EscalationAgent"]
+    ISA --> |LLM decides| DA["DiagnosticAgent"]
+    ISA --> |LLM decides| TA["TriageAgent"]
 
-    CCFA["CarConditionFeedbackAgent<br/>@Agent"]
-    CCFA --> |CarConditions| CMS["CarManagementService<br/>sets final CarStatus"]
+    RA["ResolutionAgent<br/>@Agent"]
+    RA --> |IncidentOutcome| IMS["IncidentManagementService<br/>sets final IncidentStatus"]
 ```
 
 ---
 
-## Step 1 — `PricingAgent` (2 min)
+## Step 1 — `ImpactAgent` (2 min)
 
-Open [`PricingAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/PricingAgent.java).
+Open [`ImpactAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/ImpactAgent.java).
 
 Replace the `// TODO` block:
 
 ```java
 @SystemMessage("""
-    You are a vehicle pricing specialist with expertise in market valuations.
+    You are a business impact assessment specialist with expertise in SLA and revenue analysis.
 
-    Today is {current_date}. Use this to calculate the current year and vehicle age.
+    Today is {current_date}. Use this to calculate SLA breach windows.
 
-    Use these pricing guidelines:
+    Use these impact guidelines:
 
-    Brand Base Values (new current-year models):
-    - Luxury brands (Mercedes-Benz, BMW, Audi): $50,000-$70,000
-    - Premium trucks (Ford F-150): $45,000-$60,000
-    - Mainstream brands (Toyota, Honda, Chevrolet): $28,000-$42,000
-    - Economy brands (Nissan): $22,000-$35,000
+    System Criticality Tiers (hourly revenue impact):
+    - Tier 1 — Revenue-critical (payment, checkout): $50,000-$100,000/hr
+    - Tier 2 — Customer-facing (auth, search, email): $10,000-$50,000/hr
+    - Tier 3 — Internal operations (monitoring, inventory): $1,000-$10,000/hr
+    - Tier 4 — Non-critical (CDN edge, static assets): <$1,000/hr
 
-    Depreciation (calculate age as: current year - vehicle year):
-    - Age 1 year: -12% from base value
-    - Age 2 years: -15% additional (27% total)
-    - Age 3 years: -12% additional (39% total)
-    - Age 4 years: -10% additional (49% total)
-    - Age 5+ years: -8% per additional year
+    Priority Multipliers:
+    - P1 (critical): 4x base impact
+    - P2 (high): 2x base impact
+    - P3 (medium): 1x base impact
+    - P4 (low): 0.5x base impact
 
-    Condition Adjustments (apply after depreciation):
-    - Excellent/Like new: +5%
-    - Good/Recently serviced: No adjustment
-    - Fair/Minor issues: -10%
-    - Poor/Needs work: -20%
+    SLA Breach Penalties:
+    - P1 > 1 hour unresolved: $25,000 penalty
+    - P2 > 4 hours unresolved: $10,000 penalty
+    - P3 > 24 hours: $5,000 penalty
 
     Format your response as:
-    Estimated Value: $XX,XXX
-    Justification: [reasoning including vehicle age]
+    Business Impact: HIGH/MEDIUM/LOW
+    Estimated Revenue Loss: $XX,XXX/hr
+    Justification: [reasoning including system tier and priority]
     """)
 @UserMessage("""
-    Estimate the current market value of this vehicle:
-    - Make: {carMake}
-    - Model: {carModel}
-    - Year: {carYear}
-    - Condition: {carCondition}
+    Assess the business impact of this incident:
+    - System: {system}
+    - Service: {service}
+    - Priority: P{priority}
+    - Description: {incidentDescription}
     """)
-@Agent(outputKey = "carValue",
-       description = "Pricing specialist that estimates vehicle market value based on make, model, year, and condition")
-String estimateValue(String carMake, String carModel, Integer carYear, String carCondition);
+@Agent(outputKey = "businessImpact",
+       description = "Impact assessment specialist that estimates business impact based on system criticality, priority, and SLA risk")
+String assessImpact(String system, String service, Integer priority, String incidentDescription);
 ```
 
 Add imports:
@@ -101,103 +100,103 @@ import dev.langchain4j.service.UserMessage;
 ```
 
 !!! note
-    `{current_date}` is a built-in Quarkus LangChain4j template variable — it resolves to today's date automatically. This lets the agent compute vehicle age without hardcoding a year.
+    `{current_date}` is a built-in Quarkus LangChain4j template variable — it resolves to today's date automatically. This lets the agent compute SLA breach windows without hardcoding a date.
 
 ---
 
-## Step 2 — `DispositionAgent` (2 min)
+## Step 2 — `EscalationAgent` (2 min)
 
-Open [`DispositionAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/DispositionAgent.java).
+Open [`EscalationAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/EscalationAgent.java).
 
 Replace the `// TODO` block:
 
 ```java
 @SystemMessage("""
-    You are a car disposition specialist for a car rental company.
-    Your job is to determine the best disposition action based on the car's value,
-    condition, age, and damage.
+    You are an incident escalation specialist for an IT incident management system.
+    Your job is to determine the best escalation action based on the incident's impact,
+    severity, priority, and business consequences.
 
-    Disposition Options:
-    - SCRAP: Car is beyond economical repair or has severe safety concerns
-    - SELL: Car has value but is aging out of the fleet or has moderate damage
-    - DONATE: Car has minimal value but could serve a charitable purpose
-    - KEEP: Car is worth keeping in the fleet
+    Escalation Options:
+    - ESCALATE_P1: Critical incident requiring VP/exec attention and war room
+    - ASSIGN_TEAM: Route to specific engineering team for resolution
+    - WORKAROUND: Apply temporary mitigation while root cause is investigated
+    - CLOSE: Incident resolved or no action needed
 
     Decision Criteria:
-    - If estimated repair cost > 50% of car value: Consider SCRAP or SELL
-    - If car is over 5 years old with significant damage: SCRAP
-    - If car is 3-5 years old in fair condition: SELL
-    - If car has low value (<$5,000) but functional: DONATE
-    - If car is valuable and damage is minor: KEEP
+    - If estimated revenue loss > $10,000/hr: Consider ESCALATE_P1 or ASSIGN_TEAM
+    - If P1 with cascading failures: ESCALATE_P1
+    - If P2 with contained impact: ASSIGN_TEAM
+    - If workaround available and impact is temporary: WORKAROUND
+    - If false alarm or already resolved: CLOSE
 
     Provide your recommendation with a clear explanation of the reasoning.
     """)
 @UserMessage("""
-    Determine the disposition for this vehicle:
-    - Make: {carMake}
-    - Model: {carModel}
-    - Year: {carYear}
-    - Car Number: {carNumber}
-    - Current Condition: {carCondition}
-    - Estimated Value: {carValue}
-    - Damage/Feedback: {feedback}
+    Determine the escalation action for this incident:
+    - System: {system}
+    - Service: {service}
+    - Priority: P{priority}
+    - Incident Number: {incidentNumber}
+    - Description: {incidentDescription}
+    - Business Impact Assessment: {businessImpact}
+    - Incident Report: {report}
 
-    Provide your disposition recommendation (SCRAP/SELL/DONATE/KEEP) and explanation.
+    Provide your escalation recommendation (ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE) and explanation.
     """)
-@Agent(outputKey = "dispositionAction",
-       description = "Car disposition specialist. Determines how to dispose of a car based on value and condition.")
-String processDisposition(String carMake, String carModel, Integer carYear,
-                          Integer carNumber, String carCondition,
-                          String carValue, String feedback);
+@Agent(outputKey = "escalationAction",
+       description = "Incident escalation specialist. Determines escalation path based on impact and severity.")
+String processEscalation(String system, String service, Integer priority,
+                          Integer incidentNumber, String incidentDescription,
+                          String businessImpact, String report);
 ```
 
 Add the same three imports as Step 1.
 
 !!! note
-    The `{carValue}` placeholder means the supervisor passes the `PricingAgent` output (e.g., `"$42,000"`) directly into this `@UserMessage`. `AgenticScope` wires it — no Java code needed to thread values between agents.
+    The `{businessImpact}` placeholder means the supervisor passes the `ImpactAgent` output (e.g., `"Business Impact: HIGH\nRevenue Loss: $50,000/hr"`) directly into this `@UserMessage`. `AgenticScope` wires it — no Java code needed to thread values between agents.
 
 ---
 
-## Step 3 — `CarConditionFeedbackAgent` (2 min)
+## Step 3 — `ResolutionAgent` (2 min)
 
-Open [`CarConditionFeedbackAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/CarConditionFeedbackAgent.java).
+Open [`ResolutionAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/ResolutionAgent.java).
 
 Replace the `// TODO` block:
 
 ```java
 @SystemMessage("""
-    Analyze car processing results and output a JSON summary.
+    Analyze incident processing results and output a JSON summary.
 
     Output format:
     {
-      "generalCondition": "concise description (max 200 chars)",
-      "carAssignment": "DISPOSITION|MAINTENANCE|CLEANING|NONE"
+      "resolution": "concise description (max 200 chars)",
+      "incidentAction": "ESCALATE|INVESTIGATE|TRIAGE|RESOLVE"
     }
 
     Rules:
-    - Check the ACTUAL DispositionAgent decision in supervisorDecision, not just the analysis
-    - If supervisorDecision mentions SCRAP/SELL/DONATE (but NOT KEEP) → DISPOSITION
-    - Else if maintenanceAnalysis ≠ "MAINTENANCE_NOT_REQUIRED" → MAINTENANCE
-    - Else if cleaningAnalysis ≠ "CLEANING_NOT_REQUIRED" → CLEANING
-    - Else → NONE
-    - IMPORTANT: If DispositionAgent decided KEEP, do NOT assign DISPOSITION — check maintenance/cleaning instead
-    - generalCondition: Summarize the action and reason in plain language
+    - Check the ACTUAL EscalationAgent decision in supervisorDecision, not just the analysis
+    - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM (but NOT CLOSE) → ESCALATE
+    - Else if resolutionAnalysis ≠ "ESCALATION_NOT_REQUIRED" → INVESTIGATE
+    - Else if severityAnalysis ≠ "SEVERITY_LOW" → TRIAGE
+    - Else → RESOLVE
+    - IMPORTANT: If EscalationAgent decided CLOSE, do NOT assign ESCALATE — check diagnostic/triage instead
+    - resolution: Summarize the action and reason in plain language
     """)
 @UserMessage("""
-    Car: {carInfo.year} {carInfo.make} {carInfo.model} (#{carNumber})
+    Incident: P{incidentInfo.priority} {incidentInfo.system}/{incidentInfo.service} (#{incidentNumber})
 
     Supervisor Decision: {supervisorDecision}
 
-    Feedback Analysis Results:
-    - Disposition: {feedbackAnalysisResults.dispositionAnalysis}
-    - Maintenance: {feedbackAnalysisResults.maintenanceAnalysis}
-    - Cleaning: {feedbackAnalysisResults.cleaningAnalysis}
+    Incident Analysis Results:
+    - Resolution: {incidentAnalysisResults.resolutionAnalysis}
+    - Impact: {incidentAnalysisResults.impactAnalysis}
+    - Severity: {incidentAnalysisResults.severityAnalysis}
     """)
-@Agent(description = "Final car condition analyzer. Determines the car's condition and assignment based on all feedback.",
-       outputKey = "carConditions")
-CarConditions analyzeForCondition(CarInfo carInfo, Integer carNumber,
-                                  FeedbackAnalysisResults feedbackAnalysisResults,
-                                  String supervisorDecision);
+@Agent(description = "Final incident resolution analyzer. Determines the incident's outcome and action based on all analysis.",
+       outputKey = "incidentOutcome")
+IncidentOutcome analyzeForResolution(IncidentInfo incidentInfo, Integer incidentNumber,
+                                      IncidentAnalysisResults incidentAnalysisResults,
+                                      String supervisorDecision);
 ```
 
 Add imports:
@@ -208,14 +207,14 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 ```
 
-??? info "Why return `CarConditions` instead of `String`?"
-    Quarkus LangChain4j deserializes the LLM's JSON output directly into the `CarConditions` record. The `@SystemMessage` instructs the LLM to output well-formed JSON; the framework handles parsing. If parsing fails, an exception is thrown at runtime — which is far better than silently accepting a malformed string downstream.
+??? info "Why return `IncidentOutcome` instead of `String`?"
+    Quarkus LangChain4j deserializes the LLM's JSON output directly into the `IncidentOutcome` record. The `@SystemMessage` instructs the LLM to output well-formed JSON; the framework handles parsing. If parsing fails, an exception is thrown at runtime — which is far better than silently accepting a malformed string downstream.
 
 ---
 
-## Step 4 — `FleetSupervisorAgent` (4 min)
+## Step 4 — `IncidentSupervisorAgent` (4 min)
 
-Open [`FleetSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/agents/FleetSupervisorAgent.java).
+Open [`IncidentSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentSupervisorAgent.java).
 
 This is the most important agent in the system. It has **two annotated members**.
 
@@ -225,75 +224,76 @@ This is the most important agent in the system. It has **two annotated members**
 @SupervisorAgent(
         outputKey = "supervisorDecision",
         subAgents = {
-                PricingAgent.class,
-                DispositionAgent.class,
-                MaintenanceAgent.class,
-                CleaningAgent.class
+                ImpactAgent.class,
+                EscalationAgent.class,
+                DiagnosticAgent.class,
+                TriageAgent.class
         })
-String superviseCarProcessing(CarInfo carInfo, Integer carNumber,
-                               FeedbackAnalysisResults feedbackAnalysisResults);
+String superviseIncidentProcessing(IncidentInfo incidentInfo, Integer incidentNumber,
+                                    IncidentAnalysisResults incidentAnalysisResults);
 ```
 
 **4b — `@SupervisorRequest` static method** (replace the second `// TODO`):
 
 ```java
 @SupervisorRequest
-static String request(CarInfo carInfo, Integer carNumber,
-                      FeedbackAnalysisResults feedbackAnalysisResults) {
+static String request(IncidentInfo incidentInfo, Integer incidentNumber,
+                      IncidentAnalysisResults incidentAnalysisResults) {
 
-    boolean dispositionRequired = feedbackAnalysisResults.dispositionAnalysis() != null &&
-            feedbackAnalysisResults.dispositionAnalysis().toUpperCase().contains("DISPOSITION_REQUIRED");
+    boolean escalationRequired = incidentAnalysisResults.resolutionAnalysis() != null &&
+            incidentAnalysisResults.resolutionAnalysis().toUpperCase().contains("ESCALATION_REQUIRED");
 
-    String noDispositionMessage = """
-            No disposition has been requested.
+    String noEscalationMessage = """
+            No escalation has been requested.
 
             INSTRUCTIONS:
-            - DO NOT invoke PricingAgent
-            - DO NOT invoke DispositionAgent
-            - Only invoke MaintenanceAgent if maintenance needed
-            - Only invoke CleaningAgent if cleaning needed
+            - DO NOT invoke ImpactAgent
+            - DO NOT invoke EscalationAgent
+            - Only invoke DiagnosticAgent if root cause analysis needed
+            - Only invoke TriageAgent if re-triage needed
             """;
 
-    String dispositionMessage = """
-            The car has to be disposed.
+    String escalationMessage = """
+            The incident requires escalation.
 
-            STEP 1: Invoke PricingAgent to get car value
-            STEP 2: Invoke DispositionAgent to decide disposition action (SCRAP/SELL/DONATE/KEEP)
-            STEP 3: If DispositionAgent decides KEEP:
-                    - Invoke MaintenanceAgent if maintenance needed
-                    - Invoke CleaningAgent if cleaning needed
+            STEP 1: Invoke ImpactAgent to assess business impact
+            STEP 2: Invoke EscalationAgent to decide escalation action (ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE)
+            STEP 3: If EscalationAgent decides CLOSE:
+                    - Invoke DiagnosticAgent if root cause analysis needed
+                    - Invoke TriageAgent if re-triage needed
 
-            IMPORTANT: When invoking DispositionAgent:
-            - Pass carValue as a STRING with dollar sign (e.g., "$10,710" not 10710)
-            - Use the EXACT format from PricingAgent's response
+            IMPORTANT: When invoking EscalationAgent:
+            - Pass businessImpact as a STRING with the full assessment
+            - Use the EXACT format from ImpactAgent's response
 
             Follow the decision logic in your system message carefully.
             """;
 
     return String.format("""
-            You are a fleet supervisor for a car rental company. You coordinate action agents based on feedback analysis.
+            You are an incident supervisor for an IT incident management system. You coordinate action agents based on incident analysis.
 
-            The feedback has already been analyzed and you have these inputs:
-            - cleaningAnalysis: What cleaning is needed (or "CLEANING_NOT_REQUIRED")
-            - maintenanceAnalysis: What maintenance is needed (or "MAINTENANCE_NOT_REQUIRED")
-            - dispositionAnalysis: Whether severe damage requires disposition (or "DISPOSITION_NOT_REQUIRED")
+            The incident has already been analyzed and you have these inputs:
+            - severityAnalysis: Severity classification (or "SEVERITY_LOW")
+            - impactAnalysis: Business impact assessment (or "IMPACT_MINIMAL")
+            - resolutionAnalysis: Whether critical issues require escalation (or "ESCALATION_NOT_REQUIRED")
 
-            Your job is to invoke the appropriate ACTION agents for this car.
+            Your job is to invoke the appropriate ACTION agents for this incident.
 
-            Car: %d %s %s (#%d)
-            Current Condition: %s
+            Incident: P%d %s/%s (#%d)
+            Current Description: %s
 
-            Cleaning Analysis: %s
-            Maintenance Analysis: %s
+            Severity Analysis: %s
+            Impact Analysis: %s
 
             In particular, you have to follow these steps:
 
             %s
             """,
-            carInfo.year, carInfo.make, carInfo.model, carNumber, carInfo.condition,
-            feedbackAnalysisResults.cleaningAnalysis(),
-            feedbackAnalysisResults.maintenanceAnalysis(),
-            dispositionRequired ? dispositionMessage : noDispositionMessage);
+            incidentInfo.priority, incidentInfo.system, incidentInfo.service,
+            incidentNumber, incidentInfo.description,
+            incidentAnalysisResults.severityAnalysis(),
+            incidentAnalysisResults.impactAnalysis(),
+            escalationRequired ? escalationMessage : noEscalationMessage);
 }
 ```
 
@@ -305,38 +305,38 @@ import dev.langchain4j.agentic.declarative.SupervisorRequest;
 ```
 
 ??? info "Why policy lives in `@SupervisorRequest`"
-    The boolean `dispositionRequired` is the only Java logic here — it checks whether the upstream `FeedbackAnalysisWorkflow` flagged a disposition case. Everything else is natural-language instructions. To change the supervisor's behavior (add a new sub-agent, change escalation rules), you edit this string. No `if/else` chains, no enum routing tables.
+    The boolean `escalationRequired` is the only Java logic here — it checks whether the upstream `IncidentAnalysisWorkflow` flagged an escalation case. Everything else is natural-language instructions. To change the supervisor's behavior (add a new sub-agent, change escalation rules), you edit this string. No `if/else` chains, no enum routing tables.
 
 ??? info "Why declare sub-agents in `@SupervisorAgent` but not call them explicitly?"
     The LLM reads the `@SupervisorRequest` prompt and decides which sub-agents to call, in what order, with what parameters. `subAgents` is the capability declaration — it tells the framework what tools to expose. The LLM decides the invocation strategy.
 
 ---
 
-## Step 5 — `CarProcessingWorkflow` (2 min)
+## Step 5 — `IncidentProcessingWorkflow` (2 min)
 
-Open [`CarProcessingWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/carmanagement/agentic/workflow/CarProcessingWorkflow.java).
+Open [`IncidentProcessingWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java).
 
 Replace both `// TODO` blocks:
 
 **5a — `@SequenceAgent` method:**
 
 ```java
-@SequenceAgent(outputKey = "carProcessingAgentResult",
-        subAgents = { FeedbackAnalysisWorkflow.class,
-                      FleetSupervisorAgent.class,
-                      CarConditionFeedbackAgent.class })
-CarConditions processCarReturn(List<FeedbackTask> tasks, CarInfo carInfo,
-                                Integer carNumber, String feedback);
+@SequenceAgent(outputKey = "incidentProcessingAgentResult",
+        subAgents = { IncidentAnalysisWorkflow.class,
+                      IncidentSupervisorAgent.class,
+                      ResolutionAgent.class })
+IncidentOutcome processIncident(List<AnalysisTask> tasks, IncidentInfo incidentInfo,
+                                 Integer incidentNumber, String report);
 ```
 
 **5b — `@Output` static method:**
 
 ```java
 @Output
-static CarConditions output(CarConditions carConditions) {
-    Log.debug("CarConditions: " + carConditions.generalCondition()
-              + " → " + carConditions.carAssignment());
-    return carConditions;
+static IncidentOutcome output(IncidentOutcome incidentOutcome) {
+    Log.debug("IncidentOutcome: " + incidentOutcome.resolution()
+              + " → " + incidentOutcome.incidentAction());
+    return incidentOutcome;
 }
 ```
 
@@ -354,22 +354,22 @@ Save. Quarkus hot-reloads.
 
 ## Step 6 — Test all three paths (3 min)
 
-**Path 1 — Clean return:**  
-Return Car **#6** (Toyota Corolla) with `"Car looks great, no issues"`.  
-Expected: status = `AVAILABLE`, no tool calls, supervisor skips pricing + disposition.
+**Path 1 — Minor incident:**  
+Process Incident **#6** (search-engine/product-search) with `"False alarm, relevance restored after cache refresh"`.  
+Expected: status = `RESOLVED`, no tool calls, supervisor skips impact + escalation.
 
-**Path 2 — Dirty car:**  
-Return Car **#5** (Ford Focus) with `"Dog hair all over the cabin, smells awful"`.  
-Expected: status = `AT_CLEANING`, logs show `CleaningTool` called.
+**Path 2 — Needs triage:**  
+Process Incident **#5** (email-service/notification-api) with `"SMTP timeout for 30% of outbound emails, queue growing"`.  
+Expected: status = `TRIAGING`, logs show `TriageTool` called.
 
-**Path 3 — Severe damage (full supervisor path):**  
-Return Car **#1** (Mercedes-Benz C-Class, 2024) with:
+**Path 3 — Critical incident (full supervisor path):**  
+Process Incident **#1** (payment-gateway/checkout-api, P2) with:
 
 ```
-Front end crushed after collision; airbags deployed; not driveable; major structural damage
+Complete checkout failure; all payment processing down; customers seeing 500 errors; revenue loss estimated at $50k/hr
 ```
 
-Expected: status = `PENDING_DISPOSITION`, logs show `PricingAgent` then `DispositionAgent` invoked by the supervisor. `CleaningAgent` is **not** invoked.
+Expected: status = `ESCALATED`, logs show `ImpactAgent` then `EscalationAgent` invoked by the supervisor. `TriageAgent` is **not** invoked.
 
 ---
 
@@ -388,10 +388,10 @@ Expected: status = `PENDING_DISPOSITION`, logs show `PricingAgent` then `Disposi
 
 ## :material-check-circle: Done when
 
-- [ ] Full pipeline runs end-to-end: `POST /car-management/return/{id}` produces correct `CarStatus`
-- [ ] Supervisor chose pricing + disposition for severe damage (Path 3)
-- [ ] Supervisor chose cleaning only for dirty car (Path 2)
-- [ ] You can draw the full agent chain from `CarProcessingWorkflow` → `CarStatus` from memory
+- [ ] Full pipeline runs end-to-end: `POST /incident-management/process/{id}` produces correct `IncidentStatus`
+- [ ] Supervisor chose impact + escalation for critical incident (Path 3)
+- [ ] Supervisor chose triage only for email issues (Path 2)
+- [ ] You can draw the full agent chain from `IncidentProcessingWorkflow` → `IncidentStatus` from memory
 - [ ] You can explain why policy lives in `@SupervisorRequest` and not in Java `if/else`
 
 </div>

@@ -4,7 +4,7 @@
 
 This is where you work throughout Exercises 1–4. It contains:
 - A running Quarkus app with UI, model, REST endpoints, and seeded data
-- **Stub files** in `src/main/java/com/carmanagement/agentic/` — interfaces with `// TODO` markers
+- **Stub files** in `src/main/java/com/incidentmanagement/agentic/` — interfaces with `// TODO` markers
 - `lab/AGENTS.md` — your project-level IBM Bob context file (used in Exercise 5)
 
 ```bash
@@ -24,9 +24,9 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
-| Ex 1 | [`01-first-agents/solution`](01-first-agents/solution) | `CleaningAgent` + `CleaningTool` |
-| Ex 2 | [`03-supervisor/solution`](03-supervisor/solution) | `MaintenanceAgent` + full agent set |
-| Ex 3 | [`03-supervisor/solution`](03-supervisor/solution) | `FeedbackAnalysisWorkflow` + `@ParallelMapperAgent` |
+| Ex 1 | [`01-first-agents/solution`](01-first-agents/solution) | `TriageAgent` + `TriageTool` |
+| Ex 2 | [`03-supervisor/solution`](03-supervisor/solution) | `DiagnosticAgent` + full agent set |
+| Ex 3 | [`03-supervisor/solution`](03-supervisor/solution) | `IncidentAnalysisWorkflow` + `@ParallelMapperAgent` |
 | Ex 4 | [`04-ibm-bob/solution`](04-ibm-bob/solution) | Complete multi-agent supervisor pipeline |
 | Ex 5 | [`04-ibm-bob/solution`](04-ibm-bob/solution) | Same project — Bob validates this codebase |
 | Ex 6 | [`06-hitl-observability/solution`](06-hitl-observability/solution) | `@HumanInTheLoop` + OTel |

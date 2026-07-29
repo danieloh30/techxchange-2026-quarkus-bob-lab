@@ -1,20 +1,20 @@
-CREATE SEQUENCE IF NOT EXISTS car_info_id_seq;
+CREATE SEQUENCE IF NOT EXISTS incident_info_id_seq;
 
-CREATE TABLE IF NOT EXISTS car_info (
-    id INT PRIMARY KEY DEFAULT nextval('car_info_id_seq'),
-    make VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    year INT NOT NULL,
-    condition VARCHAR(255),
+CREATE TABLE IF NOT EXISTS incident_info (
+    id INT PRIMARY KEY DEFAULT nextval('incident_info_id_seq'),
+    system_name VARCHAR(255) NOT NULL,
+    service VARCHAR(255) NOT NULL,
+    priority INT NOT NULL,
+    description VARCHAR(255),
     status VARCHAR(20) NOT NULL
 );
 
-INSERT INTO car_info (id, make, model, year, condition, status) VALUES
-    (nextval('car_info_id_seq'), 'Mercedes-Benz', 'C-Class', EXTRACT(YEAR FROM CURRENT_DATE) - 2, 'Minor dent on passenger door', 'RENTED'),
-    (nextval('car_info_id_seq'), 'BMW', 'X5', EXTRACT(YEAR FROM CURRENT_DATE) - 1, 'Recently serviced, excellent condition', 'IN_MAINTENANCE'),
-    (nextval('car_info_id_seq'), 'Audi', 'Q4', EXTRACT(YEAR FROM CURRENT_DATE) - 1, 'Brake pads recently replaced', 'RENTED'),
-    (nextval('car_info_id_seq'), 'Nissan', 'Altima', EXTRACT(YEAR FROM CURRENT_DATE) - 8, 'Interior needs cleaning', 'AT_CLEANING'),
-    (nextval('car_info_id_seq'), 'Ford', 'Focus', EXTRACT(YEAR FROM CURRENT_DATE) - 12, 'High mileage, engine issues', 'RENTED'),
-    (nextval('car_info_id_seq'), 'Toyota', 'Corolla', EXTRACT(YEAR FROM CURRENT_DATE) - 3, 'Like new, no issues', 'RENTED'),
-    (nextval('car_info_id_seq'), 'Honda', 'Civic', EXTRACT(YEAR FROM CURRENT_DATE) - 4, 'Good condition, minor wear and tear', 'RENTED'),
-    (nextval('car_info_id_seq'), 'Ford', 'F-150', EXTRACT(YEAR FROM CURRENT_DATE) - 2, 'Small scratch on rear bumper', 'IN_MAINTENANCE');
+INSERT INTO incident_info (id, system_name, service, priority, description, status) VALUES
+    (nextval('incident_info_id_seq'), 'payment-gateway', 'checkout-api', 2, 'Intermittent timeout errors during peak hours', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'auth-service', 'user-login', 1, 'Authentication failures affecting all users', 'IN_PROGRESS'),
+    (nextval('incident_info_id_seq'), 'inventory-db', 'stock-sync', 3, 'Stock levels not syncing between warehouses', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'cdn-edge', 'static-assets', 4, 'Slow asset loading in APAC region', 'TRIAGING'),
+    (nextval('incident_info_id_seq'), 'email-service', 'notification-api', 2, 'Notification emails delayed by 30+ minutes', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'search-engine', 'product-search', 3, 'Search results returning stale data', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'monitoring', 'alerting-api', 2, 'False positive alerts flooding on-call team', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'api-gateway', 'rate-limiter', 1, 'Rate limiter misconfigured causing legitimate request drops', 'IN_PROGRESS');

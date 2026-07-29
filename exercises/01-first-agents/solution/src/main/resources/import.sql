@@ -1,19 +1,20 @@
-CREATE SEQUENCE IF NOT EXISTS car_info_id_seq;
+CREATE SEQUENCE IF NOT EXISTS incident_info_id_seq;
 
-CREATE TABLE IF NOT EXISTS car_info (
-    id INT PRIMARY KEY DEFAULT nextval('car_info_id_seq'),
-    make VARCHAR(255) NOT NULL,
-    model VARCHAR(255) NOT NULL,
-    year INT NOT NULL,
+CREATE TABLE IF NOT EXISTS incident_info (
+    id INT PRIMARY KEY DEFAULT nextval('incident_info_id_seq'),
+    system_name VARCHAR(255) NOT NULL,
+    service VARCHAR(255) NOT NULL,
+    priority INT NOT NULL,
+    description VARCHAR(255),
     status VARCHAR(20) NOT NULL
 );
 
-INSERT INTO car_info (id, make, model, year, status) VALUES
-    (nextval('car_info_id_seq'), 'Mercedes-Benz', 'C-Class', EXTRACT(YEAR FROM CURRENT_DATE) - 2, 'RENTED'),
-    (nextval('car_info_id_seq'), 'BMW', 'X5', EXTRACT(YEAR FROM CURRENT_DATE) - 1, 'AT_CLEANING'),
-    (nextval('car_info_id_seq'), 'Audi', 'Q4', EXTRACT(YEAR FROM CURRENT_DATE) - 1, 'RENTED'),
-    (nextval('car_info_id_seq'), 'Nissan', 'Altima', EXTRACT(YEAR FROM CURRENT_DATE) - 8, 'AT_CLEANING'),
-    (nextval('car_info_id_seq'), 'Ford', 'Focus', EXTRACT(YEAR FROM CURRENT_DATE) - 12, 'RENTED'),
-    (nextval('car_info_id_seq'), 'Toyota', 'Corolla', EXTRACT(YEAR FROM CURRENT_DATE) - 3, 'RENTED'),
-    (nextval('car_info_id_seq'), 'Honda', 'Civic', EXTRACT(YEAR FROM CURRENT_DATE) - 4, 'RENTED'),
-    (nextval('car_info_id_seq'), 'Ford', 'F-150', EXTRACT(YEAR FROM CURRENT_DATE) - 2, 'AT_CLEANING');
+INSERT INTO incident_info (id, system_name, service, priority, description, status) VALUES
+    (nextval('incident_info_id_seq'), 'payment-gateway', 'checkout-api', 2, 'Intermittent 503 errors during peak hours', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'auth-service', 'user-login', 1, 'Complete authentication failure', 'IN_PROGRESS'),
+    (nextval('incident_info_id_seq'), 'inventory-db', 'stock-sync', 3, 'Stale inventory data, sync lag 15 min', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'cdn-edge', 'static-assets', 4, 'Slow asset loading in EU region', 'TRIAGING'),
+    (nextval('incident_info_id_seq'), 'email-service', 'notification-api', 2, 'Delivery failures for order confirmations', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'search-engine', 'product-search', 3, 'Relevance degradation after index rebuild', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'monitoring', 'alerting-api', 2, 'Alert fatigue — 40% false positive rate', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'api-gateway', 'rate-limiter', 1, 'Rate limiter rejecting legitimate traffic', 'IN_PROGRESS');
