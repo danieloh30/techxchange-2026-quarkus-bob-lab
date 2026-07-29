@@ -33,6 +33,8 @@ export OPENAI_API_KEY=sk-your-lab-key-here
 
 Open **http://localhost:8080** — you'll see the Incident Dashboard with 8 seeded incidents but no agent behavior yet (processing will fail — that's expected, you haven't wired the agents).
 
+<img src="../images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+
 ---
 
 ## Step 1 — Implement `TriageAgent` (5 min)
@@ -156,7 +158,11 @@ The LLM decides *whether* to call the tool based on the `@SystemMessage` policy.
 
 ## Step 4 — Test it (4 min)
 
-Open **http://localhost:8080** and process Incident **#5** (email-service/notification-api, status: `OPEN`) with:
+Open **http://localhost:8080**, click **View** on Incident **#5** (email-service/notification-api, status: `OPEN`), and process it with:
+
+<img src="../images/incident-detail-panel.png" alt="Detail panel for processing an incident" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+
+Enter this report in the detail panel:
 
 ```
 Order confirmation emails failing for 30% of customers, bounce rate spiking

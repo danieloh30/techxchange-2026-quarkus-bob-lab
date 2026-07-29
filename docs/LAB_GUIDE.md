@@ -195,7 +195,9 @@ export OPENAI_API_KEY=sk-your-lab-key-here
 ./mvnw quarkus:dev
 ```
 
-Open http://localhost:8080 — Incident Dashboard with 8 seeded incidents; **Process** button in the Action column. Processing will fail — no agents are wired yet. That's Exercise 1.
+Open http://localhost:8080 — Incident Dashboard with 8 seeded incidents. Click the **View** button in the Action column to open the detail panel. Processing will fail — no agents are wired yet. That's Exercise 1.
+
+<img src="images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 ### 1.2 Open the exercise guide
 

@@ -24,7 +24,7 @@ public interface IncidentAnalysisWorkflow {
     // --8<-- [start:parallel-mapper-agent]
     @ParallelMapperAgent(
             description = "Analyzes incident reports in parallel for severity, impact, and resolution needs",
-            outputKey = "feedbackAnalysisResults",
+            outputKey = "incidentAnalysisResults",
             subAgent = IncidentAnalysisAgent.class,
             itemsProvider = "tasks")
     // --8<-- [end:parallel-mapper-agent]
@@ -36,15 +36,15 @@ public interface IncidentAnalysisWorkflow {
 
     /**
      * Output method that transforms the parallel analysis results into a structured object.
-     * The feedbackAnalysisResults list contains results in the same order as the input tasks:
+     * The incidentAnalysisResults list contains results in the same order as the input tasks:
      * [0] = severity analysis, [1] = impact analysis, [2] = resolution analysis
      */
     @Output
-    static IncidentAnalysisResults output(AgenticScope scope, List<String> feedbackAnalysisResults) {
+    static IncidentAnalysisResults output(AgenticScope scope, List<String> incidentAnalysisResults) {
         return new IncidentAnalysisResults(
-                feedbackAnalysisResults.get(0),  // severityAnalysis
-                feedbackAnalysisResults.get(1),  // impactAnalysis
-                feedbackAnalysisResults.get(2)   // resolutionAnalysis
+                incidentAnalysisResults.get(0),  // severityAnalysis
+                incidentAnalysisResults.get(1),  // impactAnalysis
+                incidentAnalysisResults.get(2)   // resolutionAnalysis
         );
     }
 }
