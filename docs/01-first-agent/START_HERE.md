@@ -169,9 +169,18 @@ Order confirmation emails failing for 30% of customers, bounce rate spiking
 ```
 
 **Expected terminal logs:**
-```
-[dev.langchain4j.agentic] ← LLM: tool_call requestTriage(incidentNumber=5, assignOnCall=true, ...)
-  └─ TriageTool activated for incident #5
+```json
+{
+    "role" : "assistant",
+    "tool_calls" : [ {
+      "id" : "call_...",
+      "type" : "function",
+      "function" : {
+        "name" : "requestTriage",
+        "arguments" : "{\"incidentNumber\":5,\"system\":\"email-service\",\"service\":\"notification-api\",\"priority\":2,\"assignOnCall\":true,\"notifyStakeholders\":true,\"createWarRoom\":true,\"linkRelatedIncidents\":true,\"triageNotes\":\"Order confirmation emails are failing for 30% of customers...\"}"
+      }
+    } ]
+}
 ```
 
 **Expected UI:** Incident #5 status → `TRIAGING`
