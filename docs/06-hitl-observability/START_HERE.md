@@ -67,7 +67,7 @@ UI shows **"Awaiting Approval"**:
 - **Approve** → status becomes `ESCALATED`
 - Repeat with same incident (reset DB or use Incident #3) → **Reject** → status becomes `IN_PROGRESS`
 
-<img src="../images/hitl-approval-modal.png" alt="Human-in-the-loop approval modal" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<img src="../../images/hitl-approval-modal.png" alt="Human-in-the-loop approval modal" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 ---
 
@@ -75,7 +75,7 @@ UI shows **"Awaiting Approval"**:
 
 Open **http://localhost:3000** → Explore → Tempo → service `incident-management`.
 
-<img src="../images/grafana-dashboard.png" alt="Grafana Tempo trace view" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<img src="../../images/grafana-dashboard.png" alt="Grafana Tempo trace view" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 Find spans and read:
 
