@@ -48,7 +48,7 @@ public class ApprovalService {
             String incidentSystem,
             String incidentService,
             String incidentPriority,
-            String revenueImpact,
+            String businessImpact,
             String proposedEscalation,
             String escalationReason,
             String incidentDescription,
@@ -68,7 +68,7 @@ public class ApprovalService {
         // Create proposal in separate thread with its own transaction
         executor.submit(() -> {
             try {
-                createProposalInNewTransaction(incidentNumber, incidentSystem, incidentService, incidentPriority, revenueImpact,
+                createProposalInNewTransaction(incidentNumber, incidentSystem, incidentService, incidentPriority, businessImpact,
                         proposedEscalation, escalationReason, incidentDescription, incidentReport);
                 Log.info("Proposal creation transaction committed - now visible to queries");
             } catch (Exception e) {
@@ -87,7 +87,7 @@ public class ApprovalService {
             String incidentSystem,
             String incidentService,
             String incidentPriority,
-            String revenueImpact,
+            String businessImpact,
             String proposedEscalation,
             String escalationReason,
             String incidentDescription,
@@ -99,7 +99,7 @@ public class ApprovalService {
         proposal.incidentSystem = incidentSystem;
         proposal.incidentService = incidentService;
         proposal.incidentPriority = incidentPriority;
-        proposal.revenueImpact = revenueImpact;
+        proposal.businessImpact = businessImpact;
         proposal.proposedEscalation = proposedEscalation;
         proposal.escalationReason = escalationReason;
         proposal.incidentDescription = incidentDescription;
@@ -111,7 +111,7 @@ public class ApprovalService {
         entityManager.flush();
 
         Log.infof("Created approval proposal ID=%d for incident %d - %s / %s [%s] (Impact: %s, Proposed: %s)",
-                proposal.id, incidentNumber, incidentSystem, incidentService, incidentPriority, revenueImpact, proposedEscalation);
+                proposal.id, incidentNumber, incidentSystem, incidentService, incidentPriority, businessImpact, proposedEscalation);
         Log.info("WORKFLOW PAUSED - Waiting for human approval decision");
         Log.infof("Proposal persisted with ID: %d, status: %s", proposal.id, proposal.status);
     }

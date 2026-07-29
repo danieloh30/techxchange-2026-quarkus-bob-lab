@@ -1,16 +1,9 @@
 package com.incidentmanagement.model;
 
-/**
- * Record representing an incident analysis task with its configuration.
- * Contains the type of analysis and system instructions for the task.
- */
 public record AnalysisTask(
         AnalysisType analysisType,
         String systemInstructions) {
 
-    /**
-     * Factory method for creating a severity analysis task.
-     */
     public static AnalysisTask severity() {
         return new AnalysisTask(
                 AnalysisType.SEVERITY,
@@ -25,9 +18,6 @@ public record AnalysisTask(
         );
     }
 
-    /**
-     * Factory method for creating an impact analysis task.
-     */
     public static AnalysisTask impact() {
         return new AnalysisTask(
                 AnalysisType.IMPACT,
@@ -43,9 +33,6 @@ public record AnalysisTask(
         );
     }
 
-    /**
-     * Factory method for creating a resolution analysis task.
-     */
     public static AnalysisTask resolution() {
         return new AnalysisTask(
                 AnalysisType.RESOLUTION,

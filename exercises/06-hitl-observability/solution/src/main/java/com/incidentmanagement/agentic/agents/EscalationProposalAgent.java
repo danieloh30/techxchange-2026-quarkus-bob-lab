@@ -44,7 +44,7 @@ public interface EscalationProposalAgent {
         - Priority: {incidentPriority}
         - Incident Number: {incidentNumber}
         - Current Description: {incidentDescription}
-        - Estimated Revenue Impact: {revenueImpact}
+        - Estimated Revenue Impact: {businessImpact}
         - Incident Report: {feedback}
 
         Provide your escalation proposal with clear reasoning.
@@ -56,6 +56,6 @@ public interface EscalationProposalAgent {
             String incidentPriority,
             Integer incidentNumber,
             String incidentDescription,
-            String revenueImpact,
+            String businessImpact,
             String feedback);
 }

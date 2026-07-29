@@ -17,7 +17,7 @@ public interface IncidentAnalysisAgent {
         Incident Information:
         System: {incidentInfo.system}
         Service: {incidentInfo.service}
-        Priority: {incidentInfo.priority}
+        Priority: P{incidentInfo.priority}
         Current Description: {incidentInfo.description}
 
         Report: {report}

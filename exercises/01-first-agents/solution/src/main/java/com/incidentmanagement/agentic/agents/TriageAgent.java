@@ -16,7 +16,8 @@ public interface TriageAgent {
 
     @SystemMessage("""
         You handle intake for the triage department of an IT incident management system.
-        It is your job to submit a request to the provided requestTriage function to take action based on the provided report.
+        It is your job to submit a request to the provided requestTriage function
+        to take action based on the provided incident report.
         Be specific about what triage actions are needed.
         If no triage action is needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
         """)
@@ -24,7 +25,7 @@ public interface TriageAgent {
         Incident Information:
         System: {incidentInfo.system}
         Service: {incidentInfo.service}
-        Priority: {incidentInfo.priority}
+        Priority: P{incidentInfo.priority}
         Incident Number: {incidentNumber}
 
         Report: {report}

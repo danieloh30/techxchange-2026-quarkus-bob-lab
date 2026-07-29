@@ -17,16 +17,16 @@ public interface IncidentAnalysisAgent {
         Incident Information:
         System: {incidentInfo.system}
         Service: {incidentInfo.service}
-        Priority: {incidentInfo.priority}
-        Previous Description: {incidentInfo.description}
+        Priority: P{incidentInfo.priority}
+        Current Description: {incidentInfo.description}
 
-        Report: {feedback}
+        Report: {report}
         """)
-    @Agent(description = "Incident analyzer. Using incident report, determines if action is needed based on task type.",
-            outputKey = "feedbackAnalysis")
-    String analyzeFeedback(
+    @Agent(description = "Incident analyzer. Using report, determines if action is needed based on task type.",
+            outputKey = "incidentAnalysis")
+    String analyzeIncident(
             AnalysisTask task,
             IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String feedback);
+            String report);
 }
