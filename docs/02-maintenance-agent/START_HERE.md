@@ -8,12 +8,9 @@
 **Files to edit:** `lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java`
 
 !!! tip "Solution fallback"
-    Two solution variants exist — both include `DiagnosticAgent`:
+    [`exercises/02-workflow-patterns/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-composed) — includes `DiagnosticAgent` wired into a conditional workflow.
 
-    - [`exercises/02-workflow-patterns/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-sequence) — sequence workflow pattern
-    - [`exercises/02-workflow-patterns/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-composed) — composed workflow pattern
-
-    Either works for this exercise. Use **solution-sequence** if unsure.
+    [`exercises/02-workflow-patterns/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-sequence) — sequence variant (TriageAgent + ResolutionAgent only).
 
 ---
 
@@ -51,9 +48,9 @@ Replace the `// TODO` block with the following code **exactly**:
     """)
 @UserMessage("""
     Incident Information:
-    System: {system}
-    Service: {service}
-    Priority: P{priority}
+    System: {incidentInfo.system}
+    Service: {incidentInfo.service}
+    Priority: P{incidentInfo.priority}
     Incident Number: {incidentNumber}
 
     Diagnostic Request:
@@ -61,14 +58,15 @@ Replace the `// TODO` block with the following code **exactly**:
     """)
 @Agent(description = "Incident diagnostic specialist. Using incident information and request, determines what diagnostic actions are needed.",
        outputKey = "analysisResult")
-String processDiagnostic(String system, String service,
-                          Integer priority, Integer incidentNumber,
+String processDiagnostic(IncidentInfo incidentInfo,
+                          Integer incidentNumber,
                           String diagnosticRequest);
 ```
 
 Add these imports at the top:
 
 ```java
+import com.incidentmanagement.model.IncidentInfo;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
