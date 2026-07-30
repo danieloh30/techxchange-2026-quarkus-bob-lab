@@ -139,11 +139,11 @@ Save both files. Quarkus hot-reloads automatically.
 Before testing, trace the execution path in your head:
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'actorBkg': '#e3f2fd', 'actorTextColor': '#1565c0', 'actorBorder': '#90caf9', 'actorLineColor': '#90caf9', 'signalColor': '#546e7a', 'signalTextColor': '#37474f', 'activationBkgColor': '#f3e5f5', 'activationBorderColor': '#ce93d8', 'noteBkgColor': '#fff9c4', 'noteTextColor': '#5d4037', 'noteBorderColor': '#ffe082', 'sequenceNumberColor': '#1565c0'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 sequenceDiagram
-    participant App as 🚀 processTriage()
-    participant LLM as 🧠 LLM
-    participant Tool as 🔧 TriageTool
+    participant App as processTriage()
+    participant LLM as LLM
+    participant Tool as TriageTool
 
     App->>+LLM: @UserMessage (incident info + report)
     Note right of LLM: Analyzes report

@@ -42,23 +42,23 @@ incident-management started in ~4s
 Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java).
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    ISA["🎯 IncidentSupervisorAgent\nescalation required"]:::supervisor
-    EPA["🚨 EscalationProposalAgent\nproposed_action = ESCALATE_P1"]:::agent
-    HITL{"🛡️ @HumanInTheLoop gate\nUI: Awaiting Approval"}:::decision
-    ESC["✅ ESCALATED"]:::success
-    INV["🔄 IN_PROGRESS\nreassessment"]:::info
+    ISA([IncidentSupervisorAgent<br/>escalation required])
+    EPA([EscalationProposalAgent<br/>proposed_action = ESCALATE_P1])
+    HITL{@HumanInTheLoop gate<br/>UI: Awaiting Approval}
+    ESC([ESCALATED])
+    INV([IN_PROGRESS<br/>reassessment])
 
     ISA --> EPA --> HITL
-    HITL -->|"Escalate to Management"| ESC
-    HITL -->|"Keep at Team Level"| INV
+    HITL -->|Escalate to Management| ESC
+    HITL -->|Keep at Team Level| INV
 
-    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef decision fill:#fff9c4,stroke:#fff176,color:#e65100,stroke-width:2px
-    classDef success fill:#c8e6c9,stroke:#a5d6a7,color:#1b5e20,stroke-width:2px
-    classDef info fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    style ISA fill:#FFE4CC,stroke:#B87333
+    style EPA fill:#D8F0D8,stroke:#3D7A3D
+    style HITL fill:#FFF8DC,stroke:#C4A000
+    style ESC fill:#D8F0D8,stroke:#3D7A3D
+    style INV fill:#D4E6F1,stroke:#2E6B8A
 ```
 
 ---

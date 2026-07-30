@@ -131,33 +131,35 @@ Apex Systems needs systems that:
 ### Architecture you will grow into
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    IR["📋 Incident Report"]:::input --> IPW
+    IR([Incident Report]) --> IPW
 
-    subgraph main["🏢 Apex Systems Incident Management · Quarkus :8080"]
-        IPW["🔄 IncidentProcessingWorkflow\n@SequenceAgent"]:::workflow
-        IPW --> IAW["📊 IncidentAnalysisWorkflow\n@ParallelMapperAgent × 3"]:::workflow
-        IPW --> ISA["🎯 IncidentSupervisorAgent\n@SupervisorAgent"]:::supervisor
-        IPW --> RA["📝 ResolutionAgent"]:::agent
+    subgraph main["Apex Systems Incident Management · Quarkus :8080"]
+        IPW([IncidentProcessingWorkflow<br/>@SequenceAgent])
+        IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3])
+        IPW --> ISA([IncidentSupervisorAgent<br/>@SupervisorAgent])
+        IPW --> RA([ResolutionAgent])
 
-        ISA --> TA["🏥 TriageAgent\n@ToolBox"]:::tool
-        ISA --> DA["🔍 DiagnosticAgent"]:::agent
-        ISA --> EA["🚨 EscalationAgent\n+ HITL gate"]:::agent
-        ISA --> IA["💰 ImpactAgent"]:::a2a
+        ISA --> TA([TriageAgent<br/>@ToolBox])
+        ISA --> DA([DiagnosticAgent])
+        ISA --> EA([EscalationAgent<br/>+ HITL gate])
+        ISA --> IA([ImpactAgent])
     end
 
-    IA -->|"A2A"| RIA["🌐 :8888\nRemote Impact Assessment"]:::remote
+    IA -->|A2A| RIA([":8888 — Remote<br/>Impact Assessment"])
 
-    classDef input fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
-    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
-    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef tool fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
-    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
-    classDef remote fill:#ffcdd2,stroke:#ef9a9a,color:#b71c1c,stroke-width:2px
-
-    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
+    style IR fill:#E8DCC4,stroke:#6B5B45
+    style IPW fill:#D4E6F1,stroke:#2E6B8A
+    style IAW fill:#D4E6F1,stroke:#2E6B8A
+    style ISA fill:#FFE4CC,stroke:#B87333
+    style RA fill:#D8F0D8,stroke:#3D7A3D
+    style TA fill:#FFF8DC,stroke:#C4A000
+    style DA fill:#D8F0D8,stroke:#3D7A3D
+    style EA fill:#D8F0D8,stroke:#3D7A3D
+    style IA fill:#FFF8DC,stroke:#C4A000
+    style RIA fill:#F5D0D0,stroke:#A04040
+    style main fill:#F5F5F0,stroke:#8B8070
 ```
 
 ### IBM stack for this lab
@@ -409,23 +411,23 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 ### 6.2 HITL flow
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    IR["📋 Incident report\nP1/P2 on revenue-critical system"]:::input
-    EPA["🚨 EscalationProposalAgent\nproposed_action = ESCALATE_P1"]:::agent
-    HITL{"🛡️ @HumanInTheLoop gate"}:::decision
-    EXEC["✅ Execute escalation\nESCALATE_P1 / ASSIGN_TEAM"]:::success
-    FALL["🔄 Fallback: CLOSE\n→ IN_PROGRESS"]:::info
+    IR([Incident report<br/>P1/P2 on revenue-critical system])
+    EPA([EscalationProposalAgent<br/>proposed_action = ESCALATE_P1])
+    HITL{@HumanInTheLoop gate}
+    EXEC([Execute escalation<br/>ESCALATE_P1 / ASSIGN_TEAM])
+    FALL([Fallback: CLOSE<br/>→ IN_PROGRESS])
 
     IR --> EPA --> HITL
-    HITL -->|"Escalate to Management"| EXEC
-    HITL -->|"Keep at Team Level"| FALL
+    HITL -->|Escalate to Management| EXEC
+    HITL -->|Keep at Team Level| FALL
 
-    classDef input fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef decision fill:#fff9c4,stroke:#fff176,color:#e65100,stroke-width:2px
-    classDef success fill:#c8e6c9,stroke:#a5d6a7,color:#1b5e20,stroke-width:2px
-    classDef info fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    style IR fill:#E8DCC4,stroke:#6B5B45
+    style EPA fill:#D8F0D8,stroke:#3D7A3D
+    style HITL fill:#FFF8DC,stroke:#C4A000
+    style EXEC fill:#D8F0D8,stroke:#3D7A3D
+    style FALL fill:#D4E6F1,stroke:#2E6B8A
 ```
 
 ### 6.3 OpenTelemetry key spans
@@ -470,35 +472,34 @@ flowchart TD
 ### 7.2 A2A architecture
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart LR
-    subgraph main["🏢 :8080 — Main App"]
-        IPW["🔄 IncidentProcessingWorkflow"]:::workflow
-        ISA["🎯 IncidentSupervisorAgent"]:::supervisor
-        IA["💰 ImpactAgent\n@A2AClientAgent"]:::a2a
+    subgraph main[":8080 — Main App"]
+        IPW([IncidentProcessingWorkflow])
+        ISA([IncidentSupervisorAgent])
+        IA([ImpactAgent<br/>@A2AClientAgent])
         IPW --> ISA --> IA
     end
 
-    IA -->|"JSON-RPC / HTTP\nPOST /a2a/tasks/send"| AE
+    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
 
-    subgraph remote["🌐 :8888 — Remote Impact Assessment"]
-        AE["📡 AgentExecutor"]:::service
-        RIA["💰 ImpactAgent\nlocal LLM call"]:::agent
-        LLM["🧠 LLM → HIGH / $50k/hr"]:::llm
+    subgraph remote[":8888 — Remote Impact Assessment"]
+        AE([AgentExecutor])
+        RIA([ImpactAgent<br/>local LLM call])
+        LLM([LLM → HIGH / $50k/hr])
         AE --> RIA --> LLM
     end
 
-    LLM -->|"Task result"| IA
+    LLM -->|Task result| IA
 
-    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
-    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
-    classDef service fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
-    classDef llm fill:#f3e5f5,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-
-    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
-    style remote fill:#fce4ec,stroke:#ef9a9a,stroke-width:2px,color:#b71c1c
+    style IPW fill:#D4E6F1,stroke:#2E6B8A
+    style ISA fill:#FFE4CC,stroke:#B87333
+    style IA fill:#FFF8DC,stroke:#C4A000
+    style AE fill:#E8DCC4,stroke:#6B5B45
+    style RIA fill:#D8F0D8,stroke:#3D7A3D
+    style LLM fill:#E8E0F0,stroke:#6B5B8A
+    style main fill:#F5F5F0,stroke:#8B8070
+    style remote fill:#FFF5F0,stroke:#A08070
 ```
 
 ### 7.3 MCP vs A2A
