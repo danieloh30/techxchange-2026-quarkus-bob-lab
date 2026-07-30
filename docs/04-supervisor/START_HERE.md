@@ -14,7 +14,7 @@
 - `lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java`
 
 !!! tip "Solution fallback"
-    [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution){:target="_blank"} — open if stuck.
+    [`exercises/04-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-supervisor/solution){:target="_blank"} — open if stuck.
 
 ---
 

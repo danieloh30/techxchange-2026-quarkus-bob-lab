@@ -11,7 +11,7 @@
 - `lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentAnalysisWorkflow.java`
 
 !!! tip "Solution fallback"
-    [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution){:target="_blank"} — open if stuck.
+    [`exercises/03-parallel-workflow/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-parallel-workflow/solution){:target="_blank"} — open if stuck.
 
 ---
 
@@ -172,7 +172,7 @@ Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-age
 This page visualizes every agent's type, `outputKey`, and sub-agent wiring — use it after every exercise to confirm your changes compiled and registered correctly.
 
 !!! info "Topology view"
-    If you check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"}, you'll see "No root agents detected" — that's expected. `IncidentProcessingWorkflow` (the root) already `extends MonitoredAgent`, but its `@SequenceAgent` method is still a TODO stub in `lab/`. The topology tree will appear after you wire it in **Exercise 4, Step 5**. (If you're running the [solution fallback](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution){:target="_blank"}, the topology will already show the full tree.)
+    If you check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"}, you'll see "No root agents detected" — that's expected. `IncidentProcessingWorkflow` (the root) already `extends MonitoredAgent`, but its `@SequenceAgent` method is still a TODO stub in `lab/`. The topology tree will appear after you wire it in **Exercise 4, Step 5**. (If you're running the [solution fallback](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-parallel-workflow/solution){:target="_blank"}, the topology will already show the full tree.)
 
 ??? question "Why not a Java `for` loop instead of `itemsProvider`?"
     `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.

@@ -24,11 +24,11 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
-| Ex 1 | [`01-first-agents/solution`](01-first-agents/solution) | `TriageAgent` + `TriageTool` |
-| Ex 2 | [`03-supervisor/solution`](03-supervisor/solution) | `DiagnosticAgent` + full agent set |
-| Ex 3 | [`03-supervisor/solution`](03-supervisor/solution) | `IncidentAnalysisWorkflow` + `@ParallelMapperAgent` |
-| Ex 4 | [`04-ibm-bob/solution`](04-ibm-bob/solution) | Complete multi-agent supervisor pipeline |
-| Ex 5 | [`04-ibm-bob/solution`](04-ibm-bob/solution) | Same project — Bob validates this codebase |
+| Ex 1 | [`01-first-agent/solution`](01-first-agent/solution) | `TriageAgent` + `TriageTool` |
+| Ex 2 | [`03-parallel-workflow/solution`](03-parallel-workflow/solution) | `DiagnosticAgent` + full agent set |
+| Ex 3 | [`03-parallel-workflow/solution`](03-parallel-workflow/solution) | `IncidentAnalysisWorkflow` + `@ParallelMapperAgent` |
+| Ex 4 | [`04-supervisor/solution`](04-supervisor/solution) | Complete multi-agent supervisor pipeline |
+| Ex 5 | [`04-supervisor/solution`](04-supervisor/solution) | Same project — Bob validates this codebase |
 | Ex 6 | [`06-hitl-observability/solution`](06-hitl-observability/solution) | `@HumanInTheLoop` + OTel |
 | Ex 7 | [`07-a2a/solution`](07-a2a/solution) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
 
@@ -36,10 +36,10 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 
 | Folder | What it shows |
 |--------|--------------|
-| [`02-workflow-patterns/solution-sequence`](02-workflow-patterns/solution-sequence) | `@SequenceAgent` chain |
-| [`02-workflow-patterns/solution-composed`](02-workflow-patterns/solution-composed) | Parallel + conditional workflows |
-| [`05-mcp/solution`](05-mcp/solution) | MCP client with `@McpToolBox` (stretch exercise) |
-| [`05-mcp/weather-mcp-server`](05-mcp/weather-mcp-server) | MCP SSE weather server |
+| [`02-maintenance-agent/solution-sequence`](02-maintenance-agent/solution-sequence) | `@SequenceAgent` chain |
+| [`02-maintenance-agent/solution-composed`](02-maintenance-agent/solution-composed) | Parallel + conditional workflows |
+| [`05-ibm-bob/solution`](05-ibm-bob/solution) | MCP client with `@McpToolBox` (stretch exercise) |
+| [`05-ibm-bob/weather-mcp-server`](05-ibm-bob/weather-mcp-server) | MCP SSE weather server |
 | [`06-hitl-observability/observability-reference`](06-hitl-observability/observability-reference) | Prompt injection guard + observability |
 
 ## Versions

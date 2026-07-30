@@ -70,11 +70,11 @@ docs/                                 # All lab instructions + images
 └── images/
 
 exercises/                            # Completed Quarkus solution projects
-├── 01-first-agents/solution
-├── 02-workflow-patterns/{solution-sequence, solution-composed}
-├── 03-supervisor/solution
-├── 04-ibm-bob/solution
-├── 05-mcp/{solution, weather-mcp-server}
+├── 01-first-agent/solution
+├── 02-maintenance-agent/{solution-sequence, solution-composed}
+├── 03-parallel-workflow/solution
+├── 04-supervisor/solution
+├── 05-ibm-bob/{solution, weather-mcp-server}
 ├── 06-hitl-observability/{solution, observability-reference}
 └── 07-a2a/solution/{multi-agent-system, remote-a2a-agent}
 ```
