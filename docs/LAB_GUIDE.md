@@ -132,21 +132,31 @@ Apex Systems needs systems that:
 
 ```mermaid
 flowchart TD
-    IR["Incident Report"] --> IPW
+    IR["📋 Incident Report"]:::input --> IPW
 
-    subgraph main["Apex Systems Incident Management (Quarkus :8080)"]
-        IPW["IncidentProcessingWorkflow<br/>@SequenceAgent"]
-        IPW --> IAW["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
-        IPW --> ISA["IncidentSupervisorAgent<br/>@SupervisorAgent"]
-        IPW --> RA["ResolutionAgent"]
+    subgraph main["🏢 Apex Systems Incident Management (Quarkus :8080)"]
+        IPW["🔄 IncidentProcessingWorkflow<br/>@SequenceAgent"]:::workflow
+        IPW --> IAW["📊 IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]:::workflow
+        IPW --> ISA["🎯 IncidentSupervisorAgent<br/>@SupervisorAgent"]:::supervisor
+        IPW --> RA["📝 ResolutionAgent"]:::agent
 
-        ISA --> TA["TriageAgent<br/>@ToolBox"]
-        ISA --> DA["DiagnosticAgent"]
-        ISA --> EA["EscalationAgent<br/>+ HITL gate"]
-        ISA --> IA["ImpactAgent"]
+        ISA --> TA["🏥 TriageAgent<br/>@ToolBox"]:::tool
+        ISA --> DA["🔍 DiagnosticAgent"]:::agent
+        ISA --> EA["🚨 EscalationAgent<br/>+ HITL gate"]:::agent
+        ISA --> IA["💰 ImpactAgent"]:::a2a
     end
 
-    IA -->|"A2A"| RIA[":8888<br/>Remote Impact Assessment"]
+    IA -->|"A2A"| RIA["🌐 :8888<br/>Remote Impact Assessment"]:::remote
+
+    classDef input fill:#37474f,stroke:#263238,color:#fff,stroke-width:2px
+    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
+    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
+    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
+    classDef tool fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
+    classDef a2a fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
+    classDef remote fill:#c62828,stroke:#b71c1c,color:#fff,stroke-width:2px
+
+    style main fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
 ```
 
 ### IBM stack for this lab
@@ -399,15 +409,21 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 
 ```mermaid
 flowchart TD
-    IR["Incident report<br/>(P1/P2 on revenue-critical system)"] --> EPA
-    EPA["EscalationProposalAgent<br/>proposed_action=ESCALATE_P1"] --> HITL
-    HITL{"@HumanInTheLoop gate"}
-    HITL -->|APPROVED| EXEC["Execute escalation<br/>(ESCALATE_P1/ASSIGN_TEAM)"]
-    HITL -->|REJECTED| FALL["Fallback: CLOSE<br/>→ IN_PROGRESS"]
+    IR["📋 Incident report<br/>P1/P2 on revenue-critical system"]:::input
+    EPA["🚨 EscalationProposalAgent<br/>proposed_action = ESCALATE_P1"]:::agent
+    HITL{"🛡️ @HumanInTheLoop gate"}:::decision
+    EXEC["✅ Execute escalation<br/>ESCALATE_P1 / ASSIGN_TEAM"]:::success
+    FALL["🔄 Fallback: CLOSE<br/>→ IN_PROGRESS"]:::info
 
-    style HITL fill:#ff9800,color:#fff
-    style EXEC fill:#4caf50,color:#fff
-    style FALL fill:#2196f3,color:#fff
+    IR --> EPA --> HITL
+    HITL -->|"Escalate to Management"| EXEC
+    HITL -->|"Keep at Team Level"| FALL
+
+    classDef input fill:#37474f,stroke:#263238,color:#fff,stroke-width:2px
+    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
+    classDef decision fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
+    classDef success fill:#2e7d32,stroke:#1b5e20,color:#fff,stroke-width:2px
+    classDef info fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
 ```
 
 ### 6.3 OpenTelemetry key spans
@@ -453,19 +469,33 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    subgraph main[":8080 — Main App"]
-        IPW["IncidentProcessingWorkflow"] --> ISA["IncidentSupervisorAgent"]
-        ISA --> IA["ImpactAgent<br/>@A2AClientAgent"]
+    subgraph main["🏢 :8080 — Main App"]
+        IPW["🔄 IncidentProcessingWorkflow"]:::workflow
+        ISA["🎯 IncidentSupervisorAgent"]:::supervisor
+        IA["💰 ImpactAgent<br/>@A2AClientAgent"]:::a2a
+        IPW --> ISA --> IA
     end
 
     IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
 
-    subgraph remote[":8888 — Remote Impact Assessment"]
-        AE["AgentExecutor"] --> RIA["ImpactAgent<br/>(local LLM call)"]
-        RIA --> LLM["LLM → HIGH / $50k/hr"]
+    subgraph remote["🌐 :8888 — Remote Impact Assessment"]
+        AE["📡 AgentExecutor"]:::service
+        RIA["💰 ImpactAgent<br/>local LLM call"]:::agent
+        LLM["🧠 LLM → HIGH / $50k/hr"]:::llm
+        AE --> RIA --> LLM
     end
 
     LLM -->|"Task result"| IA
+
+    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
+    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
+    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
+    classDef a2a fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
+    classDef service fill:#455a64,stroke:#37474f,color:#fff,stroke-width:2px
+    classDef llm fill:#37474f,stroke:#263238,color:#fff,stroke-width:2px
+
+    style main fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
+    style remote fill:#fce4ec,stroke:#c62828,stroke-width:2px,color:#b71c1c
 ```
 
 ### 7.3 MCP vs A2A

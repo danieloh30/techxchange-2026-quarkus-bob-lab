@@ -43,15 +43,21 @@ Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-
 
 ```mermaid
 flowchart TD
-    ISA["IncidentSupervisorAgent<br/>(escalation required)"] --> EPA
-    EPA["EscalationProposalAgent<br/>proposed_action=ESCALATE_P1"] --> HITL
-    HITL{"@HumanInTheLoop gate<br/>UI: Awaiting Approval"}
-    HITL -->|APPROVED| ESC["ESCALATED"]
-    HITL -->|REJECTED| INV["IN_PROGRESS<br/>(reassessment)"]
+    ISA["🎯 IncidentSupervisorAgent<br/>escalation required"]:::supervisor
+    EPA["🚨 EscalationProposalAgent<br/>proposed_action = ESCALATE_P1"]:::agent
+    HITL{"🛡️ @HumanInTheLoop gate<br/>UI: Awaiting Approval"}:::decision
+    ESC["✅ ESCALATED"]:::success
+    INV["🔄 IN_PROGRESS<br/>reassessment"]:::info
 
-    style HITL fill:#ff9800,color:#fff
-    style ESC fill:#4caf50,color:#fff
-    style INV fill:#2196f3,color:#fff
+    ISA --> EPA --> HITL
+    HITL -->|"Escalate to Management"| ESC
+    HITL -->|"Keep at Team Level"| INV
+
+    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
+    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
+    classDef decision fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
+    classDef success fill:#2e7d32,stroke:#1b5e20,color:#fff,stroke-width:2px
+    classDef info fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
 ```
 
 ---

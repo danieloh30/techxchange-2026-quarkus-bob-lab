@@ -139,17 +139,18 @@ Save both files. Quarkus hot-reloads automatically.
 Before testing, trace the execution path in your head:
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'actorBkg': '#1565c0', 'actorTextColor': '#fff', 'actorBorder': '#0d47a1', 'signalColor': '#37474f', 'signalTextColor': '#37474f', 'activationBkgColor': '#e3f2fd', 'activationBorderColor': '#1565c0'}}}%%
 sequenceDiagram
-    participant App as processTriage()
-    participant LLM as LLM
-    participant Tool as TriageTool
+    participant App as 🚀 processTriage()
+    participant LLM as 🧠 LLM (GPT-4o)
+    participant Tool as 🔧 TriageTool
 
-    App->>LLM: @UserMessage (incident info + report)
-    LLM->>LLM: Decides: "needs triage"
-    LLM->>Tool: tool_call: requestTriage(incidentNumber=5, ...)
-    Tool->>Tool: incidentInfo.status = TRIAGING
-    Tool-->>LLM: "Triage requested for email-service/notification-api..."
-    LLM-->>App: Final response → AgenticScope["analysisResult"]
+    App->>+LLM: @UserMessage (incident info + report)
+    Note right of LLM: Analyzes report
+    LLM->>+Tool: tool_call: requestTriage(#5, ...)
+    Note right of Tool: status → TRIAGING
+    Tool-->>-LLM: "Triage requested for email-service..."
+    LLM-->>-App: → AgenticScope["analysisResult"]
 ```
 
 The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If the report says "false alarm, no action needed", the LLM produces `TRIAGE_NOT_REQUIRED` directly — no tool call.
