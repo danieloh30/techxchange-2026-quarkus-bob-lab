@@ -27,7 +27,7 @@ Complete the full multi-agent pipeline. After this exercise, a single `POST /inc
 flowchart TD
     IPW([IncidentProcessingWorkflow<br/>@SequenceAgent])
 
-    IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3])
+    IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent x3])
     IPW --> ISA([IncidentSupervisorAgent<br/>@SupervisorAgent])
     IPW --> RA([ResolutionAgent])
 

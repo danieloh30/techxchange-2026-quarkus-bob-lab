@@ -28,7 +28,7 @@ This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    A([IncidentAnalysisAgent × 3])
+    A([IncidentAnalysisAgent x3])
     B([Output → List of String])
     C([IncidentAnalysisResults])
     D([IncidentSupervisorAgent])
