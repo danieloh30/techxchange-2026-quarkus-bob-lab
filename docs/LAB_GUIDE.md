@@ -137,7 +137,7 @@ flowchart TD
 
     subgraph main["Apex Systems Incident Management · Quarkus :8080"]
         IPW([IncidentProcessingWorkflow<br/>@SequenceAgent])
-        IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3])
+        IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent x3])
         IPW --> ISA([IncidentSupervisorAgent<br/>@SupervisorAgent])
         IPW --> RA([ResolutionAgent])
 
