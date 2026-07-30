@@ -51,7 +51,7 @@ public interface IncidentSupervisorAgent {
                 Follow the decision logic in your system message carefully.
                 """;
 
-        return String.format("""
+        return """
                 You are an incident supervisor for an IT incident management system. You coordinate action agents based on incident analysis.
 
                 The incident has already been analyzed and you have these inputs:
@@ -61,20 +61,12 @@ public interface IncidentSupervisorAgent {
 
                 Your job is to invoke the appropriate ACTION agents for this incident.
 
-                Incident: P%d %s/%s (#%d)
-                Current Description: %s
-
-                Severity Analysis: %s
-                Impact Analysis: %s
-
-                In particular, you have to follow these steps:
-
-                %s
-                """,
-                incidentInfo.priority, incidentInfo.system, incidentInfo.service,
-                incidentNumber, incidentInfo.description,
-                incidentAnalysisResults.severityAnalysis(),
-                incidentAnalysisResults.impactAnalysis(),
-                escalationRequired ? escalationMessage : noEscalationMessage);
+                Incident: P""" + incidentInfo.priority + " " + incidentInfo.system + "/" + incidentInfo.service
+                + " (#" + incidentNumber + ")\n"
+                + "Current Description: " + incidentInfo.description + "\n\n"
+                + "Severity Analysis: " + incidentAnalysisResults.severityAnalysis() + "\n"
+                + "Impact Analysis: " + incidentAnalysisResults.impactAnalysis() + "\n\n"
+                + "In particular, you have to follow these steps:\n\n"
+                + (escalationRequired ? escalationMessage : noEscalationMessage);
     }
 }
