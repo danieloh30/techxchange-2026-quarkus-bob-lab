@@ -444,7 +444,7 @@ function createApprovalCard(proposal) {
                 <span class="incident-icon">&#9888;</span>
                 <h3>${proposal.incidentPriority} - ${proposal.incidentSystem} / ${proposal.incidentService}</h3>
             </div>
-            <div class="impact-value">${proposal.revenueImpact}</div>
+            <div class="impact-value">${proposal.businessImpact}</div>
         </div>
         <div class="approval-card-body">
             <div class="info-row">
