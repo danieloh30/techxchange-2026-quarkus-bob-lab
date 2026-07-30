@@ -133,21 +133,31 @@ Apex Systems needs systems that:
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    IR([Incident Report]) --> IPW
+    IR([Incident Report])
+    RIA(["':8888 — Remote Impact Assessment'"])
 
     subgraph main["Apex Systems Incident Management · Quarkus :8080"]
-        IPW([IncidentProcessingWorkflow<br/>@SequenceAgent])
-        IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent x3])
-        IPW --> ISA([IncidentSupervisorAgent<br/>@SupervisorAgent])
-        IPW --> RA([ResolutionAgent])
-
-        ISA --> TA([TriageAgent<br/>@ToolBox])
-        ISA --> DA([DiagnosticAgent])
-        ISA --> EA([EscalationAgent<br/>+ HITL gate])
-        ISA --> IA([ImpactAgent])
+        IPW(["IncidentProcessingWorkflow<br/>@SequenceAgent"])
+        IAW(["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent x3"])
+        ISA(["IncidentSupervisorAgent<br/>@SupervisorAgent"])
+        RA([ResolutionAgent])
+        TA(["TriageAgent<br/>@ToolBox"])
+        DA([DiagnosticAgent])
+        EA(["EscalationAgent<br/>+ HITL gate"])
+        IA([ImpactAgent])
     end
 
-    IA -->|A2A| RIA([":8888 — Remote<br/>Impact Assessment"])
+    IR --> IPW
+    IPW --> IAW
+    IPW --> ISA
+    IPW --> RA
+
+    ISA --> TA
+    ISA --> DA
+    ISA --> EA
+    ISA --> IA
+
+    IA -->|A2A| RIA
 
     style IR fill:#E8DCC4,stroke:#6B5B45
     style IPW fill:#D4E6F1,stroke:#2E6B8A
@@ -477,19 +487,18 @@ flowchart LR
     subgraph main[":8080 — Main App"]
         IPW([IncidentProcessingWorkflow])
         ISA([IncidentSupervisorAgent])
-        IA([ImpactAgent<br/>@A2AClientAgent])
-        IPW --> ISA --> IA
+        IA(["ImpactAgent<br/>@A2AClientAgent"])
     end
-
-    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
 
     subgraph remote[":8888 — Remote Impact Assessment"]
         AE([AgentExecutor])
-        RIA([ImpactAgent<br/>local LLM call])
-        LLM([LLM → HIGH / $50k/hr])
-        AE --> RIA --> LLM
+        RIA(["ImpactAgent<br/>local LLM call"])
+        LLM(["LLM result"])
     end
 
+    IPW --> ISA --> IA
+    IA -->|A2A POST /a2a/tasks/send| AE
+    AE --> RIA --> LLM
     LLM -->|Task result| IA
 
     style IPW fill:#D4E6F1,stroke:#2E6B8A
