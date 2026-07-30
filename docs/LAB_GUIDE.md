@@ -38,7 +38,7 @@ Before the lab starts, confirm:
 | **Java 25+** (`java -version`) | ✓ |
 | **Maven 3.9+** (or use included `./mvnw`) | ✓ |
 | **IBM Enterprise Build of Quarkus** / Quarkus **3.37.4** | ✓ |
-| **IBM Bob** installed and signed in ([bob.ibm.com](https://bob.ibm.com/)) | ✓ |
+| **IBM Bob** installed and signed in ([bob.ibm.com](https://bob.ibm.com/){:target="_blank"}) | ✓ |
 | LLM API key — instructors provide `OPENAI_API_KEY` or lab endpoint | ✓ |
 | Ports **8080**, **8888** free | ✓ |
 | Git clone of this repo (see below) | ✓ |

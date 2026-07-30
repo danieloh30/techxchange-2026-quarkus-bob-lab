@@ -11,7 +11,7 @@
 - `lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentAnalysisWorkflow.java`
 
 !!! tip "Solution fallback"
-    [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution) — open if stuck.
+    [`exercises/03-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution){:target="_blank"} — open if stuck.
 
 ---
 
@@ -64,7 +64,7 @@ Each parallel invocation of `IncidentAnalysisAgent` writes its result under `"in
 
 ## Step 1 — Implement `IncidentAnalysisAgent` (4 min)
 
-Open [`IncidentAnalysisAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentAnalysisAgent.java).
+Open [`IncidentAnalysisAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentAnalysisAgent.java){:target="_blank"}.
 
 Replace the `// TODO` block with the following code **exactly**:
 
@@ -108,7 +108,7 @@ import dev.langchain4j.service.UserMessage;
 
 ## Step 2 — Implement `IncidentAnalysisWorkflow` (3 min)
 
-Open [`IncidentAnalysisWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentAnalysisWorkflow.java).
+Open [`IncidentAnalysisWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentAnalysisWorkflow.java){:target="_blank"}.
 
 Replace both `// TODO` blocks with the following **two members**:
 
@@ -157,17 +157,12 @@ Save both files. Quarkus hot-reloads.
 
 ---
 
-## Step 3 — Verify parallel execution (2 min)
+## Step 3 — Verify agent registration (2 min)
 
-Process Incident **#5** (email-service/notification-api) with:
+!!! note "End-to-end testing starts in Exercise 4"
+    `IncidentProcessingWorkflow` is still a TODO stub in `lab/`, so processing an incident from the UI won't trigger the parallel workflow yet. In this step you verify that the agents **compiled and registered** correctly. You'll see them run end-to-end (with overlapping timestamps proving parallelism) after wiring the full pipeline in Exercise 4.
 
-```
-Complete email delivery failure, SMTP connections timing out, queue backlog growing
-```
-
-**Watch the terminal logs.** You should see three `analyzeIncident` invocations with **overlapping timestamps** — they start within milliseconds of each other, not sequentially.
-
-Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents) to see the full agent graph. Look for these two entries:
+Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the agent graph. Look for these two entries:
 
 | Agent | Type | Key detail |
 |-------|------|------------|
@@ -177,7 +172,7 @@ Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-age
 This page visualizes every agent's type, `outputKey`, and sub-agent wiring — use it after every exercise to confirm your changes compiled and registered correctly.
 
 !!! info "Topology view"
-    If you check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology), you'll see "No root agents detected" — that's expected. `IncidentProcessingWorkflow` (the root) already `extends MonitoredAgent`, but its `@SequenceAgent` method is still a TODO stub in `lab/`. The topology tree will appear after you wire it in **Exercise 4, Step 5**. (If you're running the [solution fallback](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution), the topology will already show the full tree.)
+    If you check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"}, you'll see "No root agents detected" — that's expected. `IncidentProcessingWorkflow` (the root) already `extends MonitoredAgent`, but its `@SequenceAgent` method is still a TODO stub in `lab/`. The topology tree will appear after you wire it in **Exercise 4, Step 5**. (If you're running the [solution fallback](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-supervisor/solution){:target="_blank"}, the topology will already show the full tree.)
 
 ??? question "Why not a Java `for` loop instead of `itemsProvider`?"
     `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
@@ -188,8 +183,8 @@ This page visualizes every agent's type, `outputKey`, and sub-agent wiring — u
 
 ## :material-check-circle: Done when
 
-- [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear in the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents)
-- [ ] Terminal logs show overlapping timestamps for the three `analyzeIncident` invocations
+- [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear in the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"}
+- [ ] No compile errors in the Quarkus terminal after hot reload
 - [ ] You can explain `outputKey` and `@Output` from memory
 - [ ] You can explain how `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 tasks
 

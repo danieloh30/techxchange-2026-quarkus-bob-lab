@@ -14,7 +14,7 @@
 - `lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java`
 
 !!! tip "Solution fallback"
-    [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution) — open if stuck.
+    [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution){:target="_blank"} — open if stuck.
 
 ---
 
@@ -55,7 +55,7 @@ flowchart TD
 
 ## Step 1 — `ImpactAgent` (2 min)
 
-Open [`ImpactAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/ImpactAgent.java).
+Open [`ImpactAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/ImpactAgent.java){:target="_blank"}.
 
 Replace the `// TODO` block:
 
@@ -116,7 +116,7 @@ import dev.langchain4j.service.UserMessage;
 
 ## Step 2 — `EscalationAgent` (2 min)
 
-Open [`EscalationAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/EscalationAgent.java).
+Open [`EscalationAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/EscalationAgent.java){:target="_blank"}.
 
 Replace the `// TODO` block:
 
@@ -169,7 +169,7 @@ Add the same three imports as Step 1.
 
 ## Step 3 — `ResolutionAgent` (2 min)
 
-Open [`ResolutionAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/ResolutionAgent.java).
+Open [`ResolutionAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/ResolutionAgent.java){:target="_blank"}.
 
 Replace the `// TODO` block:
 
@@ -224,7 +224,7 @@ import dev.langchain4j.service.UserMessage;
 
 ## Step 4 — `IncidentSupervisorAgent` (4 min)
 
-Open [`IncidentSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentSupervisorAgent.java).
+Open [`IncidentSupervisorAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentSupervisorAgent.java){:target="_blank"}.
 
 This is the most important agent in the system. It has **two annotated members**.
 
@@ -316,7 +316,7 @@ import dev.langchain4j.agentic.declarative.SupervisorRequest;
 
 ## Step 5 — `IncidentProcessingWorkflow` (2 min)
 
-Open [`IncidentProcessingWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java).
+Open [`IncidentProcessingWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java){:target="_blank"}.
 
 Notice the interface already `extends MonitoredAgent` — this is what enables the **topology view** in the Dev UI. The framework registers any `MonitoredAgent` workflow as a root agent, allowing it to visualize the full agent tree.
 
@@ -359,9 +359,9 @@ Save. Quarkus hot-reloads.
 ## Step 6 — Test all three paths (3 min)
 
 !!! tip "Agentic Dev UI"
-    Before testing, open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents) to see the full pipeline: `IncidentProcessingWorkflow` → `IncidentSupervisorAgent` (with its 4 sub-agents) → `ResolutionAgent`. This page shows each agent's type (`@SequenceAgent`, `@SupervisorAgent`), `outputKey`, and sub-agent list — a quick sanity check that everything wired correctly after hot reload.
+    Before testing, open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the full pipeline: `IncidentProcessingWorkflow` → `IncidentSupervisorAgent` (with its 4 sub-agents) → `ResolutionAgent`. This page shows each agent's type (`@SequenceAgent`, `@SupervisorAgent`), `outputKey`, and sub-agent list — a quick sanity check that everything wired correctly after hot reload.
 
-    Now open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology) — this is the first exercise where a **root agent** appears. The topology view visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
+    Now open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the first exercise where a **root agent** appears. The topology view visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
 
 **Path 1 — Minor incident:**  
 Process Incident **#6** (search-engine/product-search) with `"False alarm, relevance restored after cache refresh"`.  

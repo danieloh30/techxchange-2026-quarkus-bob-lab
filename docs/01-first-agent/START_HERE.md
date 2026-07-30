@@ -11,7 +11,7 @@
 - `lab/src/main/java/com/incidentmanagement/agentic/tools/TriageTool.java`
 
 !!! tip "Solution fallback"
-    [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution) — open if stuck.
+    [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution){:target="_blank"} — open if stuck.
 
 ---
 
@@ -39,7 +39,7 @@ Open **http://localhost:8080** — you'll see the Incident Dashboard with 8 seed
 
 ## Step 1 — Implement `TriageAgent` (5 min)
 
-Open [`TriageAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/TriageAgent.java).
+Open [`TriageAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/TriageAgent.java){:target="_blank"}.
 
 Replace the `// TODO` block with the following code **exactly**:
 
@@ -84,7 +84,7 @@ import dev.langchain4j.service.UserMessage;
 
 ## Step 2 — Implement `TriageTool` (4 min)
 
-Open [`TriageTool.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/tools/TriageTool.java).
+Open [`TriageTool.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/tools/TriageTool.java){:target="_blank"}.
 
 Add the following method inside the class (replace the `// TODO` block):
 
@@ -187,7 +187,7 @@ Order confirmation emails failing for 30% of customers, bounce rate spiking
 **Expected UI:** Incident #5 status → `TRIAGING`
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents) to see all registered agents, their `outputKey`, sub-agents, and wiring. This is the fastest way to confirm your agent compiled and was picked up by the framework.
+    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see all registered agents, their `outputKey`, sub-agents, and wiring. This is the fastest way to confirm your agent compiled and was picked up by the framework.
 
 Now process Incident **#6** (search-engine/product-search, status: `OPEN`) with:
 ```
