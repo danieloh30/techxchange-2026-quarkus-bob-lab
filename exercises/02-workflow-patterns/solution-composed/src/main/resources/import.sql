@@ -12,11 +12,11 @@ CREATE TABLE incident_info (
 );
 
 INSERT INTO incident_info (id, system_name, service, priority, description, status) VALUES
-    (nextval('incident_info_id_seq'), 'payment-gateway', 'checkout-api', 2, 'Intermittent timeout errors during peak hours', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'auth-service', 'user-login', 1, 'Authentication failures affecting all users', 'IN_PROGRESS'),
-    (nextval('incident_info_id_seq'), 'inventory-db', 'stock-sync', 3, 'Stock levels not syncing between warehouses', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'cdn-edge', 'static-assets', 4, 'Slow asset loading in APAC region', 'TRIAGING'),
-    (nextval('incident_info_id_seq'), 'email-service', 'notification-api', 2, 'Notification emails delayed by 30+ minutes', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'search-engine', 'product-search', 3, 'Search results returning stale data', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'monitoring', 'alerting-api', 2, 'False positive alerts flooding on-call team', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'api-gateway', 'rate-limiter', 1, 'Rate limiter misconfigured causing legitimate request drops', 'IN_PROGRESS');
+    (nextval('incident_info_id_seq'), 'payment-gateway', 'checkout-api', 2, 'Intermittent 503 errors during peak hours', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'auth-service', 'user-login', 1, 'Complete authentication failure', 'IN_PROGRESS'),
+    (nextval('incident_info_id_seq'), 'inventory-db', 'stock-sync', 3, 'Stale inventory data, sync lag 15 min', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'cdn-edge', 'static-assets', 4, 'Slow asset loading in EU region', 'TRIAGING'),
+    (nextval('incident_info_id_seq'), 'email-service', 'notification-api', 2, 'Delivery failures for order confirmations', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'search-engine', 'product-search', 3, 'Relevance degradation after index rebuild', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'monitoring', 'alerting-api', 2, 'Alert fatigue — 40% false positive rate', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'api-gateway', 'rate-limiter', 1, 'Rate limiter rejecting legitimate traffic', 'IN_PROGRESS');

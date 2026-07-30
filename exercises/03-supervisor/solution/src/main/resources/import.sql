@@ -12,11 +12,11 @@ CREATE TABLE incident_info (
 );
 
 INSERT INTO incident_info (id, system_name, service, priority, description, status) VALUES
-    (nextval('incident_info_id_seq'), 'Payment Gateway', 'Checkout Service', 'P2', 'Intermittent timeout errors during peak hours', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'Kubernetes Cluster', 'API Server', 'P3', 'Node scaling configured and tested', 'IN_PROGRESS'),
-    (nextval('incident_info_id_seq'), 'Email Platform', 'SMTP Relay', 'P3', 'Recent security patches applied', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'Legacy ERP', 'Inventory Module', 'P4', 'Slow query performance on reports', 'TRIAGING'),
-    (nextval('incident_info_id_seq'), 'Core Database', 'Primary Cluster', 'P1', 'Replication lag causing data inconsistency', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'CDN', 'Edge Cache', 'P4', 'Operating normally after maintenance', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'Authentication', 'SSO Provider', 'P3', 'Token refresh delays under load', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'Load Balancer', 'Traffic Manager', 'P2', 'Health check failures on backend pool', 'IN_PROGRESS');
+    (nextval('incident_info_id_seq'), 'payment-gateway', 'checkout-api', 'P2', 'Intermittent 503 errors during peak hours', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'auth-service', 'user-login', 'P1', 'Complete authentication failure', 'IN_PROGRESS'),
+    (nextval('incident_info_id_seq'), 'inventory-db', 'stock-sync', 'P3', 'Stale inventory data, sync lag 15 min', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'cdn-edge', 'static-assets', 'P4', 'Slow asset loading in EU region', 'TRIAGING'),
+    (nextval('incident_info_id_seq'), 'email-service', 'notification-api', 'P2', 'Delivery failures for order confirmations', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'search-engine', 'product-search', 'P3', 'Relevance degradation after index rebuild', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'monitoring', 'alerting-api', 'P2', 'Alert fatigue — 40% false positive rate', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'api-gateway', 'rate-limiter', 'P1', 'Rate limiter rejecting legitimate traffic', 'IN_PROGRESS');
