@@ -127,7 +127,10 @@ Alert threshold slightly too sensitive, causing a few extra notifications
 - **With original threshold:** tool may be called (triage requested)
 - **With strict threshold:** `TRIAGE_NOT_REQUIRED` — no tool call, no status change
 
-Now try:
+!!! tip "Incident status changed?"
+    If Incident #7 is no longer `OPEN`, press `s` in the Quarkus terminal to force a restart — the H2 dev database resets to seed data. Or use any other `OPEN` incident.
+
+Now try the same incident with a critical report:
 
 ```
 Complete monitoring blackout — zero alerts firing, all dashboards showing stale data, on-call has no visibility
