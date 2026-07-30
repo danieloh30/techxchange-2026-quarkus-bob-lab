@@ -167,7 +167,7 @@ Complete email delivery failure, SMTP connections timing out, queue backlog grow
 
 **Watch the terminal logs.** You should see three `analyzeIncident` invocations with **overlapping timestamps** — they start within milliseconds of each other, not sequentially.
 
-You can also open the **Dev UI** (`http://localhost:8080/q/dev`) → **CDI beans** panel and verify `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear as managed beans.
+Open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** to see the full agent graph. Verify `IncidentAnalysisWorkflow` shows `@ParallelMapperAgent` with `subAgent = IncidentAnalysisAgent` and `itemsProvider = "tasks"`. This page visualizes every agent's type, `outputKey`, and sub-agent wiring — much more useful than generic CDI bean inspection.
 
 ??? question "Why not a Java `for` loop instead of `itemsProvider`?"
     `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
@@ -178,7 +178,7 @@ You can also open the **Dev UI** (`http://localhost:8080/q/dev`) → **CDI beans
 
 ## :material-check-circle: Done when
 
-- [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` compile and appear in Dev UI CDI beans
+- [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear in the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents)
 - [ ] Terminal logs show overlapping timestamps for the three `analyzeIncident` invocations
 - [ ] You can explain `outputKey` and `@Output` from memory
 - [ ] You can explain how `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 tasks

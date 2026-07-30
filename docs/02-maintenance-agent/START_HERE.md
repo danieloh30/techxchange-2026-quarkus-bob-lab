@@ -86,7 +86,7 @@ Save the file. Quarkus hot-reloads. Check the terminal for any compile errors.
 `DiagnosticAgent` wires into the supervisor pipeline in Exercise 4, so it can't be tested end-to-end yet. But you can confirm it compiled correctly:
 
 1. Check the Quarkus terminal — no red stack traces after hot reload
-2. Open **http://localhost:8080** and press `q` in the terminal to open Dev UI, or visit **http://localhost:8080/q/dev-ui** — confirm no CDI errors
+2. Open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** — confirm `DiagnosticAgent` appears in the agent list with its `outputKey` and description
 
 If you see `Unsatisfied dependency` or `AmbiguousResolutionException`, double-check: `DiagnosticAgent` must be an **interface** (not a class), with **no** `@ApplicationScoped` annotation.
 

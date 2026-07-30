@@ -588,13 +588,13 @@ Your answer directly shapes next year's lab content.
 | 0–10 | :00–:10 | Intro — story + architecture + stack | Trim architecture diagram walk |
 | 10–25 | :10–:25 | Ex 1 — First agent (TriageAgent + TriageTool) | Skip false-alarm test; just show critical-incident path |
 | 25–35 | :25–:35 | Ex 2 — DiagnosticAgent + @SystemMessage tuning | Skip tuning experiment; just implement DiagnosticAgent |
-| 35–45 | :35–:45 | Ex 3 — Parallel workflow (@ParallelMapperAgent) | Skip Dev UI CDI bean check |
+| 35–45 | :35–:45 | Ex 3 — Parallel workflow (@ParallelMapperAgent) | Skip Agentic Dev UI check |
 | 45–60 | :45–:60 | Ex 4 — Full supervisor pipeline | Skip Path 1 (minor incident); keep Paths 2+3 |
 | 60–70 | :60–:70 | Ex 5 — IBM Bob + AGENTS.md | Keep guardrail demo; skip security audit |
 | 70–80 | :70–:80 | Ex 6 — HITL + observability | Skip Grafana span deep-dive; just show HITL approve/reject |
 | 80–90 | :80–:90 | Ex 7 — A2A | Skip trade-offs table discussion; just correlate logs |
 
-**Priority order if behind:** Keep Ex 4 (full supervisor pipeline) and Ex 5 (Bob + AGENTS.md) intact — these are the highest TechXchange differentiation points. Compress Ex 2 tuning experiment, Ex 3 Dev UI checks, and Ex 6 Grafana walk.
+**Priority order if behind:** Keep Ex 4 (full supervisor pipeline) and Ex 5 (Bob + AGENTS.md) intact — these are the highest TechXchange differentiation points. Compress Ex 2 tuning experiment, Ex 3 Agentic Dev UI checks, and Ex 6 Grafana walk.
 
 ---
 

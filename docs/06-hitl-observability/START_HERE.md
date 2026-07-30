@@ -39,6 +39,9 @@ incident-management started in ~4s
 
 ## Read the HITL pattern (3 min)
 
+!!! tip "Agentic Dev UI"
+    Open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** to see the full agent graph for this exercise. Notice `EscalationProposalAgent` and `HumanApprovalAgent` — the HITL gate shows up as a distinct agent type in the wiring view.
+
 Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java).
 
 ```mermaid
