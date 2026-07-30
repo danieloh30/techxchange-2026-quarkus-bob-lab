@@ -1,6 +1,8 @@
-CREATE SEQUENCE IF NOT EXISTS incident_info_id_seq;
+DROP SEQUENCE IF EXISTS incident_info_id_seq;
+CREATE SEQUENCE incident_info_id_seq;
 
-CREATE TABLE IF NOT EXISTS incident_info (
+DROP TABLE IF EXISTS incident_info;
+CREATE TABLE incident_info (
     id INT PRIMARY KEY DEFAULT nextval('incident_info_id_seq'),
     system_name VARCHAR(255) NOT NULL,
     service VARCHAR(255) NOT NULL,
