@@ -11,7 +11,7 @@
 - `lab/src/main/java/com/incidentmanagement/agentic/tools/TriageTool.java`
 
 !!! tip "Solution fallback"
-    [`exercises/01-first-agents/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agents/solution){:target="_blank"} — open if stuck.
+    [`exercises/01-first-agent/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/01-first-agent/solution){:target="_blank"} — open if stuck.
 
 ---
 

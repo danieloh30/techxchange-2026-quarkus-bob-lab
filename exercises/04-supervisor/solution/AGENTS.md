@@ -1,4 +1,4 @@
-# AGENTS.md — IBM Bob Project Context (Exercise 04-ibm-bob/solution)
+# AGENTS.md — IBM Bob Project Context (Exercise 04-supervisor/solution)
 
 > This is the project-local copy of `AGENTS.md` for the Exercise 4 solution.
 > The authoritative version is the [`AGENTS.md`](../../../../AGENTS.md) at the repository root.

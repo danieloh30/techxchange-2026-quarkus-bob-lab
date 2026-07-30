@@ -134,7 +134,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 **Rule of thumb:** If the remote service just *does something* when told exactly what to do → MCP. If it *decides something* using its own reasoning → A2A.
 
 !!! example "Stretch: Try MCP"
-    The [`exercises/05-mcp/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp){:target="_blank"} folder contains a working MCP weather server and client. Run both and see `@McpToolBox` in action as a stretch exercise.
+    The [`exercises/05-ibm-bob/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-ibm-bob){:target="_blank"} folder contains a working MCP weather server and client. Run both and see `@McpToolBox` in action as a stretch exercise.
 
 ---
 

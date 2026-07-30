@@ -8,7 +8,7 @@
 **This exercise produces:** a validated `lab/AGENTS.md` file and Bob-driven governance workflow
 
 !!! tip "Solution fallback"
-    [`exercises/04-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-ibm-bob/solution){:target="_blank"} — open it only if you get stuck.
+    [`exercises/04-supervisor/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/04-supervisor/solution){:target="_blank"} — open it only if you get stuck.
 
     **Bob unavailable?** Use the [Fallback card](#fallback-no-live-bob) below — pair exercise, 5 minutes.
 

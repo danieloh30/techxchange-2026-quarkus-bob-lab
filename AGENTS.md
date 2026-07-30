@@ -93,13 +93,13 @@ public class WidgetTool {
 
 ```
 exercises/
-├── 01-first-agents/solution          TriageAgent + TriageTool          [port 8080]
-├── 02-workflow-patterns/
+├── 01-first-agent/solution           TriageAgent + TriageTool          [port 8080]
+├── 02-maintenance-agent/
 │   ├── solution-sequence             @SequenceAgent chain               [port 8080]
 │   └── solution-composed             parallel + conditional              [port 8080]
-├── 03-supervisor/solution            IncidentSupervisorAgent             [port 8080]
-├── 04-ibm-bob/solution               full supervisor stack (Bob lab)     [port 8080]
-├── 05-mcp/
+├── 03-parallel-workflow/solution     IncidentSupervisorAgent             [port 8080]
+├── 04-supervisor/solution            full supervisor stack (Bob lab)     [port 8080]
+├── 05-ibm-bob/
 │   ├── solution                      MCP client (@McpToolBox)            [port 8080]
 │   └── weather-mcp-server            MCP SSE server                      [port 8081]
 ├── 06-hitl-observability/solution    HITL + OTel + LGTM                  [port 8080]
@@ -110,7 +110,7 @@ exercises/
 
 ---
 
-## Existing agents (04-ibm-bob/solution — the richest exercise)
+## Existing agents (04-supervisor/solution — the richest exercise)
 
 | Interface | File | Role | outputKey |
 |-----------|------|------|-----------|
