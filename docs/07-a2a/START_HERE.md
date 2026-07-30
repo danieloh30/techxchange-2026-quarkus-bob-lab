@@ -57,34 +57,35 @@ Expected:
 ## The A2A architecture
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart LR
     subgraph main["🏢 :8080 — Main App"]
         IPW["🔄 IncidentProcessingWorkflow"]:::workflow
         ISA["🎯 IncidentSupervisorAgent"]:::supervisor
-        IA["💰 ImpactAgent<br/>@A2AClientAgent"]:::a2a
+        IA["💰 ImpactAgent\n@A2AClientAgent"]:::a2a
         IPW --> ISA --> IA
     end
 
-    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
+    IA -->|"JSON-RPC / HTTP\nPOST /a2a/tasks/send"| AE
 
     subgraph remote["🌐 :8888 — Remote Impact Assessment"]
         AE["📡 AgentExecutor"]:::service
-        RIA["💰 ImpactAgent<br/>local LLM call"]:::agent
+        RIA["💰 ImpactAgent\nlocal LLM call"]:::agent
         LLM["🧠 LLM → HIGH / $50k/hr"]:::llm
         AE --> RIA --> LLM
     end
 
     LLM -->|"Task result"| IA
 
-    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
-    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
-    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
-    classDef a2a fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
-    classDef service fill:#455a64,stroke:#37474f,color:#fff,stroke-width:2px
-    classDef llm fill:#37474f,stroke:#263238,color:#fff,stroke-width:2px
+    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
+    classDef service fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
+    classDef llm fill:#f3e5f5,stroke:#ce93d8,color:#4a148c,stroke-width:2px
 
-    style main fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
-    style remote fill:#fce4ec,stroke:#c62828,stroke-width:2px,color:#b71c1c
+    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
+    style remote fill:#fce4ec,stroke:#ef9a9a,stroke-width:2px,color:#b71c1c
 ```
 
 **A2A concepts:**

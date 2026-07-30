@@ -33,22 +33,33 @@ Apex Systems needs systems that **reason** over messy natural-language incident 
 A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus — from a single agent to a full multi-agent supervisor pipeline with human oversight and distributed services.
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart TD
-    IR["Incident Report"] --> IPW
+    IR["📋 Incident Report"]:::input --> IPW
 
-    subgraph main["Apex Systems Incident Management (Quarkus :8080)"]
-        IPW["IncidentProcessingWorkflow<br/>@SequenceAgent"]
-        IPW --> IAW["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]
-        IPW --> ISA["IncidentSupervisorAgent<br/>@SupervisorAgent"]
-        IPW --> RA["ResolutionAgent"]
+    subgraph main["🏢 Apex Systems Incident Management · Quarkus :8080"]
+        IPW["🔄 IncidentProcessingWorkflow\n@SequenceAgent"]:::workflow
+        IPW --> IAW["📊 IncidentAnalysisWorkflow\n@ParallelMapperAgent × 3"]:::workflow
+        IPW --> ISA["🎯 IncidentSupervisorAgent\n@SupervisorAgent"]:::supervisor
+        IPW --> RA["📝 ResolutionAgent"]:::agent
 
-        ISA --> TA["TriageAgent<br/>@ToolBox"]
-        ISA --> DA["DiagnosticAgent"]
-        ISA --> EA["EscalationAgent<br/>+ HITL gate"]
-        ISA --> IA["ImpactAgent"]
+        ISA --> TA["🏥 TriageAgent\n@ToolBox"]:::tool
+        ISA --> DA["🔍 DiagnosticAgent"]:::agent
+        ISA --> EA["🚨 EscalationAgent\n+ HITL gate"]:::agent
+        ISA --> IA["💰 ImpactAgent"]:::a2a
     end
 
-    IA -->|"A2A"| RIA[":8888<br/>Remote Impact Assessment"]
+    IA -->|"A2A"| RIA["🌐 :8888\nRemote Impact Assessment"]:::remote
+
+    classDef input fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
+    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef tool fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
+    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
+    classDef remote fill:#ffcdd2,stroke:#ef9a9a,color:#b71c1c,stroke-width:2px
+
+    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
 ```
 
 ---

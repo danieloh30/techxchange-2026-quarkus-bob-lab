@@ -42,10 +42,26 @@
 .md-typeset .mermaid {
   text-align: center;
   margin: 1.5rem auto;
+  font-size: 1rem;
 }
 
 .md-typeset pre:has(.mermaid) {
   background: transparent;
   border: none;
   box-shadow: none;
+}
+
+.mermaid .node rect,
+.mermaid .node polygon,
+.mermaid .node circle {
+  rx: 12px;
+  ry: 12px;
+}
+
+.mermaid .edgeLabel {
+  font-size: 0.85rem;
+}
+
+.mermaid .label {
+  font-size: 0.95rem;
 }

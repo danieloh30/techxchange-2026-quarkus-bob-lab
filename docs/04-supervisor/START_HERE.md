@@ -23,27 +23,28 @@
 Complete the full multi-agent pipeline. After this exercise, a single `POST /incident-management/process/{id}` triggers:
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart TD
-    IPW["🔄 IncidentProcessingWorkflow<br/>@SequenceAgent"]:::workflow
+    IPW["🔄 IncidentProcessingWorkflow\n@SequenceAgent"]:::workflow
 
-    IPW --> IAW["📊 IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]:::workflow
-    IPW --> ISA["🎯 IncidentSupervisorAgent<br/>@SupervisorAgent"]:::supervisor
+    IPW --> IAW["📊 IncidentAnalysisWorkflow\n@ParallelMapperAgent × 3"]:::workflow
+    IPW --> ISA["🎯 IncidentSupervisorAgent\n@SupervisorAgent"]:::supervisor
     IPW --> RA["📝 ResolutionAgent"]:::agent
 
-    IAW -->|IncidentAnalysisResults| ISA
+    IAW -->|"IncidentAnalysisResults"| ISA
 
     ISA -->|"LLM decides"| IA["💰 ImpactAgent"]:::agent
     ISA -->|"LLM decides"| EA["🚨 EscalationAgent"]:::agent
     ISA -->|"LLM decides"| DA["🔍 DiagnosticAgent"]:::agent
     ISA -->|"LLM decides"| TA["🏥 TriageAgent"]:::tool
 
-    RA -->|IncidentOutcome| IMS["⚙️ IncidentManagementService"]:::service
+    RA -->|"IncidentOutcome"| IMS["⚙️ IncidentManagementService"]:::service
 
-    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
-    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
-    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
-    classDef tool fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
-    classDef service fill:#455a64,stroke:#37474f,color:#fff,stroke-width:2px
+    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef tool fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
+    classDef service fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
 ```
 
 ---

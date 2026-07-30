@@ -131,32 +131,33 @@ Apex Systems needs systems that:
 ### Architecture you will grow into
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart TD
     IR["📋 Incident Report"]:::input --> IPW
 
-    subgraph main["🏢 Apex Systems Incident Management (Quarkus :8080)"]
-        IPW["🔄 IncidentProcessingWorkflow<br/>@SequenceAgent"]:::workflow
-        IPW --> IAW["📊 IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]:::workflow
-        IPW --> ISA["🎯 IncidentSupervisorAgent<br/>@SupervisorAgent"]:::supervisor
+    subgraph main["🏢 Apex Systems Incident Management · Quarkus :8080"]
+        IPW["🔄 IncidentProcessingWorkflow\n@SequenceAgent"]:::workflow
+        IPW --> IAW["📊 IncidentAnalysisWorkflow\n@ParallelMapperAgent × 3"]:::workflow
+        IPW --> ISA["🎯 IncidentSupervisorAgent\n@SupervisorAgent"]:::supervisor
         IPW --> RA["📝 ResolutionAgent"]:::agent
 
-        ISA --> TA["🏥 TriageAgent<br/>@ToolBox"]:::tool
+        ISA --> TA["🏥 TriageAgent\n@ToolBox"]:::tool
         ISA --> DA["🔍 DiagnosticAgent"]:::agent
-        ISA --> EA["🚨 EscalationAgent<br/>+ HITL gate"]:::agent
+        ISA --> EA["🚨 EscalationAgent\n+ HITL gate"]:::agent
         ISA --> IA["💰 ImpactAgent"]:::a2a
     end
 
-    IA -->|"A2A"| RIA["🌐 :8888<br/>Remote Impact Assessment"]:::remote
+    IA -->|"A2A"| RIA["🌐 :8888\nRemote Impact Assessment"]:::remote
 
-    classDef input fill:#37474f,stroke:#263238,color:#fff,stroke-width:2px
-    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
-    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
-    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
-    classDef tool fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
-    classDef a2a fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
-    classDef remote fill:#c62828,stroke:#b71c1c,color:#fff,stroke-width:2px
+    classDef input fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
+    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef tool fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
+    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
+    classDef remote fill:#ffcdd2,stroke:#ef9a9a,color:#b71c1c,stroke-width:2px
 
-    style main fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
+    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
 ```
 
 ### IBM stack for this lab
@@ -408,22 +409,23 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 ### 6.2 HITL flow
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart TD
-    IR["📋 Incident report<br/>P1/P2 on revenue-critical system"]:::input
-    EPA["🚨 EscalationProposalAgent<br/>proposed_action = ESCALATE_P1"]:::agent
+    IR["📋 Incident report\nP1/P2 on revenue-critical system"]:::input
+    EPA["🚨 EscalationProposalAgent\nproposed_action = ESCALATE_P1"]:::agent
     HITL{"🛡️ @HumanInTheLoop gate"}:::decision
-    EXEC["✅ Execute escalation<br/>ESCALATE_P1 / ASSIGN_TEAM"]:::success
-    FALL["🔄 Fallback: CLOSE<br/>→ IN_PROGRESS"]:::info
+    EXEC["✅ Execute escalation\nESCALATE_P1 / ASSIGN_TEAM"]:::success
+    FALL["🔄 Fallback: CLOSE\n→ IN_PROGRESS"]:::info
 
     IR --> EPA --> HITL
     HITL -->|"Escalate to Management"| EXEC
     HITL -->|"Keep at Team Level"| FALL
 
-    classDef input fill:#37474f,stroke:#263238,color:#fff,stroke-width:2px
-    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
-    classDef decision fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
-    classDef success fill:#2e7d32,stroke:#1b5e20,color:#fff,stroke-width:2px
-    classDef info fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
+    classDef input fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef decision fill:#fff9c4,stroke:#fff176,color:#e65100,stroke-width:2px
+    classDef success fill:#c8e6c9,stroke:#a5d6a7,color:#1b5e20,stroke-width:2px
+    classDef info fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
 ```
 
 ### 6.3 OpenTelemetry key spans
@@ -468,34 +470,35 @@ flowchart TD
 ### 7.2 A2A architecture
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart LR
     subgraph main["🏢 :8080 — Main App"]
         IPW["🔄 IncidentProcessingWorkflow"]:::workflow
         ISA["🎯 IncidentSupervisorAgent"]:::supervisor
-        IA["💰 ImpactAgent<br/>@A2AClientAgent"]:::a2a
+        IA["💰 ImpactAgent\n@A2AClientAgent"]:::a2a
         IPW --> ISA --> IA
     end
 
-    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
+    IA -->|"JSON-RPC / HTTP\nPOST /a2a/tasks/send"| AE
 
     subgraph remote["🌐 :8888 — Remote Impact Assessment"]
         AE["📡 AgentExecutor"]:::service
-        RIA["💰 ImpactAgent<br/>local LLM call"]:::agent
+        RIA["💰 ImpactAgent\nlocal LLM call"]:::agent
         LLM["🧠 LLM → HIGH / $50k/hr"]:::llm
         AE --> RIA --> LLM
     end
 
     LLM -->|"Task result"| IA
 
-    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
-    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
-    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
-    classDef a2a fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
-    classDef service fill:#455a64,stroke:#37474f,color:#fff,stroke-width:2px
-    classDef llm fill:#37474f,stroke:#263238,color:#fff,stroke-width:2px
+    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
+    classDef service fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
+    classDef llm fill:#f3e5f5,stroke:#ce93d8,color:#4a148c,stroke-width:2px
 
-    style main fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
-    style remote fill:#fce4ec,stroke:#c62828,stroke-width:2px,color:#b71c1c
+    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
+    style remote fill:#fce4ec,stroke:#ef9a9a,stroke-width:2px,color:#b71c1c
 ```
 
 ### 7.3 MCP vs A2A

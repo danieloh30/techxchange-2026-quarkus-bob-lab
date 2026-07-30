@@ -42,22 +42,23 @@ incident-management started in ~4s
 Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java).
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart TD
-    ISA["🎯 IncidentSupervisorAgent<br/>escalation required"]:::supervisor
-    EPA["🚨 EscalationProposalAgent<br/>proposed_action = ESCALATE_P1"]:::agent
-    HITL{"🛡️ @HumanInTheLoop gate<br/>UI: Awaiting Approval"}:::decision
+    ISA["🎯 IncidentSupervisorAgent\nescalation required"]:::supervisor
+    EPA["🚨 EscalationProposalAgent\nproposed_action = ESCALATE_P1"]:::agent
+    HITL{"🛡️ @HumanInTheLoop gate\nUI: Awaiting Approval"}:::decision
     ESC["✅ ESCALATED"]:::success
-    INV["🔄 IN_PROGRESS<br/>reassessment"]:::info
+    INV["🔄 IN_PROGRESS\nreassessment"]:::info
 
     ISA --> EPA --> HITL
     HITL -->|"Escalate to Management"| ESC
     HITL -->|"Keep at Team Level"| INV
 
-    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
-    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
-    classDef decision fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
-    classDef success fill:#2e7d32,stroke:#1b5e20,color:#fff,stroke-width:2px
-    classDef info fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
+    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef decision fill:#fff9c4,stroke:#fff176,color:#e65100,stroke-width:2px
+    classDef success fill:#c8e6c9,stroke:#a5d6a7,color:#1b5e20,stroke-width:2px
+    classDef info fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
 ```
 
 ---
