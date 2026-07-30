@@ -7,7 +7,7 @@
 **You work in:** `exercises/07-a2a/solution/` (run + read)
 
 !!! tip "Reference solution"
-    [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution)
+    [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution){:target="_blank"}
 
 ---
 
@@ -53,9 +53,9 @@ Expected:
 ```
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents) on the main system (:8080). Notice `ImpactAgent` now shows as `@A2AClientAgent` instead of a local LLM agent — the framework transparently proxies calls to the remote service.
+    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080). Notice `ImpactAgent` now shows as `@A2AClientAgent` instead of a local LLM agent — the framework transparently proxies calls to the remote service.
 
-    Check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology) — this is the final evolution of the agent tree. Compare it to Exercise 4: `ImpactAgent` is now an A2A remote node instead of a local sub-agent.
+    Check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the final evolution of the agent tree. Compare it to Exercise 4: `ImpactAgent` is now an A2A remote node instead of a local sub-agent.
 
 ---
 
@@ -134,7 +134,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 **Rule of thumb:** If the remote service just *does something* when told exactly what to do → MCP. If it *decides something* using its own reasoning → A2A.
 
 !!! example "Stretch: Try MCP"
-    The [`exercises/05-mcp/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp) folder contains a working MCP weather server and client. Run both and see `@McpToolBox` in action as a stretch exercise.
+    The [`exercises/05-mcp/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-mcp){:target="_blank"} folder contains a working MCP weather server and client. Run both and see `@McpToolBox` in action as a stretch exercise.
 
 ---
 

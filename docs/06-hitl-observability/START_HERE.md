@@ -8,7 +8,7 @@
 **Learn by:** reading `EscalationProposalAgent` + `HumanApprovalAgent`, running the UI, reading OTel spans
 
 !!! tip "Reference solution"
-    [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution)
+    [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution){:target="_blank"}
 
 ---
 
@@ -40,11 +40,11 @@ incident-management started in ~4s
 ## Read the HITL pattern (3 min)
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents) to see the full agent graph for this exercise. Notice `EscalationProposalAgent` and `HumanApprovalAgent` — the HITL gate shows up as a distinct agent type in the wiring view.
+    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the full agent graph for this exercise. Notice `EscalationProposalAgent` and `HumanApprovalAgent` — the HITL gate shows up as a distinct agent type in the wiring view.
 
-    Also check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology) — compare it to Exercise 4. The tree now includes the HITL agents branching off the supervisor.
+    Also check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — compare it to Exercise 4. The tree now includes the HITL agents branching off the supervisor.
 
-Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java) and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java).
+Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java){:target="_blank"} and [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java){:target="_blank"}.
 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%

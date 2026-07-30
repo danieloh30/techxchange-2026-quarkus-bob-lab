@@ -8,9 +8,9 @@
 **Files to edit:** `lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java`
 
 !!! tip "Solution fallback"
-    [`exercises/02-workflow-patterns/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-composed) — includes `DiagnosticAgent` wired into a conditional workflow.
+    [`exercises/02-workflow-patterns/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-composed){:target="_blank"} — includes `DiagnosticAgent` wired into a conditional workflow.
 
-    [`exercises/02-workflow-patterns/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-sequence) — sequence variant (TriageAgent + ResolutionAgent only).
+    [`exercises/02-workflow-patterns/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-workflow-patterns/solution-sequence){:target="_blank"} — sequence variant (TriageAgent + ResolutionAgent only).
 
 ---
 
@@ -22,7 +22,7 @@ Add `DiagnosticAgent` — same `@Agent` pattern as `TriageAgent` but **no tool**
 
 ## Step 1 — Implement `DiagnosticAgent` (4 min)
 
-Open [`DiagnosticAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java).
+Open [`DiagnosticAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java){:target="_blank"}.
 
 Replace the `// TODO` block with the following code **exactly**:
 
@@ -86,7 +86,7 @@ Save the file. Quarkus hot-reloads. Check the terminal for any compile errors.
 `DiagnosticAgent` wires into the supervisor pipeline in Exercise 4, so it can't be tested end-to-end yet. But you can confirm it compiled correctly:
 
 1. Check the Quarkus terminal — no red stack traces after hot reload
-2. Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents) — confirm `DiagnosticAgent` appears in the agent list with its `outputKey` and description
+2. Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} — confirm `DiagnosticAgent` appears in the agent list with its `outputKey` and description
 
 If you see `Unsatisfied dependency` or `AmbiguousResolutionException`, double-check: `DiagnosticAgent` must be an **interface** (not a class), with **no** `@ApplicationScoped` annotation.
 

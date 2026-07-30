@@ -13,7 +13,7 @@ Confirm these before the lab starts:
 | **Java 25+** | `java -version` |
 | Maven 3.9+ | or use `./mvnw` in each exercise |
 | Quarkus **3.37.4** (IBM Enterprise Build) | Java 25 target |
-| [IBM Bob](https://bob.ibm.com/) | Sign in before the lab starts |
+| [IBM Bob](https://bob.ibm.com/){:target="_blank"} | Sign in before the lab starts |
 | LLM API key | Provided in the room (`OPENAI_API_KEY`) |
 | Free ports **8080**, **8888** | One process per exercise set |
 | Docker or Podman | For Quarkus Dev Services (PostgreSQL, LGTM) |
