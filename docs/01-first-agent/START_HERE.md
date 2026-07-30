@@ -187,7 +187,7 @@ Order confirmation emails failing for 30% of customers, bounce rate spiking
 **Expected UI:** Incident #5 status → `TRIAGING`
 
 !!! tip "Agentic Dev UI"
-    Open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** to see all registered agents, their `outputKey`, sub-agents, and wiring. This is the fastest way to confirm your agent compiled and was picked up by the framework.
+    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents) to see all registered agents, their `outputKey`, sub-agents, and wiring. This is the fastest way to confirm your agent compiled and was picked up by the framework.
 
 Now process Incident **#6** (search-engine/product-search, status: `OPEN`) with:
 ```
