@@ -1,5 +1,6 @@
 package com.incidentmanagement.agentic.agents;
 
+import com.incidentmanagement.model.IncidentInfo;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
@@ -27,9 +28,9 @@ public interface DiagnosticAgent {
         """)
     @UserMessage("""
         Incident Information:
-        System: {system}
-        Service: {service}
-        Priority: P{priority}
+        System: {incidentInfo.system}
+        Service: {incidentInfo.service}
+        Priority: P{incidentInfo.priority}
         Incident Number: {incidentNumber}
 
         Diagnostic Request:
@@ -37,7 +38,7 @@ public interface DiagnosticAgent {
         """)
     @Agent(description = "Incident diagnostic specialist. Using incident information and request, determines what diagnostic actions are needed.",
            outputKey = "analysisResult")
-    String processDiagnostic(String system, String service,
-                              Integer priority, Integer incidentNumber,
+    String processDiagnostic(IncidentInfo incidentInfo,
+                              Integer incidentNumber,
                               String diagnosticRequest);
 }
