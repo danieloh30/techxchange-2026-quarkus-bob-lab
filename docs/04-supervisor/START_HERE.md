@@ -25,20 +25,28 @@ Complete the full multi-agent pipeline. After this exercise, a single `POST /inc
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    IPW([IncidentProcessingWorkflow<br/>@SequenceAgent])
+    IPW(["IncidentProcessingWorkflow<br/>@SequenceAgent"])
+    IAW(["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent x3"])
+    ISA(["IncidentSupervisorAgent<br/>@SupervisorAgent"])
+    RA([ResolutionAgent])
+    IA([ImpactAgent])
+    EA([EscalationAgent])
+    DA([DiagnosticAgent])
+    TA([TriageAgent])
+    IMS([IncidentManagementService])
 
-    IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent x3])
-    IPW --> ISA([IncidentSupervisorAgent<br/>@SupervisorAgent])
-    IPW --> RA([ResolutionAgent])
+    IPW --> IAW
+    IPW --> ISA
+    IPW --> RA
 
     IAW -->|IncidentAnalysisResults| ISA
 
-    ISA -->|LLM decides| IA([ImpactAgent])
-    ISA -->|LLM decides| EA([EscalationAgent])
-    ISA -->|LLM decides| DA([DiagnosticAgent])
-    ISA -->|LLM decides| TA([TriageAgent])
+    ISA -->|LLM decides| IA
+    ISA -->|LLM decides| EA
+    ISA -->|LLM decides| DA
+    ISA -->|LLM decides| TA
 
-    RA -->|IncidentOutcome| IMS([IncidentManagementService])
+    RA -->|IncidentOutcome| IMS
 
     style IPW fill:#D4E6F1,stroke:#2E6B8A
     style IAW fill:#D4E6F1,stroke:#2E6B8A

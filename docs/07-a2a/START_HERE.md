@@ -67,19 +67,18 @@ flowchart LR
     subgraph main[":8080 — Main App"]
         IPW([IncidentProcessingWorkflow])
         ISA([IncidentSupervisorAgent])
-        IA([ImpactAgent<br/>@A2AClientAgent])
-        IPW --> ISA --> IA
+        IA(["ImpactAgent<br/>@A2AClientAgent"])
     end
-
-    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
 
     subgraph remote[":8888 — Remote Impact Assessment"]
         AE([AgentExecutor])
-        RIA([ImpactAgent<br/>local LLM call])
-        LLM([LLM → HIGH / $50k/hr])
-        AE --> RIA --> LLM
+        RIA(["ImpactAgent<br/>local LLM call"])
+        LLM(["LLM result"])
     end
 
+    IPW --> ISA --> IA
+    IA -->|A2A POST /a2a/tasks/send| AE
+    AE --> RIA --> LLM
     LLM -->|Task result| IA
 
     style IPW fill:#D4E6F1,stroke:#2E6B8A
