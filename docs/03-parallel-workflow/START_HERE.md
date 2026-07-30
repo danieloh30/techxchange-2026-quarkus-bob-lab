@@ -26,31 +26,33 @@ This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, 
 ## How `AgenticScope` connects agents
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    A["🔄 IncidentAnalysisAgent × 3"]:::workflow
-    B["📦 @Output → List‹String›"]:::output
-    C["📊 IncidentAnalysisResults"]:::output
-    D["🎯 IncidentSupervisorAgent"]:::next
+    A([IncidentAnalysisAgent × 3])
+    B([Output → List of String])
+    C([IncidentAnalysisResults])
+    D([IncidentSupervisorAgent])
 
     A --> B --> C --> D
 
-    subgraph parallel["⚡ Concurrent — outputKey = incidentAnalysis"]
-        A1["🔴 Severity analyst"]:::agent
-        A2["💰 Impact analyst"]:::agent
-        A3["⚠️ Resolution analyst"]:::agent
+    subgraph parallel["Concurrent — outputKey = incidentAnalysis"]
+        A1([Severity analyst])
+        A2([Impact analyst])
+        A3([Resolution analyst])
     end
 
     A1 --> B
     A2 --> B
     A3 --> B
 
-    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef output fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-    classDef next fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px,stroke-dasharray:5
-
-    style parallel fill:#e8f5e9,stroke:#81c784,stroke-width:2px,color:#1b5e20
+    style A fill:#D4E6F1,stroke:#2E6B8A
+    style B fill:#E8E0F0,stroke:#6B5B8A
+    style C fill:#E8E0F0,stroke:#6B5B8A
+    style D fill:#E8DCC4,stroke:#6B5B45
+    style A1 fill:#D8F0D8,stroke:#3D7A3D
+    style A2 fill:#D8F0D8,stroke:#3D7A3D
+    style A3 fill:#D8F0D8,stroke:#3D7A3D
+    style parallel fill:#F5F5F0,stroke:#8B8070
 ```
 
 Each parallel invocation of `IncidentAnalysisAgent` writes its result under `"incidentAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `IncidentAnalysisResults`.

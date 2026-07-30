@@ -33,33 +33,35 @@ Apex Systems needs systems that **reason** over messy natural-language incident 
 A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus — from a single agent to a full multi-agent supervisor pipeline with human oversight and distributed services.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    IR["📋 Incident Report"]:::input --> IPW
+    IR([Incident Report]) --> IPW
 
-    subgraph main["🏢 Apex Systems Incident Management · Quarkus :8080"]
-        IPW["🔄 IncidentProcessingWorkflow\n@SequenceAgent"]:::workflow
-        IPW --> IAW["📊 IncidentAnalysisWorkflow\n@ParallelMapperAgent × 3"]:::workflow
-        IPW --> ISA["🎯 IncidentSupervisorAgent\n@SupervisorAgent"]:::supervisor
-        IPW --> RA["📝 ResolutionAgent"]:::agent
+    subgraph main["Apex Systems Incident Management · Quarkus :8080"]
+        IPW([IncidentProcessingWorkflow<br/>@SequenceAgent])
+        IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3])
+        IPW --> ISA([IncidentSupervisorAgent<br/>@SupervisorAgent])
+        IPW --> RA([ResolutionAgent])
 
-        ISA --> TA["🏥 TriageAgent\n@ToolBox"]:::tool
-        ISA --> DA["🔍 DiagnosticAgent"]:::agent
-        ISA --> EA["🚨 EscalationAgent\n+ HITL gate"]:::agent
-        ISA --> IA["💰 ImpactAgent"]:::a2a
+        ISA --> TA([TriageAgent<br/>@ToolBox])
+        ISA --> DA([DiagnosticAgent])
+        ISA --> EA([EscalationAgent<br/>+ HITL gate])
+        ISA --> IA([ImpactAgent])
     end
 
-    IA -->|"A2A"| RIA["🌐 :8888\nRemote Impact Assessment"]:::remote
+    IA -->|A2A| RIA([":8888 — Remote<br/>Impact Assessment"])
 
-    classDef input fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
-    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
-    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef tool fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
-    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
-    classDef remote fill:#ffcdd2,stroke:#ef9a9a,color:#b71c1c,stroke-width:2px
-
-    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
+    style IR fill:#E8DCC4,stroke:#6B5B45
+    style IPW fill:#D4E6F1,stroke:#2E6B8A
+    style IAW fill:#D4E6F1,stroke:#2E6B8A
+    style ISA fill:#FFE4CC,stroke:#B87333
+    style RA fill:#D8F0D8,stroke:#3D7A3D
+    style TA fill:#FFF8DC,stroke:#C4A000
+    style DA fill:#D8F0D8,stroke:#3D7A3D
+    style EA fill:#D8F0D8,stroke:#3D7A3D
+    style IA fill:#FFF8DC,stroke:#C4A000
+    style RIA fill:#F5D0D0,stroke:#A04040
+    style main fill:#F5F5F0,stroke:#8B8070
 ```
 
 ---

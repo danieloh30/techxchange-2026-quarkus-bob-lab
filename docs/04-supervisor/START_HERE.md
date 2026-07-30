@@ -23,28 +23,32 @@
 Complete the full multi-agent pipeline. After this exercise, a single `POST /incident-management/process/{id}` triggers:
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    IPW["🔄 IncidentProcessingWorkflow\n@SequenceAgent"]:::workflow
+    IPW([IncidentProcessingWorkflow<br/>@SequenceAgent])
 
-    IPW --> IAW["📊 IncidentAnalysisWorkflow\n@ParallelMapperAgent × 3"]:::workflow
-    IPW --> ISA["🎯 IncidentSupervisorAgent\n@SupervisorAgent"]:::supervisor
-    IPW --> RA["📝 ResolutionAgent"]:::agent
+    IPW --> IAW([IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3])
+    IPW --> ISA([IncidentSupervisorAgent<br/>@SupervisorAgent])
+    IPW --> RA([ResolutionAgent])
 
-    IAW -->|"IncidentAnalysisResults"| ISA
+    IAW -->|IncidentAnalysisResults| ISA
 
-    ISA -->|"LLM decides"| IA["💰 ImpactAgent"]:::agent
-    ISA -->|"LLM decides"| EA["🚨 EscalationAgent"]:::agent
-    ISA -->|"LLM decides"| DA["🔍 DiagnosticAgent"]:::agent
-    ISA -->|"LLM decides"| TA["🏥 TriageAgent"]:::tool
+    ISA -->|LLM decides| IA([ImpactAgent])
+    ISA -->|LLM decides| EA([EscalationAgent])
+    ISA -->|LLM decides| DA([DiagnosticAgent])
+    ISA -->|LLM decides| TA([TriageAgent])
 
-    RA -->|"IncidentOutcome"| IMS["⚙️ IncidentManagementService"]:::service
+    RA -->|IncidentOutcome| IMS([IncidentManagementService])
 
-    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
-    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef tool fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
-    classDef service fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
+    style IPW fill:#D4E6F1,stroke:#2E6B8A
+    style IAW fill:#D4E6F1,stroke:#2E6B8A
+    style ISA fill:#FFE4CC,stroke:#B87333
+    style RA fill:#D8F0D8,stroke:#3D7A3D
+    style IA fill:#D8F0D8,stroke:#3D7A3D
+    style EA fill:#D8F0D8,stroke:#3D7A3D
+    style DA fill:#D8F0D8,stroke:#3D7A3D
+    style TA fill:#FFF8DC,stroke:#C4A000
+    style IMS fill:#E8DCC4,stroke:#6B5B45
 ```
 
 ---

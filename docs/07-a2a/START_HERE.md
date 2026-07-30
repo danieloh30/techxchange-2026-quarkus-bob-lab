@@ -57,35 +57,34 @@ Expected:
 ## The A2A architecture
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart LR
-    subgraph main["🏢 :8080 — Main App"]
-        IPW["🔄 IncidentProcessingWorkflow"]:::workflow
-        ISA["🎯 IncidentSupervisorAgent"]:::supervisor
-        IA["💰 ImpactAgent\n@A2AClientAgent"]:::a2a
+    subgraph main[":8080 — Main App"]
+        IPW([IncidentProcessingWorkflow])
+        ISA([IncidentSupervisorAgent])
+        IA([ImpactAgent<br/>@A2AClientAgent])
         IPW --> ISA --> IA
     end
 
-    IA -->|"JSON-RPC / HTTP\nPOST /a2a/tasks/send"| AE
+    IA -->|"JSON-RPC / HTTP<br/>POST /a2a/tasks/send"| AE
 
-    subgraph remote["🌐 :8888 — Remote Impact Assessment"]
-        AE["📡 AgentExecutor"]:::service
-        RIA["💰 ImpactAgent\nlocal LLM call"]:::agent
-        LLM["🧠 LLM → HIGH / $50k/hr"]:::llm
+    subgraph remote[":8888 — Remote Impact Assessment"]
+        AE([AgentExecutor])
+        RIA([ImpactAgent<br/>local LLM call])
+        LLM([LLM → HIGH / $50k/hr])
         AE --> RIA --> LLM
     end
 
-    LLM -->|"Task result"| IA
+    LLM -->|Task result| IA
 
-    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
-    classDef supervisor fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
-    classDef a2a fill:#ffe0b2,stroke:#ffb74d,color:#e65100,stroke-width:2px
-    classDef service fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px
-    classDef llm fill:#f3e5f5,stroke:#ce93d8,color:#4a148c,stroke-width:2px
-
-    style main fill:#e3f2fd,stroke:#90caf9,stroke-width:2px,color:#0d47a1
-    style remote fill:#fce4ec,stroke:#ef9a9a,stroke-width:2px,color:#b71c1c
+    style IPW fill:#D4E6F1,stroke:#2E6B8A
+    style ISA fill:#FFE4CC,stroke:#B87333
+    style IA fill:#FFF8DC,stroke:#C4A000
+    style AE fill:#E8DCC4,stroke:#6B5B45
+    style RIA fill:#D8F0D8,stroke:#3D7A3D
+    style LLM fill:#E8E0F0,stroke:#6B5B8A
+    style main fill:#F5F5F0,stroke:#8B8070
+    style remote fill:#FFF5F0,stroke:#A08070
 ```
 
 **A2A concepts:**
