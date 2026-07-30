@@ -55,6 +55,8 @@ Expected:
 !!! tip "Agentic Dev UI"
     Open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** on the main system (:8080). Notice `ImpactAgent` now shows as `@A2AClientAgent` instead of a local LLM agent — the framework transparently proxies calls to the remote service.
 
+    Check the **topology** at **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology** — this is the final evolution of the agent tree. Compare it to Exercise 4: `ImpactAgent` is now an A2A remote node instead of a local sub-agent.
+
 ---
 
 ## The A2A architecture
