@@ -52,6 +52,9 @@ Expected:
 }
 ```
 
+!!! tip "Agentic Dev UI"
+    Open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** on the main system (:8080). Notice `ImpactAgent` now shows as `@A2AClientAgent` instead of a local LLM agent — the framework transparently proxies calls to the remote service.
+
 ---
 
 ## The A2A architecture

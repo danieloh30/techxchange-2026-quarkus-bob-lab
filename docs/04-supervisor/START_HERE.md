@@ -356,6 +356,9 @@ Save. Quarkus hot-reloads.
 
 ## Step 6 — Test all three paths (3 min)
 
+!!! tip "Agentic Dev UI"
+    Before testing, open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** to see the full pipeline: `IncidentProcessingWorkflow` → `IncidentSupervisorAgent` (with its 4 sub-agents) → `ResolutionAgent`. This page shows each agent's type (`@SequenceAgent`, `@SupervisorAgent`), `outputKey`, and sub-agent list — a quick sanity check that everything wired correctly after hot reload.
+
 **Path 1 — Minor incident:**  
 Process Incident **#6** (search-engine/product-search) with `"False alarm, relevance restored after cache refresh"`.  
 Expected: status = `RESOLVED`, no tool calls, supervisor skips impact + escalation.
