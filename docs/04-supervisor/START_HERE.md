@@ -318,7 +318,9 @@ import dev.langchain4j.agentic.declarative.SupervisorRequest;
 
 Open [`IncidentProcessingWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java).
 
-Replace both `// TODO` blocks:
+Notice the interface already `extends MonitoredAgent` — this is what enables the **topology view** in the Dev UI. The framework registers any `MonitoredAgent` workflow as a root agent, allowing it to visualize the full agent tree.
+
+Replace the `// TODO` block:
 
 **5a — `@SequenceAgent` method:**
 
