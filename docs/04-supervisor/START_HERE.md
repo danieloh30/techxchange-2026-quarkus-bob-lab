@@ -359,6 +359,8 @@ Save. Quarkus hot-reloads.
 !!! tip "Agentic Dev UI"
     Before testing, open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents** to see the full pipeline: `IncidentProcessingWorkflow` → `IncidentSupervisorAgent` (with its 4 sub-agents) → `ResolutionAgent`. This page shows each agent's type (`@SequenceAgent`, `@SupervisorAgent`), `outputKey`, and sub-agent list — a quick sanity check that everything wired correctly after hot reload.
 
+    Now open **http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology** — this is the first exercise where a **root agent** appears. The topology view visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
+
 **Path 1 — Minor incident:**  
 Process Incident **#6** (search-engine/product-search) with `"False alarm, relevance restored after cache refresh"`.  
 Expected: status = `RESOLVED`, no tool calls, supervisor skips impact + escalation.
