@@ -7,11 +7,12 @@ import com.incidentmanagement.model.IncidentOutcome;
 import com.incidentmanagement.model.IncidentInfo;
 import dev.langchain4j.agentic.declarative.Output;
 import dev.langchain4j.agentic.declarative.SequenceAgent;
+import dev.langchain4j.agentic.observability.MonitoredAgent;
 
 /**
  * Workflow for processing incidents using a sequence of agents.
  */
-public interface IncidentProcessingWorkflow {
+public interface IncidentProcessingWorkflow extends MonitoredAgent {
 
     /**
      * Processes an incident by running triage and then resolution analysis.
