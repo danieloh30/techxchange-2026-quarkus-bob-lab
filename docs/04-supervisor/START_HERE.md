@@ -24,21 +24,26 @@ Complete the full multi-agent pipeline. After this exercise, a single `POST /inc
 
 ```mermaid
 flowchart TD
-    IPW["IncidentProcessingWorkflow<br/>@SequenceAgent"] --> IAW
-    IPW --> ISA
-    IPW --> RA
+    IPW["🔄 IncidentProcessingWorkflow<br/>@SequenceAgent"]:::workflow
 
-    IAW["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3<br/><i>done in Ex 3</i>"]
-    IAW --> |IncidentAnalysisResults| ISA
+    IPW --> IAW["📊 IncidentAnalysisWorkflow<br/>@ParallelMapperAgent × 3"]:::workflow
+    IPW --> ISA["🎯 IncidentSupervisorAgent<br/>@SupervisorAgent"]:::supervisor
+    IPW --> RA["📝 ResolutionAgent"]:::agent
 
-    ISA["IncidentSupervisorAgent<br/>@SupervisorAgent"]
-    ISA --> |LLM decides| IA["ImpactAgent"]
-    ISA --> |LLM decides| EA["EscalationAgent"]
-    ISA --> |LLM decides| DA["DiagnosticAgent"]
-    ISA --> |LLM decides| TA["TriageAgent"]
+    IAW -->|IncidentAnalysisResults| ISA
 
-    RA["ResolutionAgent<br/>@Agent"]
-    RA --> |IncidentOutcome| IMS["IncidentManagementService<br/>sets final IncidentStatus"]
+    ISA -->|"LLM decides"| IA["💰 ImpactAgent"]:::agent
+    ISA -->|"LLM decides"| EA["🚨 EscalationAgent"]:::agent
+    ISA -->|"LLM decides"| DA["🔍 DiagnosticAgent"]:::agent
+    ISA -->|"LLM decides"| TA["🏥 TriageAgent"]:::tool
+
+    RA -->|IncidentOutcome| IMS["⚙️ IncidentManagementService"]:::service
+
+    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
+    classDef supervisor fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
+    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
+    classDef tool fill:#e65100,stroke:#bf360c,color:#fff,stroke-width:2px
+    classDef service fill:#455a64,stroke:#37474f,color:#fff,stroke-width:2px
 ```
 
 ---

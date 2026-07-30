@@ -27,16 +27,29 @@ This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, 
 
 ```mermaid
 flowchart TD
-    A["IncidentAnalysisAgent × 3<br/>(concurrent)"] --> B["@Output collects List&lt;String&gt;"]
-    B --> C["IncidentAnalysisResults<br/>outputKey = incidentAnalysisResults"]
-    C --> D["IncidentSupervisorAgent<br/>(Exercise 4)"]
+    A["🔄 IncidentAnalysisAgent × 3"]:::workflow
+    B["📦 @Output → List&lt;String&gt;"]:::output
+    C["📊 IncidentAnalysisResults"]:::output
+    D["🎯 IncidentSupervisorAgent"]:::next
 
-    subgraph parallel["Each invocation: outputKey = incidentAnalysis"]
-        A1["🔴 Severity analyst"] ~~~ A2["💰 Impact analyst"] ~~~ A3["⚠️ Resolution analyst"]
+    A --> B --> C --> D
+
+    subgraph parallel["⚡ Concurrent — outputKey = incidentAnalysis"]
+        A1["🔴 Severity analyst"]:::agent
+        A2["💰 Impact analyst"]:::agent
+        A3["⚠️ Resolution analyst"]:::agent
     end
+
     A1 --> B
     A2 --> B
     A3 --> B
+
+    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
+    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
+    classDef output fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
+    classDef next fill:#455a64,stroke:#37474f,color:#fff,stroke-width:2px,stroke-dasharray:5
+
+    style parallel fill:#e0f2f1,stroke:#00897b,stroke-width:2px,color:#004d40
 ```
 
 Each parallel invocation of `IncidentAnalysisAgent` writes its result under `"incidentAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `IncidentAnalysisResults`.
