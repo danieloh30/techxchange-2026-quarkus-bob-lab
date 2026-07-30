@@ -12,11 +12,11 @@ CREATE TABLE incident_info (
 );
 
 INSERT INTO incident_info (id, system_name, service, priority, description, status) VALUES
-    (nextval('incident_info_id_seq'), 'Payment Processing', 'Checkout API', 'P1', 'Transaction failures reported by multiple customers', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'E-Commerce Platform', 'Product Catalog', 'P2', 'Catalog search returning stale results', 'IN_PROGRESS'),
-    (nextval('incident_info_id_seq'), 'Trading System', 'Order Execution', 'P1', 'Order execution latency exceeding SLA thresholds', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'HR System', 'Employee Portal', 'P3', 'Portal login intermittently failing', 'TRIAGING'),
-    (nextval('incident_info_id_seq'), 'Internal Tools', 'Wiki Platform', 'P4', 'Search indexing delayed by 2 hours', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'Customer Portal', 'Dashboard API', 'P3', 'Dashboard loading slowly during peak hours', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'Mobile App', 'Push Notifications', 'P2', 'Push notifications delayed by 15 minutes', 'OPEN'),
-    (nextval('incident_info_id_seq'), 'API Gateway', 'Rate Limiter', 'P3', 'Rate limiter miscounting requests from specific IP ranges', 'IN_PROGRESS');
+    (nextval('incident_info_id_seq'), 'payment-gateway', 'checkout-api', 'P2', 'Intermittent 503 errors during peak hours', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'auth-service', 'user-login', 'P1', 'Complete authentication failure', 'IN_PROGRESS'),
+    (nextval('incident_info_id_seq'), 'inventory-db', 'stock-sync', 'P3', 'Stale inventory data, sync lag 15 min', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'cdn-edge', 'static-assets', 'P4', 'Slow asset loading in EU region', 'TRIAGING'),
+    (nextval('incident_info_id_seq'), 'email-service', 'notification-api', 'P2', 'Delivery failures for order confirmations', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'search-engine', 'product-search', 'P3', 'Relevance degradation after index rebuild', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'monitoring', 'alerting-api', 'P2', 'Alert fatigue — 40% false positive rate', 'OPEN'),
+    (nextval('incident_info_id_seq'), 'api-gateway', 'rate-limiter', 'P1', 'Rate limiter rejecting legitimate traffic', 'IN_PROGRESS');
