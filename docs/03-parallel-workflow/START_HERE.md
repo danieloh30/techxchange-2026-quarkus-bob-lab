@@ -26,9 +26,10 @@ This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, 
 ## How `AgenticScope` connects agents
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Inter, system-ui, sans-serif'}}}%%
 flowchart TD
     A["🔄 IncidentAnalysisAgent × 3"]:::workflow
-    B["📦 @Output → List&lt;String&gt;"]:::output
+    B["📦 @Output → List‹String›"]:::output
     C["📊 IncidentAnalysisResults"]:::output
     D["🎯 IncidentSupervisorAgent"]:::next
 
@@ -44,12 +45,12 @@ flowchart TD
     A2 --> B
     A3 --> B
 
-    classDef workflow fill:#1565c0,stroke:#0d47a1,color:#fff,stroke-width:2px
-    classDef agent fill:#00897b,stroke:#00695c,color:#fff,stroke-width:2px
-    classDef output fill:#6a1b9a,stroke:#4a148c,color:#fff,stroke-width:2px
-    classDef next fill:#455a64,stroke:#37474f,color:#fff,stroke-width:2px,stroke-dasharray:5
+    classDef workflow fill:#bbdefb,stroke:#64b5f6,color:#0d47a1,stroke-width:2px
+    classDef agent fill:#b2dfdb,stroke:#80cbc4,color:#004d40,stroke-width:2px
+    classDef output fill:#e1bee7,stroke:#ce93d8,color:#4a148c,stroke-width:2px
+    classDef next fill:#cfd8dc,stroke:#b0bec5,color:#263238,stroke-width:2px,stroke-dasharray:5
 
-    style parallel fill:#e0f2f1,stroke:#00897b,stroke-width:2px,color:#004d40
+    style parallel fill:#e8f5e9,stroke:#81c784,stroke-width:2px,color:#1b5e20
 ```
 
 Each parallel invocation of `IncidentAnalysisAgent` writes its result under `"incidentAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `IncidentAnalysisResults`.
