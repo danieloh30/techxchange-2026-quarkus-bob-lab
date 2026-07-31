@@ -43,7 +43,8 @@
   width: 100%;
 }
 
-.md-typeset__table table {
+.md-typeset table:not([class]) {
+  display: table;
   width: 100%;
 }
 
