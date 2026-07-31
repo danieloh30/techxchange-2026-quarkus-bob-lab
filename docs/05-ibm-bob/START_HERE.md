@@ -177,9 +177,9 @@ Discuss how Bob's capabilities map across the delivery lifecycle:
 |-------|------------------|
 | Discover / plan | Architecture-aware plan, file list, risk flagging from AGENTS.md |
 | Implement | Declarative agent interfaces per AGENTS.md rules, approval gate before apply |
-| Secure | Shift-left: PII in prompts, secrets in logs, over-broad `@SystemMessage` |
-| Test | `@QuarkusTest @TestTransaction` generation as part of the task |
-| Operate | Instana/OTel hooks; guidance on `gen_ai.*` span interpretation |
+| Secure | Shift-left: PII in prompts, secrets in logs, over-broad SystemMessage |
+| Test | QuarkusTest + TestTransaction generation as part of the task |
+| Operate | Instana/OTel hooks; guidance on gen_ai span interpretation |
 | Modernize | Java upgrade playbooks (premium packaging); Jakarta EE migration |
 
 ---
