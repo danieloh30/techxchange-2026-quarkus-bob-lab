@@ -1,4 +1,4 @@
-# Exercise 4 — Full Supervisor Pipeline
+# Exercise 4 — Supervisor Agent Pattern
 
 <span class="badge badge--code-along">Code-Along</span>
 

@@ -83,7 +83,7 @@ Save the file. Quarkus hot-reloads. Check the terminal for any compile errors.
 
 ## Step 2 — Verify the compile (1 min)
 
-`DiagnosticAgent` wires into the supervisor pipeline in Exercise 4, so it can't be tested end-to-end yet. But you can confirm it compiled correctly:
+`DiagnosticAgent` wires into the supervisor agent pattern in Exercise 4, so it can't be tested end-to-end yet. But you can confirm it compiled correctly:
 
 1. Check the Quarkus terminal — no red stack traces after hot reload
 2. Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} — confirm `DiagnosticAgent` appears in the agent list with its `outputKey` and description
