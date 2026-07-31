@@ -13,9 +13,9 @@
 
 ## The problem
 
-In Exercise 4, `ImpactAgent` ran inside the main app — same process, same release cycle. But Riley's SRE team needs independent ownership: their own repo, their own release cadence, and the ability to serve other IBM systems beyond Apex Systems.
+In Exercise 4, every agent ran inside a single process — same JVM, same release cycle, same crash domain. But Riley's SRE team needs `ImpactAgent` as a **remote agent**: independent repo, independent release cadence, independently scalable, and reusable by other systems beyond Apex Systems.
 
-Solution: convert `ImpactAgent` into an **Agent-to-Agent (A2A)** remote service.
+Solution: convert `ImpactAgent` into a **remote agent** using the A2A (Agent-to-Agent) protocol — the local interface stays the same, but execution happens in a separate process.
 
 ---
 

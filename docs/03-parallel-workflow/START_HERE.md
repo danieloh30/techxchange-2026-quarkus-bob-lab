@@ -17,9 +17,9 @@
 
 ## The goal
 
-Instead of calling severity, impact, and resolution analysis sequentially, run all three **concurrently** with `@ParallelMapperAgent`. Wall-clock time ≈ slowest single call (not the sum). Then assemble three independent `String` results into a single typed `IncidentAnalysisResults` record via an `@Output` method.
+Run three **parallel agents** — severity, impact, and resolution analysis — concurrently instead of sequentially. Wall-clock time ≈ slowest single call (not the sum). One interface declaration, three concurrent LLM calls, each with a different `@SystemMessage` injected at runtime.
 
-This introduces two new concepts: **dynamic `@SystemMessage`** (same interface, different prompt at runtime) and **`@Output`** (result aggregation before the next agent reads scope).
+This introduces two concepts: **dynamic `@SystemMessage`** (same agent interface, different prompt per task) and **`@Output`** (aggregating parallel results into a typed record before downstream agents read scope).
 
 ---
 
