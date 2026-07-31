@@ -39,7 +39,11 @@
 }
 
 /* Full-width tables */
-.md-typeset table:not([class]) {
+.md-typeset__table {
+  width: 100%;
+}
+
+.md-typeset__table table {
   width: 100%;
 }
 
