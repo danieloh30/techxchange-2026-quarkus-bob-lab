@@ -1,4 +1,4 @@
-# Exercise 7 — A2A: Distributed Impact Assessment Agent
+# Exercise 7 — Remote Agents (A2A)
 
 <span class="badge badge--run-read">Run + Read</span>
 

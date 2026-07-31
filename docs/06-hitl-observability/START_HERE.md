@@ -1,4 +1,4 @@
-# Exercise 6 — Human-in-the-Loop + Observability
+# Exercise 6 — Human Gate + Tracing
 
 <span class="badge badge--run-read">Run + Read</span>
 

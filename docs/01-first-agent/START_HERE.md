@@ -1,4 +1,4 @@
-# Exercise 1 — Your First Agent: TriageAgent + TriageTool
+# Exercise 1 — Agent + Tool: TriageAgent + TriageTool
 
 <span class="badge badge--code-along">Code-Along</span>
 
