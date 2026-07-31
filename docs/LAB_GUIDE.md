@@ -423,11 +423,11 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    IR([Incident report<br/>P1/P2 on revenue-critical system])
-    EPA([EscalationProposalAgent<br/>proposed_action = ESCALATE_P1])
-    HITL{@HumanInTheLoop gate}
-    EXEC([Execute escalation<br/>ESCALATE_P1 / ASSIGN_TEAM])
-    FALL([Fallback: CLOSE<br/>→ IN_PROGRESS])
+    IR(["Incident report<br/>P1 or P2 on revenue-critical system"])
+    EPA(["EscalationProposalAgent<br/>proposed action ESCALATE_P1"])
+    HITL{"HumanInTheLoop gate"}
+    EXEC(["Execute escalation<br/>ESCALATE_P1 or ASSIGN_TEAM"])
+    FALL(["Fallback CLOSE<br/>to IN_PROGRESS"])
 
     IR --> EPA --> HITL
     HITL -->|Escalate to Management| EXEC
