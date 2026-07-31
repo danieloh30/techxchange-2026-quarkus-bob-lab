@@ -1,4 +1,4 @@
-# Exercise 4 — Supervisor Agent Pattern
+# Exercise 4 — Supervisor Orchestration
 
 <span class="badge badge--code-along">Code-Along</span>
 

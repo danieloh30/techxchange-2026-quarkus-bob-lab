@@ -15,7 +15,7 @@
 | Exercise 1 | 15 min | :25 | **Code-along** — `TriageAgent` + `TriageTool` (your first agent) |
 | Exercise 2 | 10 min | :35 | **Code-along** — `DiagnosticAgent` + live `@SystemMessage` tuning |
 | Exercise 3 | 10 min | :45 | **Code-along** — `@ParallelMapperAgent` + `@Output` + `AgenticScope` |
-| Exercise 4 | 15 min | :60 | **Code-along** — supervisor agent pattern: impact, escalation, sequence |
+| Exercise 4 | 15 min | :60 | **Code-along** — supervisor orchestration: impact, escalation, sequence |
 | Exercise 5 | 10 min | :70 | **IBM Bob** + `AGENTS.md` — govern and document what you built |
 | Exercise 6 | 10 min | :80 | Human-in-the-loop + OpenTelemetry observability |
 | Exercise 7 | 10 min | :90 | A2A — distributed impact assessment agent |
@@ -603,7 +603,7 @@ Your answer directly shapes next year's lab content.
 | 70–80 | :70–:80 | Ex 6 — HITL + observability | Skip Grafana span deep-dive; just show HITL approve/reject |
 | 80–90 | :80–:90 | Ex 7 — A2A | Skip trade-offs table discussion; just correlate logs |
 
-**Priority order if behind:** Keep Ex 4 (supervisor agent pattern) and Ex 5 (Bob + AGENTS.md) intact — these are the highest TechXchange differentiation points. Compress Ex 2 tuning experiment, Ex 3 Agentic Dev UI checks, and Ex 6 Grafana walk.
+**Priority order if behind:** Keep Ex 4 (supervisor orchestration) and Ex 5 (Bob + AGENTS.md) intact — these are the highest TechXchange differentiation points. Compress Ex 2 tuning experiment, Ex 3 Agentic Dev UI checks, and Ex 6 Grafana walk.
 
 ---
 

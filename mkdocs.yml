@@ -81,7 +81,7 @@ nav:
       - "1. First agent": 01-first-agent/START_HERE.md
       - "2. Maintenance agent": 02-maintenance-agent/START_HERE.md
       - "3. Parallel workflow": 03-parallel-workflow/START_HERE.md
-      - "4. Supervisor agent": 04-supervisor/START_HERE.md
+      - "4. Supervisor orchestration": 04-supervisor/START_HERE.md
       - "5. IBM Bob": 05-ibm-bob/START_HERE.md
       - "6. HITL + observability": 06-hitl-observability/START_HERE.md
       - "7. A2A": 07-a2a/START_HERE.md

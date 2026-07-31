@@ -45,7 +45,7 @@ No agent behavior yet: that's Exercise 1.
 | [1. First agent](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
 | [2. Diagnostic agent](02-maintenance-agent/START_HERE.md) | 10 min | `DiagnosticAgent` + `@SystemMessage` as policy |
 | [3. Parallel workflow](03-parallel-workflow/START_HERE.md) | 10 min | `@ParallelMapperAgent` + `@Output` |
-| [4. Supervisor agent](04-supervisor/START_HERE.md) | 15 min | Full multi-agent supervisor |
+| [4. Supervisor orchestration](04-supervisor/START_HERE.md) | 15 min | Full multi-agent supervisor |
 | [5. IBM Bob](05-ibm-bob/START_HERE.md) | 10 min | `AGENTS.md` — governed AI development |
 | [6. HITL + observability](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
 | [7. A2A](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
