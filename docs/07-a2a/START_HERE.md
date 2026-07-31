@@ -64,12 +64,12 @@ Expected:
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart LR
-    IPW([IncidentProcessingWorkflow])
-    ISA([IncidentSupervisorAgent])
-    IA(["ImpactAgent<br/>A2AClientAgent"])
-    AE([AgentExecutor])
-    RIA(["ImpactAgent<br/>local LLM call"])
-    LLM([LLM result])
+    IPW(["Processing<br/>Workflow"])
+    ISA(["Supervisor<br/>Agent"])
+    IA(["ImpactAgent<br/>A2AClient"])
+    AE(["Agent<br/>Executor"])
+    RIA(["ImpactAgent<br/>local LLM"])
+    LLM([Result])
 
     subgraph main["Main App · 8080"]
         IPW
@@ -77,7 +77,7 @@ flowchart LR
         IA
     end
 
-    subgraph remote["Remote Impact Assessment · 8888"]
+    subgraph remote["Remote Agent · 8888"]
         AE
         RIA
         LLM
@@ -102,10 +102,10 @@ flowchart LR
 
 | Concept | Meaning | Analogy |
 |---------|---------|---------|
-| `AgentCard` | Capability metadata — what can this agent do? | Service contract / OpenAPI spec |
-| `AgentExecutor` | Request handler on the server — processes an incoming `Task` | JAX-RS endpoint for agents |
-| `Task` | Long-running, stateful goal with input/output envelope | Async job submission |
-| `Message` | Single synchronous exchange within a task | Synchronous REST call |
+| AgentCard | Capability metadata | Service contract |
+| AgentExecutor | Server-side request handler | JAX-RS endpoint |
+| Task | Stateful goal with input/output | Async job |
+| Message | Single synchronous exchange | REST call |
 
 ---
 
