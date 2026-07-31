@@ -206,7 +206,7 @@ After 80 minutes you will be able to:
 
 **Goals**
 
-- Declare your first `@Agent` interface: `@SystemMessage`, `@UserMessage`, `@ToolBox`
+- Declare your first **agent + tool** pair: the agent reasons, the tool acts
 - Implement `TriageTool.requestTriage()` with `@Transactional` + JPA mutation
 - Understand the agent loop: LLM decides → tool executes → LLM resumes
 
@@ -266,14 +266,14 @@ Expected result:
 
 ## Exercise 2 — Policy as Prompt (~10 min)
 
-**Story:** Chris (ops) needs to go beyond triage decisions — incidents also need root cause analysis. He wants to understand how `@SystemMessage` threshold changes affect agent behavior without redeploying.
+**Story:** Chris (ops) needs to go beyond triage decisions — incidents also need root cause analysis. He wants to understand how changing a prompt string changes agent behavior without redeploying.
 
 **You work in:** `lab/` (keep Quarkus running)
 
 **Goals**
 
-- Declare `DiagnosticAgent` — same `@Agent` pattern, but text-only output (no `@ToolBox`)
-- Live `@SystemMessage` experiment: see how changing a string changes agent policy
+- Declare `DiagnosticAgent` — text-only agent (no `@ToolBox`) that returns analysis as prose
+- Live `@SystemMessage` tuning experiment: **change a string, change the policy** — no code logic, no redeploy
 
 ### 2.1 Open the exercise guide
 
@@ -293,15 +293,15 @@ The guide walks you through the `@SystemMessage` content to type, the tuning exp
 
 ## Exercise 3 — Parallel Agents: @ParallelMapperAgent (~10 min)
 
-**Story:** Chris needs severity, impact, AND resolution analysis — all three running concurrently to cut latency. One interface, three concurrent LLM calls, dynamic `@SystemMessage` per task.
+**Story:** Chris needs severity, impact, AND resolution analysis — all three running concurrently to cut latency. Three **parallel agents** from one interface, each with a different prompt injected at runtime.
 
 **You work in:** `lab/` (keep Quarkus running)
 
 **Goals**
 
-- Declare `IncidentAnalysisAgent` with dynamic `@SystemMessage("{task.systemInstructions}")`
+- Declare `IncidentAnalysisAgent` with dynamic `@SystemMessage("{task.systemInstructions}")` — one interface, three parallel agents
 - Declare `IncidentAnalysisWorkflow` with `@ParallelMapperAgent` + `@Output` aggregation
-- Understand `AgenticScope` data flow: how results flow from parallel workers to downstream agents
+- Understand `AgenticScope` data flow: how results flow from parallel agents to downstream consumers
 
 ### 3.1 Open the exercise guide
 
@@ -370,13 +370,13 @@ The guide provides exact code for all five files with step-by-step annotations a
 
 ## Exercise 5 — AI Governance: AGENTS.md + IBM Bob (~10 min)
 
-**Story:** Jordan, the platform engineer, just watched four exercises of agent development. Now the team needs to **govern** this system — ensure consistent patterns, prevent hallucinated APIs, and make AI-assisted development cost-efficient.
+**Story:** Jordan, the platform engineer, just watched four exercises of agent development. Now the team needs to **govern AI-assisted development** of this system — prevent hallucinated APIs, enforce consistent patterns, and make every AI request cost-efficient.
 
-You've built a 7-agent system. Now you document and validate it with IBM Bob.
+You've built a 7-agent system. Now you govern and validate it with `AGENTS.md` + IBM Bob.
 
 **Goals**
 
-- Use `AGENTS.md` to give IBM Bob targeted context — no codebase scanning
+- Use `AGENTS.md` as the governance lever — targeted context that enforces project rules
 - Validate your agents table against the code you wrote
 - Demonstrate the guardrail: Bob refuses hallucinated APIs
 - Understand token savings: 2,000–5,000 tokens per complex request
@@ -406,13 +406,13 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 
 ## Exercise 6 — Human Gate + Tracing (~10 min)
 
-**Story:** Alex in compliance is firm: no autonomous escalation of **P1/P2 incidents on revenue-critical systems**. Every LLM call must be traceable for cost auditing and SOX-style event logs. This exercise wires the approval gate and turns on OpenTelemetry tracing.
+**Story:** Alex in compliance is firm: no autonomous escalation of **P1/P2 incidents on revenue-critical systems**. Every LLM call must be traceable for cost auditing and SOX-style event logs. This exercise adds a **human gate** (approve/reject before escalation) and **tracing** (OpenTelemetry spans for every agent decision).
 
 **Goals**
 
-- Two-phase HITL: `EscalationProposalAgent` → human approve/reject → execute or fallback
-- Enable `gen_ai.*` OpenTelemetry spans for LangChain4j calls
-- Read Grafana/LGTM for LLM call latency, token counts, and HITL wait time
+- Human gate: `EscalationProposalAgent` → human approve/reject → execute or fallback
+- Tracing: enable `gen_ai.*` OpenTelemetry spans for LangChain4j calls
+- Read Grafana/LGTM for LLM call latency, token counts, and approval wait time
 
 ### 6.1 Open the exercise guide
 
@@ -466,14 +466,14 @@ flowchart TD
 
 ## Exercise 7 — Remote Agents (A2A) (~10 min)
 
-**Story:** Riley's SRE team must own business impact assessment as an independent service. It needs a separate release cycle, independent scalability, and the ability to be reused by other IBM systems beyond Apex Systems. Solution: convert `ImpactAgent` into an **Agent-to-Agent (A2A)** remote service.
+**Story:** Riley's SRE team must own business impact assessment as an independent service. It needs a separate release cycle, independent scalability, and the ability to be reused by other systems. Solution: convert `ImpactAgent` into a **remote agent** using the A2A protocol.
 
 **Goals**
 
-- Run main app (`:8080`) + impact assessment A2A service (`:8888`) as separate processes
+- Run main app (`:8080`) + remote impact assessment agent (`:8888`) as separate processes
 - `@A2AClientAgent` on the caller side — local interface, remote execution
 - **AgentCard**, **AgentExecutor**, **Task** vs **Message** semantics
-- Trace cross-service call in logs — correlate client request ID with remote executor
+- Trace cross-service call in logs — correlate client request with remote agent
 
 ### 7.1 Open the exercise guide
 

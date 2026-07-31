@@ -12,11 +12,11 @@
 
 ---
 
-## Why HITL is non-negotiable in enterprise
+## Why human gates are non-negotiable in enterprise
 
 The compliance rule: **no autonomous escalation of P1/P2 incidents on revenue-critical systems**.  
 Without a gate, the supervisor you built in Exercise 4 would ESCALATE a P1 payment-gateway outage based purely on LLM reasoning.  
-With `@HumanInTheLoop`, the system proposes and pauses — a human approves or rejects.
+With `@HumanInTheLoop`, the system proposes and pauses — a human approves or rejects. And with OpenTelemetry tracing, every LLM call, tool invocation, and approval decision is auditable.
 
 ---
 

@@ -17,9 +17,9 @@
 
 ## The goal
 
-By the end of this exercise, processing an incident with a critical report flips its status to `TRIAGING` and shows a tool call in the logs. Processing an incident with a minor report produces `TRIAGE_NOT_REQUIRED` with no tool call.
+Declare your first **agent + tool** pair: the agent reasons over natural-language incident reports, and the tool acts on the real world (mutating database state). By the end, processing a critical report flips status to `TRIAGING` with a tool call in the logs; a minor report produces `TRIAGE_NOT_REQUIRED` with no tool call.
 
-This exercise introduces the three-part `@Agent` anatomy: **interface declaration**, **@SystemMessage** (LLM policy), and **@ToolBox** (tool wiring).
+The agent+tool pattern is the fundamental building block of agentic AI: the LLM **decides**, the tool **executes**. Everything else in this lab builds on this pattern.
 
 ---
 

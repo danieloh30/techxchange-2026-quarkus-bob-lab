@@ -16,7 +16,9 @@
 
 ## The goal
 
-Add `DiagnosticAgent` — same `@Agent` pattern as `TriageAgent` but **no tool** (diagnostics returns a structured root cause analysis as text). Then run a live `@SystemMessage` tuning experiment to see how policy-as-prose controls agent behavior without any code logic.
+Discover that `@SystemMessage` **is** the policy — not code logic, not conditional branches. You'll add `DiagnosticAgent` (a text-only agent with no tool), then run a live tuning experiment: edit a single string in `@SystemMessage`, hot-reload, and watch the same incident produce completely different agent behavior.
+
+This is the key insight: **changing a prompt changes the policy**. No redeploy, no `if/else`, no feature flag.
 
 ---
 

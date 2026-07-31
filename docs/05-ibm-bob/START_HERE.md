@@ -14,13 +14,13 @@
 
 ---
 
-## Why Bob + AGENTS.md now (not earlier)?
+## Why AI governance now (not earlier)?
 
 You've just built a 7-agent system across Exercises 1–4. You know the `@Agent` model, `outputKey`, `@ToolBox`, `@SupervisorAgent`, and `@SequenceAgent` from hands-on experience.
 
-Now imagine onboarding a new developer — or asking an AI assistant to extend this system. Without upfront context, every request starts with a codebase scan: 20+ Java files, ~800 tokens, risk of wrong CDI scopes or hallucinated APIs.
+Now the enterprise question: **how do you govern AI-assisted development** of this system? Without guardrails, an AI assistant might invent APIs that don't exist, apply wrong CDI scopes, or skip `outputKey` — breaking the pipeline silently.
 
-`AGENTS.md` solves this. It's a **token-efficient context file** that Bob reads first on every request — eliminating redundant scans and enforcing project rules from the start.
+`AGENTS.md` is the governance lever. It's a **token-efficient context file** that IBM Bob reads first on every request — enforcing project rules, preventing hallucinated APIs, and eliminating redundant codebase scans from the start.
 
 === "Without AGENTS.md"
 
