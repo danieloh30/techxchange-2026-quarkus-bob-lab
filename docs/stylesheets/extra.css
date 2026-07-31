@@ -38,6 +38,11 @@
   margin-bottom: 0;
 }
 
+/* Full-width tables */
+.md-typeset table:not([class]) {
+  width: 100%;
+}
+
 /* Mermaid diagrams */
 .md-typeset .mermaid {
   text-align: center;
