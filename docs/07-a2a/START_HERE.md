@@ -64,20 +64,27 @@ Expected:
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart LR
-    subgraph main[":8080 — Main App"]
-        IPW([IncidentProcessingWorkflow])
-        ISA([IncidentSupervisorAgent])
-        IA(["ImpactAgent<br/>@A2AClientAgent"])
+    IPW([IncidentProcessingWorkflow])
+    ISA([IncidentSupervisorAgent])
+    IA(["ImpactAgent<br/>A2AClientAgent"])
+    AE([AgentExecutor])
+    RIA(["ImpactAgent<br/>local LLM call"])
+    LLM([LLM result])
+
+    subgraph main["Main App · 8080"]
+        IPW
+        ISA
+        IA
     end
 
-    subgraph remote[":8888 — Remote Impact Assessment"]
-        AE([AgentExecutor])
-        RIA(["ImpactAgent<br/>local LLM call"])
-        LLM(["LLM result"])
+    subgraph remote["Remote Impact Assessment · 8888"]
+        AE
+        RIA
+        LLM
     end
 
     IPW --> ISA --> IA
-    IA -->|A2A POST /a2a/tasks/send| AE
+    IA -->|A2A| AE
     AE --> RIA --> LLM
     LLM -->|Task result| IA
 
