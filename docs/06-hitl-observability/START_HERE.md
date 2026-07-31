@@ -49,11 +49,11 @@ Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    ISA([IncidentSupervisorAgent<br/>escalation required])
-    EPA([EscalationProposalAgent<br/>proposed_action = ESCALATE_P1])
-    HITL{@HumanInTheLoop gate<br/>UI: Awaiting Approval}
+    ISA(["IncidentSupervisorAgent<br/>escalation required"])
+    EPA(["EscalationProposalAgent<br/>proposed action ESCALATE_P1"])
+    HITL{"HumanInTheLoop gate<br/>Awaiting Approval"}
     ESC([ESCALATED])
-    INV([IN_PROGRESS<br/>reassessment])
+    INV(["IN_PROGRESS<br/>reassessment"])
 
     ISA --> EPA --> HITL
     HITL -->|Escalate to Management| ESC
