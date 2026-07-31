@@ -408,7 +408,7 @@ Expected: status = `ESCALATED`, logs show `ImpactAgent` then `EscalationAgent` i
 - [ ] Full pipeline runs end-to-end: `POST /incident-management/process/{id}` produces correct `IncidentStatus`
 - [ ] Supervisor chose impact + escalation for critical incident (Path 3)
 - [ ] Supervisor chose triage only for email issues (Path 2)
-- [ ] You can draw the full agent chain from `IncidentProcessingWorkflow` → `IncidentStatus` from memory
+- [ ] You can draw the full agent chain from ProcessingWorkflow → IncidentStatus from memory
 - [ ] You can explain why policy lives in `@SupervisorRequest` and not in Java `if/else`
 
 </div>

@@ -93,10 +93,10 @@ Find spans and read:
 
 | Attribute | What to look for |
 |-----------|-----------------|
-| `gen_ai.usage.input_tokens` | How many tokens each LLM call consumed |
-| `gen_ai.usage.output_tokens` | Generated tokens |
-| `langchain4j.tool.name` | Which tool the LLM invoked |
-| `duration` | End-to-end latency including all LLM round-trips |
+| gen_ai.usage.input_tokens | How many tokens each LLM call consumed |
+| gen_ai.usage.output_tokens | Generated tokens |
+| langchain4j.tool.name | Which tool the LLM invoked |
+| duration | End-to-end latency including all LLM round-trips |
 
 !!! warning "Production caution"
     `include-prompt=true` exports full prompt text to your tracing backend. This can include PII from `@UserMessage` templates. Disable or redact before production.

@@ -322,7 +322,7 @@ The guide shows the exact code for both files and explains why `itemsProvider`, 
 
 | ✓ | You can explain… |
 |---|-----------------|
-| ☐ | How `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 roles |
+| ☐ | How dynamic SystemMessage enables one interface for 3 roles |
 | ☐ | Why `@Output` is a static method, not an LLM call |
 | ☐ | What `itemsProvider = "tasks"` tells the framework |
 | ☐ | How `outputKey` wires parallel results to downstream agents |
@@ -361,7 +361,7 @@ The guide provides exact code for all five files with step-by-step annotations a
 
 | ✓ | You can explain… |
 |---|-----------------|
-| ☐ | Full pipeline: `IncidentProcessingWorkflow` → `IncidentAnalysisWorkflow` → `IncidentSupervisorAgent` → `ResolutionAgent` |
+| ☐ | Full pipeline: ProcessingWorkflow → AnalysisWorkflow → SupervisorAgent → ResolutionAgent |
 | ☐ | Why policy lives in `@SupervisorRequest` not in `if/else` Java |
 | ☐ | Why `ResolutionAgent` returns `IncidentOutcome` (record) not `String` |
 | ☐ | Why the supervisor test path skips `TriageAgent` for critical escalation |
@@ -398,7 +398,7 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 | ✓ | You can explain… |
 |---|-----------------|
 | ☐ | What AGENTS.md saves (2,000–5,000 tokens per complex request) |
-| ☐ | Why Bob refused `IncidentOracle.rebalanceQuantumSlots()` |
+| ☐ | Why Bob refused the hallucinated IncidentOracle API |
 | ☐ | How AGENTS.md rules prevent wrong CDI scopes and missing `outputKey` |
 | ☐ | The parallel between runtime governance (HITL) and dev-time governance (Bob approval gates) |
 
@@ -444,12 +444,12 @@ flowchart TD
 
 | Attribute | What it tells you |
 |-----------|------------------|
-| `gen_ai.usage.input_tokens` | Tokens consumed per LLM call — FinOps input |
-| `gen_ai.usage.output_tokens` | Generated tokens — often more expensive |
-| `gen_ai.request.model` | Which model was used |
-| `langchain4j.tool.name` | Name of tool the LLM called |
-| `langchain4j.hitl.status` | `PENDING` / `APPROVED` / `REJECTED` |
-| `duration` | End-to-end latency including LLM round-trips |
+| gen_ai.usage.input_tokens | Tokens consumed per LLM call — FinOps input |
+| gen_ai.usage.output_tokens | Generated tokens — often more expensive |
+| gen_ai.request.model | Which model was used |
+| langchain4j.tool.name | Name of tool the LLM called |
+| langchain4j.hitl.status | PENDING / APPROVED / REJECTED |
+| duration | End-to-end latency including LLM round-trips |
 
 **FinOps framing:** At 1,000 incidents/day with avg 500 tokens/call and GPT-4o pricing, uncontrolled prompt sizes (e.g., not using `AGENTS.md`) could mean $40–$80/day in unnecessary context tokens. Tracing makes this visible.
 

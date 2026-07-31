@@ -166,8 +166,8 @@ Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-age
 
 | Agent | Type | Key detail |
 |-------|------|------------|
-| `IncidentAnalysisWorkflow` | `@ParallelMapperAgent` | `subAgent = IncidentAnalysisAgent`, `itemsProvider = "tasks"` |
-| `IncidentAnalysisAgent` | `@Agent` | `outputKey = "incidentAnalysis"` |
+| IncidentAnalysisWorkflow | ParallelMapperAgent | subAgent = IncidentAnalysisAgent, itemsProvider = "tasks" |
+| IncidentAnalysisAgent | Agent | outputKey = "incidentAnalysis" |
 
 This page visualizes every agent's type, `outputKey`, and sub-agent wiring — use it after every exercise to confirm your changes compiled and registered correctly.
 
@@ -186,6 +186,6 @@ This page visualizes every agent's type, `outputKey`, and sub-agent wiring — u
 - [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear in the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"}
 - [ ] No compile errors in the Quarkus terminal after hot reload
 - [ ] You can explain `outputKey` and `@Output` from memory
-- [ ] You can explain how `@SystemMessage("{task.systemInstructions}")` enables one interface for 3 tasks
+- [ ] You can explain how dynamic SystemMessage enables one interface for 3 tasks
 
 </div>
