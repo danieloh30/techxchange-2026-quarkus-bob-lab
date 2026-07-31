@@ -15,7 +15,7 @@
 | Exercise 1 | 15 min | :25 | **Code-along** — `TriageAgent` + `TriageTool` (your first agent) |
 | Exercise 2 | 10 min | :35 | **Code-along** — `DiagnosticAgent` + live `@SystemMessage` tuning |
 | Exercise 3 | 10 min | :45 | **Code-along** — `@ParallelMapperAgent` + `@Output` + `AgenticScope` |
-| Exercise 4 | 15 min | :60 | **Code-along** — full supervisor pipeline: impact, escalation, sequence |
+| Exercise 4 | 15 min | :60 | **Code-along** — supervisor agent pattern: impact, escalation, sequence |
 | Exercise 5 | 10 min | :70 | **IBM Bob** + `AGENTS.md` — govern and document what you built |
 | Exercise 6 | 10 min | :80 | Human-in-the-loop + OpenTelemetry observability |
 | Exercise 7 | 10 min | :90 | A2A — distributed impact assessment agent |
@@ -329,7 +329,7 @@ The guide shows the exact code for both files and explains why `itemsProvider`, 
 
 ---
 
-## Exercise 4 — Full Supervisor Pipeline (~15 min)
+## Exercise 4 — Supervisor Agent Pattern (~15 min)
 
 **Story:** Priya (IT service mgr), Riley (SRE), and Sam (NOC) all need to work together on a single incident. A `@SupervisorAgent` decides which specialists to invoke. A `@SequenceAgent` chains the whole pipeline. Policy lives in prose, not `if/else`.
 
@@ -598,12 +598,12 @@ Your answer directly shapes next year's lab content.
 | 10–25 | :10–:25 | Ex 1 — First agent (TriageAgent + TriageTool) | Skip false-alarm test; just show critical-incident path |
 | 25–35 | :25–:35 | Ex 2 — DiagnosticAgent + @SystemMessage tuning | Skip tuning experiment; just implement DiagnosticAgent |
 | 35–45 | :35–:45 | Ex 3 — Parallel workflow (@ParallelMapperAgent) | Skip Agentic Dev UI check |
-| 45–60 | :45–:60 | Ex 4 — Full supervisor pipeline | Skip Path 1 (minor incident); keep Paths 2+3 |
+| 45–60 | :45–:60 | Ex 4 — Supervisor agent pattern | Skip Path 1 (minor incident); keep Paths 2+3 |
 | 60–70 | :60–:70 | Ex 5 — IBM Bob + AGENTS.md | Keep guardrail demo; skip security audit |
 | 70–80 | :70–:80 | Ex 6 — HITL + observability | Skip Grafana span deep-dive; just show HITL approve/reject |
 | 80–90 | :80–:90 | Ex 7 — A2A | Skip trade-offs table discussion; just correlate logs |
 
-**Priority order if behind:** Keep Ex 4 (full supervisor pipeline) and Ex 5 (Bob + AGENTS.md) intact — these are the highest TechXchange differentiation points. Compress Ex 2 tuning experiment, Ex 3 Agentic Dev UI checks, and Ex 6 Grafana walk.
+**Priority order if behind:** Keep Ex 4 (supervisor agent pattern) and Ex 5 (Bob + AGENTS.md) intact — these are the highest TechXchange differentiation points. Compress Ex 2 tuning experiment, Ex 3 Agentic Dev UI checks, and Ex 6 Grafana walk.
 
 ---
 

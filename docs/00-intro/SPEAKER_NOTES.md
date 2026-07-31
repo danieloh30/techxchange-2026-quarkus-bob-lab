@@ -30,7 +30,7 @@ Apex Systems needs systems that **reason** over messy natural-language incident 
 
 ## What you will build
 
-A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus — from a single agent to a full multi-agent supervisor pipeline with human oversight and distributed services.
+A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus — from a single agent to a full multi-agent supervisor agent pattern with human oversight and distributed services.
 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
