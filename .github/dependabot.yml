@@ -59,6 +59,6 @@ updates:
     ignore:
       # Skip milestone / CR builds; stay on stable releases
       - dependency-name: "io.quarkus.platform:*"
-        versions: ["*-CR*", "*.CR*"]
+        update-types: ["version-update:semver-pre-release"]
       - dependency-name: "io.quarkiverse.langchain4j:*"
-        versions: ["*-CR*", "*.CR*"]
+        update-types: ["version-update:semver-pre-release"]
