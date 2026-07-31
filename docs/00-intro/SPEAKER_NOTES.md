@@ -82,13 +82,13 @@ Each exercise adds a new capability, guided by a persona facing a real IT operat
 
 | Exercise | Persona | Problem | Pattern you learn |
 |----------|---------|---------|-------------------|
-| **1** | **Sam** — NOC analyst | Free-text reports pile up; triage is manual | `@Agent` + `@ToolBox` — your first agent |
-| **2** | **Chris** — Ops lead | Diagnostic decisions need policy, not code | `@SystemMessage` as policy declaration |
-| **3** | **Chris** — Ops lead | Three analyses must run concurrently | `@ParallelMapperAgent` + `@Output` |
-| **4** | **Priya** — IT service mgr | Critical incidents need adaptive escalation | `@SupervisorAgent` orchestration |
-| **5** | **Jordan** — Platform engineer | Must ship governed code; copilots hallucinate | **IBM Bob** + `AGENTS.md` |
-| **6** | **Alex** — Compliance officer | P1 incidents need approval + audit trail | **HITL** + OpenTelemetry |
-| **7** | **Riley** — SRE lead | Impact assessment is a separate team | **A2A** remote impact agent |
+| **1 — Agent + tool** | **Sam** — NOC analyst | Free-text reports pile up; triage is manual | `@Agent` + `@ToolBox` |
+| **2 — Policy as prompt** | **Chris** — Ops lead | Diagnostic decisions need policy, not code | `@SystemMessage` as policy declaration |
+| **3 — Parallel agents** | **Chris** — Ops lead | Three analyses must run concurrently | `@ParallelMapperAgent` + `@Output` |
+| **4 — Supervisor orchestration** | **Priya** — IT service mgr | Critical incidents need adaptive escalation | `@SupervisorAgent` orchestration |
+| **5 — AI governance** | **Jordan** — Platform engineer | Must ship governed code; copilots hallucinate | `AGENTS.md` + IBM Bob |
+| **6 — Human gate + tracing** | **Alex** — Compliance officer | P1 incidents need approval + audit trail | HITL + OpenTelemetry |
+| **7 — Remote agents (A2A)** | **Riley** — SRE lead | Impact assessment is a separate team | A2A remote impact agent |
 
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses IBM Bob to govern and validate the system you built.  

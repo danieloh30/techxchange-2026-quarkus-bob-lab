@@ -1,4 +1,4 @@
-# Exercise 01-first-agent
+# Exercise 01 — Agent + tool
 
 See `docs/01-first-agent/START_HERE.md` for instructions.
 

@@ -1,4 +1,4 @@
-# Exercise 04-supervisor
+# Exercise 04 — Supervisor orchestration
 
 See `docs/04-supervisor/START_HERE.md` for instructions.
 

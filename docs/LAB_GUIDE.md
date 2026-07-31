@@ -12,13 +12,13 @@
 | Block | Time | Cumulative | Focus |
 |-------|------|------------|-------|
 | Intro presentation | 10 min | :10 | Story, architecture, what you will build |
-| Exercise 1 | 15 min | :25 | **Code-along** — `TriageAgent` + `TriageTool` (your first agent) |
-| Exercise 2 | 10 min | :35 | **Code-along** — `DiagnosticAgent` + live `@SystemMessage` tuning |
-| Exercise 3 | 10 min | :45 | **Code-along** — `@ParallelMapperAgent` + `@Output` + `AgenticScope` |
-| Exercise 4 | 15 min | :60 | **Code-along** — supervisor orchestration: impact, escalation, sequence |
-| Exercise 5 | 10 min | :70 | **IBM Bob** + `AGENTS.md` — govern and document what you built |
-| Exercise 6 | 10 min | :80 | Human-in-the-loop + OpenTelemetry observability |
-| Exercise 7 | 10 min | :90 | A2A — distributed impact assessment agent |
+| Exercise 1 — Agent + tool | 15 min | :25 | **Code-along** — `TriageAgent` + `TriageTool` |
+| Exercise 2 — Policy as prompt | 10 min | :35 | **Code-along** — `DiagnosticAgent` + live `@SystemMessage` tuning |
+| Exercise 3 — Parallel agents | 10 min | :45 | **Code-along** — `@ParallelMapperAgent` + `@Output` + `AgenticScope` |
+| Exercise 4 — Supervisor orchestration | 15 min | :60 | **Code-along** — impact, escalation, sequence |
+| Exercise 5 — AI governance | 10 min | :70 | `AGENTS.md` + IBM Bob — govern and document what you built |
+| Exercise 6 — Human gate + tracing | 10 min | :80 | Human-in-the-loop + OpenTelemetry observability |
+| Exercise 7 — Remote agents (A2A) | 10 min | :90 | Distributed impact assessment agent |
 
 !!! note "How this lab works"
     **Working project:** `lab/` — a single Quarkus starter you build incrementally across Exercises 1–4.  
@@ -120,13 +120,13 @@ Apex Systems needs systems that:
 
 | # | Persona | Pain point | Pattern you learn |
 |---|---------|-----------|-------------------|
-| 1 | **Sam** — NOC analyst | Free-text reports pile up; triage is manual | First agents + `@ToolBox` |
-| 2 | **Chris** — Ops lead | Diagnostic decisions need policy, not code | `@SystemMessage` as policy |
-| 3 | **Chris** — Ops lead | Three analyses must run concurrently | `@ParallelMapperAgent` |
-| 4 | **Priya** — IT service mgr | Critical incidents need adaptive escalation | `@SupervisorAgent` orchestration |
-| 5 | **Jordan** — Java platform engineer | Must ship governed code; copilots hallucinate | **IBM Bob** + AGENTS.md |
-| 6 | **Alex** — Compliance officer | P1 incidents need approval + audit trail | **HITL** + OpenTelemetry |
-| 7 | **Riley** — SRE lead | Impact assessment is a separate team | **A2A** remote impact agent |
+| 1 — Agent + tool | **Sam** — NOC analyst | Free-text reports pile up; triage is manual | `@Agent` + `@ToolBox` |
+| 2 — Policy as prompt | **Chris** — Ops lead | Diagnostic decisions need policy, not code | `@SystemMessage` as policy |
+| 3 — Parallel agents | **Chris** — Ops lead | Three analyses must run concurrently | `@ParallelMapperAgent` |
+| 4 — Supervisor orchestration | **Priya** — IT service mgr | Critical incidents need adaptive escalation | `@SupervisorAgent` orchestration |
+| 5 — AI governance | **Jordan** — Java platform engineer | Must ship governed code; copilots hallucinate | `AGENTS.md` + IBM Bob |
+| 6 — Human gate + tracing | **Alex** — Compliance officer | P1 incidents need approval + audit trail | HITL + OpenTelemetry |
+| 7 — Remote agents (A2A) | **Riley** — SRE lead | Impact assessment is a separate team | A2A remote impact agent |
 
 ### Architecture you will grow into
 
@@ -198,7 +198,7 @@ After 80 minutes you will be able to:
 
 ---
 
-## Exercise 1 — Your First Agent: TriageAgent + TriageTool (~15 min)
+## Exercise 1 — Agent + Tool: TriageAgent + TriageTool (~15 min)
 
 **Story:** Sam at the NOC processes incoming incident reports. The system must decide: triage and assign, or mark as no action needed?
 
@@ -264,7 +264,7 @@ Expected result:
 
 ---
 
-## Exercise 2 — DiagnosticAgent + @SystemMessage as Policy (~10 min)
+## Exercise 2 — Policy as Prompt (~10 min)
 
 **Story:** Chris (ops) needs to go beyond triage decisions — incidents also need root cause analysis. He wants to understand how `@SystemMessage` threshold changes affect agent behavior without redeploying.
 
@@ -291,7 +291,7 @@ The guide walks you through the `@SystemMessage` content to type, the tuning exp
 
 ---
 
-## Exercise 3 — Parallel Workflow: @ParallelMapperAgent (~10 min)
+## Exercise 3 — Parallel Agents: @ParallelMapperAgent (~10 min)
 
 **Story:** Chris needs severity, impact, AND resolution analysis — all three running concurrently to cut latency. One interface, three concurrent LLM calls, dynamic `@SystemMessage` per task.
 
@@ -329,7 +329,7 @@ The guide shows the exact code for both files and explains why `itemsProvider`, 
 
 ---
 
-## Exercise 4 — Supervisor Agent Pattern (~15 min)
+## Exercise 4 — Supervisor Orchestration (~15 min)
 
 **Story:** Priya (IT service mgr), Riley (SRE), and Sam (NOC) all need to work together on a single incident. A `@SupervisorAgent` decides which specialists to invoke. A `@SequenceAgent` chains the whole pipeline. Policy lives in prose, not `if/else`.
 
@@ -368,7 +368,7 @@ The guide provides exact code for all five files with step-by-step annotations a
 
 ---
 
-## Exercise 5 — IBM Bob + AGENTS.md: Governed AI Development (~10 min)
+## Exercise 5 — AI Governance: AGENTS.md + IBM Bob (~10 min)
 
 **Story:** Jordan, the platform engineer, just watched four exercises of agent development. Now the team needs to **govern** this system — ensure consistent patterns, prevent hallucinated APIs, and make AI-assisted development cost-efficient.
 
@@ -404,7 +404,7 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 
 ---
 
-## Exercise 6 — Human-in-the-Loop + Observability (~10 min)
+## Exercise 6 — Human Gate + Tracing (~10 min)
 
 **Story:** Alex in compliance is firm: no autonomous escalation of **P1/P2 incidents on revenue-critical systems**. Every LLM call must be traceable for cost auditing and SOX-style event logs. This exercise wires the approval gate and turns on OpenTelemetry tracing.
 
@@ -464,7 +464,7 @@ flowchart TD
 
 ---
 
-## Exercise 7 — A2A: Distributed Impact Assessment Agent (~10 min)
+## Exercise 7 — Remote Agents (A2A) (~10 min)
 
 **Story:** Riley's SRE team must own business impact assessment as an independent service. It needs a separate release cycle, independent scalability, and the ability to be reused by other IBM systems beyond Apex Systems. Solution: convert `ImpactAgent` into an **Agent-to-Agent (A2A)** remote service.
 
@@ -540,13 +540,13 @@ A production-shaped **agentic incident management platform** on IBM Enterprise B
 
 | # | Pattern | IBM tech | Business value |
 |---|---------|----------|----------------|
-| 1 | Agents + tools | `@Agent` `@ToolBox` | Automate free-text decisions |
-| 2 | Policy-as-prompt | `@SystemMessage` tuning | Change behavior without redeploying |
-| 3 | Parallel workflows | `@ParallelMapperAgent` | Concurrent analysis reduces latency |
+| 1 | Agent + tool | `@Agent` `@ToolBox` | Automate free-text decisions |
+| 2 | Policy as prompt | `@SystemMessage` tuning | Change behavior without redeploying |
+| 3 | Parallel agents | `@ParallelMapperAgent` | Concurrent analysis reduces latency |
 | 4 | Supervisor orchestration | `@SupervisorAgent` `@SupervisorRequest` | Policy-as-prompt, not hardcoded if/else |
-| 5 | Governed development | IBM Bob + `AGENTS.md` | Ship fast under enterprise SDLC control |
-| 6 | Trust + audit | HITL + OpenTelemetry `gen_ai.*` spans | Compliance, FinOps, human oversight |
-| 7 | Distributed agents | A2A + `@A2AClientAgent` | Team ownership, independent scale |
+| 5 | AI governance | `AGENTS.md` + IBM Bob | Ship fast under enterprise SDLC control |
+| 6 | Human gate + tracing | HITL + OpenTelemetry `gen_ai.*` spans | Compliance, FinOps, human oversight |
+| 7 | Remote agents (A2A) | A2A + `@A2AClientAgent` | Team ownership, independent scale |
 
 ## Enterprise takeaway
 
@@ -595,13 +595,13 @@ Your answer directly shapes next year's lab content.
 | Min | Clock | Activity | Risk if running long |
 |-----|-------|----------|----------------------|
 | 0–10 | :00–:10 | Intro — story + architecture + stack | Trim architecture diagram walk |
-| 10–25 | :10–:25 | Ex 1 — First agent (TriageAgent + TriageTool) | Skip false-alarm test; just show critical-incident path |
-| 25–35 | :25–:35 | Ex 2 — DiagnosticAgent + @SystemMessage tuning | Skip tuning experiment; just implement DiagnosticAgent |
-| 35–45 | :35–:45 | Ex 3 — Parallel workflow (@ParallelMapperAgent) | Skip Agentic Dev UI check |
-| 45–60 | :45–:60 | Ex 4 — Supervisor agent pattern | Skip Path 1 (minor incident); keep Paths 2+3 |
-| 60–70 | :60–:70 | Ex 5 — IBM Bob + AGENTS.md | Keep guardrail demo; skip security audit |
-| 70–80 | :70–:80 | Ex 6 — HITL + observability | Skip Grafana span deep-dive; just show HITL approve/reject |
-| 80–90 | :80–:90 | Ex 7 — A2A | Skip trade-offs table discussion; just correlate logs |
+| 10–25 | :10–:25 | Ex 1 — Agent + tool | Skip false-alarm test; just show critical-incident path |
+| 25–35 | :25–:35 | Ex 2 — Policy as prompt | Skip tuning experiment; just implement DiagnosticAgent |
+| 35–45 | :35–:45 | Ex 3 — Parallel agents | Skip Agentic Dev UI check |
+| 45–60 | :45–:60 | Ex 4 — Supervisor orchestration | Skip Path 1 (minor incident); keep Paths 2+3 |
+| 60–70 | :60–:70 | Ex 5 — AI governance | Keep guardrail demo; skip security audit |
+| 70–80 | :70–:80 | Ex 6 — Human gate + tracing | Skip Grafana span deep-dive; just show HITL approve/reject |
+| 80–90 | :80–:90 | Ex 7 — Remote agents (A2A) | Skip trade-offs table discussion; just correlate logs |
 
 **Priority order if behind:** Keep Ex 4 (supervisor orchestration) and Ex 5 (Bob + AGENTS.md) intact — these are the highest TechXchange differentiation points. Compress Ex 2 tuning experiment, Ex 3 Agentic Dev UI checks, and Ex 6 Grafana walk.
 

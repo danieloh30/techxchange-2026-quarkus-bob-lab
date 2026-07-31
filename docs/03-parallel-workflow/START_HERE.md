@@ -1,4 +1,4 @@
-# Exercise 3 — Parallel Workflow: @ParallelMapperAgent
+# Exercise 3 — Parallel Agents: @ParallelMapperAgent
 
 <span class="badge badge--code-along">Code-Along</span>
 

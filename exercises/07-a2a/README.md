@@ -1,4 +1,4 @@
-# Exercise 07 — A2A
+# Exercise 07 — Remote agents (A2A)
 
 `solution/` contains:
 

@@ -1,4 +1,4 @@
-# Exercise 5 — IBM Bob + AGENTS.md: Governed AI Development
+# Exercise 5 — AI Governance: AGENTS.md + IBM Bob
 
 <span class="badge badge--bob">IBM Bob</span>
 

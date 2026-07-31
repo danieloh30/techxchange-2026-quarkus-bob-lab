@@ -1,4 +1,4 @@
-# Exercise 2 — DiagnosticAgent + @SystemMessage as Policy
+# Exercise 2 — Policy as Prompt
 
 <span class="badge badge--code-along">Code-Along</span>
 

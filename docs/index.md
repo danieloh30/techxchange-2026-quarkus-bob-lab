@@ -42,13 +42,13 @@ No agent behavior yet: that's Exercise 1.
 
 | Exercise | Time | Focus |
 |----------|------|-------|
-| [1. First agent](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
-| [2. Diagnostic agent](02-maintenance-agent/START_HERE.md) | 10 min | `DiagnosticAgent` + `@SystemMessage` as policy |
-| [3. Parallel workflow](03-parallel-workflow/START_HERE.md) | 10 min | `@ParallelMapperAgent` + `@Output` |
+| [1. Agent + tool](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
+| [2. Policy as prompt](02-maintenance-agent/START_HERE.md) | 10 min | `DiagnosticAgent` + `@SystemMessage` as policy |
+| [3. Parallel agents](03-parallel-workflow/START_HERE.md) | 10 min | `@ParallelMapperAgent` + `@Output` |
 | [4. Supervisor orchestration](04-supervisor/START_HERE.md) | 15 min | Full multi-agent supervisor |
-| [5. IBM Bob](05-ibm-bob/START_HERE.md) | 10 min | `AGENTS.md` — governed AI development |
-| [6. HITL + observability](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
-| [7. A2A](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
+| [5. AI governance](05-ibm-bob/START_HERE.md) | 10 min | `AGENTS.md` + IBM Bob |
+| [6. Human gate + tracing](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
+| [7. Remote agents (A2A)](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 

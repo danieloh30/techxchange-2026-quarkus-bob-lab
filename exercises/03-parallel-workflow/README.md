@@ -1,4 +1,4 @@
-# Exercise 03-parallel-workflow
+# Exercise 03 — Parallel agents
 
 See `docs/03-parallel-workflow/START_HERE.md` for instructions.
 
