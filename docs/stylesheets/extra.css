@@ -38,6 +38,10 @@
   margin-bottom: 0;
 }
 
+.done-when h2:first-child {
+  margin-top: 0;
+}
+
 .done-when .task-list-control + .task-list-indicator + span,
 .done-when li {
   font-size: 0.85rem;
