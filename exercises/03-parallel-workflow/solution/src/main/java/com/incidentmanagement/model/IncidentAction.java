@@ -6,6 +6,7 @@ package com.incidentmanagement.model;
 public enum IncidentAction {
     ESCALATE,    // Incident needs to be escalated to higher authority
     INVESTIGATE, // Incident needs diagnostic investigation
-    TRIAGE,      // Incident needs initial triage assessment
+    TRIAGE,
+    MONITOR,      // Incident needs initial triage assessment
     RESOLVE      // Incident can be resolved/closed
 }

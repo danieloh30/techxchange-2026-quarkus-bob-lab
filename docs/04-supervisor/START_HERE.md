@@ -188,7 +188,7 @@ Replace the `// TODO` block:
     Output format:
     {
       "resolution": "concise description (max 200 chars)",
-      "incidentAction": "ESCALATE|INVESTIGATE|TRIAGE|RESOLVE"
+      "incidentAction": "ESCALATE|INVESTIGATE|TRIAGE|MONITOR|RESOLVE"
     }
 
     Rules:
@@ -196,6 +196,7 @@ Replace the `// TODO` block:
     - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM (but NOT CLOSE) → ESCALATE
     - Else if resolutionAnalysis ≠ "ESCALATION_NOT_REQUIRED" → INVESTIGATE
     - Else if severityAnalysis ≠ "SEVERITY_LOW" → TRIAGE
+    - Else if severityAnalysis = "SEVERITY_LOW" and no escalation and no triage needed → MONITOR
     - Else → RESOLVE
     - IMPORTANT: If EscalationAgent decided CLOSE, do NOT assign ESCALATE — check diagnostic/triage instead
     - resolution: Summarize the action and reason in plain language
@@ -375,7 +376,7 @@ Open **http://localhost:8080** to test all three paths. After each, check the **
 
 **Path 1 — Minor incident:**  
 Click **View** on Incident **#6** (search-engine/product-search) and process with `"False alarm, relevance restored after cache refresh"`.  
-**How to confirm:** UI status stays `RESOLVED`. Terminal logs show no `TriageTool` call — supervisor skips impact + escalation.
+**How to confirm:** UI status stays `OPEN` (action = `MONITOR` — no action needed). Terminal logs show no `TriageTool` call — supervisor skips impact + escalation.
 
 **Path 2 — Needs triage:**  
 Click **View** on Incident **#5** (email-service/notification-api) and process with `"SMTP timeout for 30% of outbound emails, queue growing"`.  

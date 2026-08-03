@@ -15,7 +15,7 @@ public interface ResolutionAgent {
         Output format:
         {
           "resolution": "concise description (max 200 chars)",
-          "incidentAction": "ESCALATE|INVESTIGATE|TRIAGE|RESOLVE"
+          "incidentAction": "ESCALATE|INVESTIGATE|TRIAGE|MONITOR|RESOLVE"
         }
 
         Rules:
@@ -23,6 +23,7 @@ public interface ResolutionAgent {
         - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM (but NOT CLOSE) → ESCALATE
         - Else if resolutionAnalysis ≠ "ESCALATION_NOT_REQUIRED" → INVESTIGATE
         - Else if severityAnalysis ≠ "SEVERITY_LOW" → TRIAGE
+        - Else if severityAnalysis = "SEVERITY_LOW" and no escalation and no triage needed → MONITOR
         - Else → RESOLVE
         - IMPORTANT: If EscalationAgent decided CLOSE, do NOT assign ESCALATE — check diagnostic/triage instead
         - resolution: Summarize the action and reason in plain language
