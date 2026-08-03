@@ -372,7 +372,7 @@ Save. Quarkus hot-reloads.
 
     Now open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the first exercise where a **root agent** appears. The topology view visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
 
-Open **http://localhost:8080** to test all three paths. After each, check the **Quarkus terminal logs** for tool calls and the **UI** for status changes.
+Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}** to test all three paths. After each, check the **Quarkus terminal logs** for tool calls and the **UI** for status changes.
 
 **Path 1 — Minor incident:**  
 Click **View** on Incident **#6** (search-engine/product-search) and process with:

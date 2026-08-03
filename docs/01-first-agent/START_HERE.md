@@ -31,7 +31,7 @@ export OPENAI_API_KEY=sk-your-lab-key-here
 ./mvnw quarkus:dev
 ```
 
-Open **http://localhost:8080** — you'll see the Incident Dashboard with 8 seeded incidents but no agent behavior yet (processing will fail — that's expected, you haven't wired the agents).
+Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}** — you'll see the Incident Dashboard with 8 seeded incidents but no agent behavior yet (processing will fail — that's expected, you haven't wired the agents).
 
 <img src="../../images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
@@ -159,7 +159,7 @@ The LLM decides *whether* to call the tool based on the `@SystemMessage` policy.
 
 ## Step 4 — Test it (4 min)
 
-Open **http://localhost:8080**, click **View** on Incident **#5** (email-service/notification-api, status: `OPEN`), and process it with:
+Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click **View** on Incident **#5** (email-service/notification-api, status: `OPEN`), and process it with:
 
 <img src="../../images/incident-detail-panel.png" alt="Detail panel for processing an incident" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 

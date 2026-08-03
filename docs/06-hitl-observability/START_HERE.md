@@ -77,7 +77,7 @@ Open [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-
 
 ## Step 2 — Test the HITL gate (3 min)
 
-Open **http://localhost:8080**, click **View** on Incident **#1** (payment-gateway/checkout-api, P2), and process with:
+Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click **View** on Incident **#1** (payment-gateway/checkout-api, P2), and process with:
 
 ```text
 Complete checkout failure, all transactions failing, revenue loss confirmed at $50k/hr
@@ -96,7 +96,7 @@ In the Quarkus terminal logs, look for `WORKFLOW PAUSED` and `WORKFLOW RESUMED` 
 
 ## Step 3 — Read OTel spans in Grafana (4 min)
 
-Open **http://localhost:3000** → Explore → Tempo → service `incident-management`.
+Open **[http://localhost:3000](http://localhost:3000){:target="_blank"}** → Explore → Tempo → service `incident-management`.
 
 <img src="../../images/grafana-dashboard.png" alt="Grafana Tempo trace view" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 

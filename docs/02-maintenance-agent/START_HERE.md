@@ -119,7 +119,7 @@ data loss or corruption, security breaches, or cascading failures affecting mult
 For intermittent errors, slow responses, or single-user complaints, respond with "TRIAGE_NOT_REQUIRED".
 ```
 
-Quarkus hot-reloads in ~1 second. Open **http://localhost:8080**, click **View** on Incident **#7** (monitoring/alerting-api), and process it with:
+Quarkus hot-reloads in ~1 second. Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click **View** on Incident **#7** (monitoring/alerting-api), and process it with:
 
 ```
 Alert threshold slightly too sensitive, causing a few extra notifications

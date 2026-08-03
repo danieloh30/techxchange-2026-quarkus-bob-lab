@@ -186,7 +186,7 @@ cd exercises/03-parallel-workflow/solution
 
 Open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this solution has `IncidentProcessingWorkflow` fully wired, so the full agent tree is visible.
 
-Open **http://localhost:8080**, click **View** on Incident **#5** (email-service/notification-api), and process with:
+Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click **View** on Incident **#5** (email-service/notification-api), and process with:
 
 ```
 SMTP timeout for 30% of outbound emails, queue growing

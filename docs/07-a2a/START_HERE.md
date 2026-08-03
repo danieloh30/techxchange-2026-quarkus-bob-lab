@@ -111,7 +111,7 @@ flowchart LR
 
 ## Try it (3 min)
 
-Open **http://localhost:8080**, click **View** on an incident that will trigger escalation (e.g., Incident **#1**, payment-gateway/checkout-api), and process with:
+Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click **View** on an incident that will trigger escalation (e.g., Incident **#1**, payment-gateway/checkout-api), and process with:
 ```text
 Complete service outage, all API endpoints returning 503, cascading failures across dependent services
 ```
