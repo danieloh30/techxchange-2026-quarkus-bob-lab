@@ -5,8 +5,7 @@ updates:
   - package-ecosystem: maven
     directory: /lab
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 5
@@ -28,8 +27,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/01-first-agent/solution
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -51,8 +49,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/02-maintenance-agent/solution-sequence
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -74,8 +71,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/02-maintenance-agent/solution-composed
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -97,8 +93,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/03-parallel-workflow/solution
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -120,8 +115,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/04-supervisor/solution
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -143,8 +137,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/05-ibm-bob/solution
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -166,8 +159,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/05-ibm-bob/weather-mcp-server
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -189,8 +181,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/06-hitl-observability/solution
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -212,8 +203,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/06-hitl-observability/observability-reference
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -235,8 +225,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/07-a2a/solution/multi-agent-system
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -258,8 +247,7 @@ updates:
   - package-ecosystem: maven
     directory: /exercises/07-a2a/solution/remote-a2a-agent
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 3
@@ -281,8 +269,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: daily
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 5
