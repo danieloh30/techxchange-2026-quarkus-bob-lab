@@ -7,5 +7,6 @@ public enum IncidentAction {
     ESCALATE,
     INVESTIGATE,
     TRIAGE,
+    MONITOR,
     RESOLVE
 }

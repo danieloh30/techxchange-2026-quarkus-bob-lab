@@ -34,7 +34,7 @@ public interface IncidentProcessingWorkflow extends MonitoredAgent {
         } else if (isRequired(triageRequest)) {
             incidentAction = IncidentAction.TRIAGE;
         } else {
-            incidentAction = IncidentAction.RESOLVE;
+            incidentAction = IncidentAction.MONITOR;
         }
         return new IncidentOutcome(incidentResolution, incidentAction);
     }

@@ -57,6 +57,8 @@ public class IncidentManagementService {
             case ESCALATE:
                 incidentInfo.status = IncidentStatus.ESCALATED;
                 break;
+            case MONITOR:
+                break;
             case RESOLVE:
                 incidentInfo.status = IncidentStatus.RESOLVED;
                 break;

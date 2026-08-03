@@ -74,6 +74,8 @@ public class IncidentManagementService {
                 case TRIAGE:
                     incidentInfo.status = IncidentStatus.TRIAGING;
                     break;
+            case MONITOR:
+                break;
                 case RESOLVE:
                     incidentInfo.status = IncidentStatus.RESOLVED;
                     break;
