@@ -92,7 +92,7 @@ If you see `Unsatisfied dependency` or `AmbiguousResolutionException`, double-ch
 
 ---
 
-## Step 3 — @SystemMessage tuning experiment (4 min)
+## Step 3 — @SystemMessage tuning experiment (5 min)
 
 This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
 
