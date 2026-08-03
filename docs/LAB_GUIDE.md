@@ -368,18 +368,24 @@ The guide provides exact code for all five files with step-by-step annotations a
 
 ---
 
-## Exercise 5 — AI Governance: AGENTS.md + IBM Bob (~10 min)
+## Exercise 5 — MCP Client + IBM Bob AI Governance (~10 min)
 
-**Story:** Jordan, the platform engineer, just watched four exercises of agent development. Now the team needs to **govern AI-assisted development** of this system — prevent hallucinated APIs, enforce consistent patterns, and make every AI request cost-efficient.
+**Story:** Jordan, the platform engineer, just finished four exercises of agent development. Two things need to happen next: wire the system to a real external service (weather via MCP), and lock down how the AI assistant governs development going forward.
 
-You've built a 7-agent system. Now you govern and validate it with `AGENTS.md` + IBM Bob.
+This exercise has **two linked parts**: hands-on MCP client coding, then IBM Bob AI governance.
 
-**Goals**
+**Part A — MCP Client goals**
+
+- Start and explore the Quarkus MCP weather server (port 8081)
+- Understand `@McpToolBox("weather")` — how it mixes remote + local tools on one agent
+- Verify weather-aware upsell in the Miles of Smiles chat UI
+
+**Part B — IBM Bob governance goals**
 
 - Use `AGENTS.md` as the governance lever — targeted context that enforces project rules
-- Validate your agents table against the code you wrote
-- Demonstrate the guardrail: Bob refuses hallucinated APIs
-- Understand token savings: 2,000–5,000 tokens per complex request
+- Validate the agents table against the code written in Exercises 1–4
+- Demonstrate the guardrail: Bob refuses `IncidentOracle.rebalanceQuantumSlots()` (hallucinated API)
+- Use the approval gate (Plan mode) to add MCP context to `AGENTS.md`
 
 ### 5.1 Open the exercise guide
 
@@ -392,13 +398,16 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 1. **You have context.** You know what `outputKey` does, why `@Transactional` goes on tools, and how `@SupervisorRequest` works — because you typed them.
 2. **AGENTS.md documents reality.** You're describing agents that exist, not agents you'll build later. The validation step has meaning.
 3. **The guardrail demo is visceral.** You've seen what happens when an agent works correctly. Seeing Bob refuse a hallucinated API hits different when you understand the system it would break.
+4. **MCP is the bridge.** The `@McpToolBox` pattern demonstrated here connects the Quarkus agentic system to the wider MCP ecosystem — the same protocol IBM Bob uses for its own tool integrations.
 
 ### 5.3 Checkpoint
 
 | ✓ | You can explain… |
 |---|-----------------|
-| ☐ | What AGENTS.md saves (2,000–5,000 tokens per complex request) |
-| ☐ | Why Bob refused the hallucinated IncidentOracle API |
+| ☐ | How `@McpToolBox("weather")` connects to the MCP server (SSE transport, config key match) |
+| ☐ | The difference between `@ToolBox` (local CDI) and `@McpToolBox` (remote SSE) |
+| ☐ | What AGENTS.md saves (163 vs ~800 tokens per turn — 637 tokens/turn saved) |
+| ☐ | Why Bob refused the hallucinated IncidentOracle API (rule 10) |
 | ☐ | How AGENTS.md rules prevent wrong CDI scopes and missing `outputKey` |
 | ☐ | The parallel between runtime governance (HITL) and dev-time governance (Bob approval gates) |
 
