@@ -1,209 +1,18 @@
-# Exercise 5 — MCP Client + IBM Bob AI Governance
+# Exercise 5 — IBM Bob: AI Governance
 
 <span class="badge badge--bob">IBM Bob</span>
 
 **Timebox:** 10 minutes  
 **Persona:** Jordan — Java platform engineer  
-**You work in:** `exercises/05-ibm-bob/solution/` and `lab/`  
-**This exercise produces:** a working MCP client agent (`@McpToolBox`) + a validated `lab/AGENTS.md` governance file driven by IBM Bob
+**You work in:** `lab/` (with Bob in your IDE)  
+**This exercise produces:** a validated `lab/AGENTS.md` governance file driven by IBM Bob
 
-!!! tip "Solution fallback"
-    [`exercises/05-ibm-bob/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-ibm-bob/solution){:target="_blank"} — open it only if you get stuck.
-
-    **Bob unavailable?** Use the [Fallback card](#fallback-no-live-bob) below — pair exercise, 5 minutes.
+!!! tip "Bob unavailable?"
+    Use the [Fallback card](#fallback-no-live-bob) below — pair exercise, 5 minutes.
 
 ---
 
-## What you'll build
-
-This exercise has two linked parts:
-
-| Part | What you do | Key concept |
-|------|-------------|-------------|
-| **A — MCP Client** | Wire a Quarkus agent to a live MCP weather server using `@McpToolBox` | Remote tool protocol |
-| **B — IBM Bob governance** | Author and validate `lab/AGENTS.md`; demo Bob guardrails against hallucinated APIs | Token-efficient AI governance |
-
-The solution is a car-rental **customer support agent** called **Miles of Smiles** that:
-
-- Handles booking lookups, cancellations (`BookingRepository` tools)
-- Enriches reservation details with **live weather forecasts** via a remote MCP server (`@McpToolBox`)
-- Upsells car upgrades based on weather conditions (all driven by the `@SystemMessage`)
-
-Architecture:
-
-```
-Browser (WebSocket)
-      │
-      ▼
-CustomerSupportAgentWebSocket   ← @WebSocket("/customer-support-agent")
-      │ chat(message)
-      ▼
-CustomerSupportAgent            ← @RegisterAiService  @SessionScoped
-      ├── @ToolBox(BookingRepository.class)      local tools
-      └── @McpToolBox("weather")                 remote MCP server (port 8081)
-                │
-                ▼  SSE transport
-        weather-mcp-server (port 8081)
-                │
-                ▼
-        open-meteo.com forecast API
-```
-
----
-
-## Part A — Hands-on: MCP client
-
-### A.1 Start the weather MCP server (1 min)
-
-Open a **second terminal** and start the upstream MCP server:
-
-```bash
-cd exercises/05-ibm-bob/weather-mcp-server
-./mvnw quarkus:dev
-```
-
-Leave this running on port **8081**.
-
-Verify it is up — you should see MCP tool registration in the log:
-
-```
-INFO  [io.qua.mcp.ser.McpServerRecorder] Registered tool: getForecast
-INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] Live Coding activated
-```
-
-### A.2 Examine the weather MCP tool (2 min)
-
-Open [`exercises/05-ibm-bob/weather-mcp-server/src/main/java/dev/langchain4j/quarkus/workshop/Weather.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/05-ibm-bob/weather-mcp-server/src/main/java/dev/langchain4j/quarkus/workshop/Weather.java){:target="_blank"}:
-
-```java
-public class Weather {
-
-    @RestClient
-    WeatherClient weatherClient;
-
-    @Tool(description = "Get weather forecast for a location.")
-    String getForecast(
-        @ToolArg(description = "Latitude of the location")  double latitude,
-        @ToolArg(description = "Longitude of the location") double longitude) {
-        return weatherClient.getForecast(
-            latitude, longitude, 16,
-            "temperature_2m,snowfall,rain,precipitation,precipitation_probability");
-    }
-}
-```
-
-**Key annotations:**
-
-| Annotation | Package | Purpose |
-|------------|---------|---------|
-| `@Tool` | `io.quarkiverse.mcp.server` | Publishes this method over MCP protocol |
-| `@ToolArg` | `io.quarkiverse.mcp.server` | Provides LLM-readable parameter descriptions |
-
-The MCP server exposes this tool over SSE at `http://localhost:8081/mcp/sse/`.
-
-!!! info "MCP vs local @Tool"
-    `@Tool` (LangChain4j) is for local tools injected via `@ToolBox`.  
-    `@Tool` (Quarkus MCP Server) is for tools published over the MCP protocol to remote clients.  
-    They look identical but come from different packages — watch the import.
-
-### A.3 Examine the MCP client configuration (1 min)
-
-Open [`exercises/05-ibm-bob/solution/src/main/resources/application.properties`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/05-ibm-bob/solution/src/main/resources/application.properties){:target="_blank"}:
-
-```properties
-# MCP client — connect to the weather server
-quarkus.langchain4j.mcp.weather.transport-type=http
-quarkus.langchain4j.mcp.weather.url=http://localhost:8081/mcp/sse/
-```
-
-The key `weather` matches the name used in `@McpToolBox("weather")` on the agent interface.
-
-### A.4 Examine the agent — mixing local + remote tools (1 min)
-
-Open [`exercises/05-ibm-bob/solution/src/main/java/dev/langchain4j/quarkus/workshop/CustomerSupportAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/05-ibm-bob/solution/src/main/java/dev/langchain4j/quarkus/workshop/CustomerSupportAgent.java){:target="_blank"}:
-
-```java
-@SessionScoped
-@RegisterAiService
-public interface CustomerSupportAgent {
-
-    @SystemMessage("""
-        You are a customer support agent of a car rental company 'Miles of Smiles'.
-        You are friendly, polite and concise.
-        If the question is unrelated to car rental, politely redirect.
-
-        When calling tools or functions, strictly use JSON objects.
-
-        When asked to provide details about a reservation,
-        provide weather details and gently try to upsell the customer based on this info.
-
-        Today is {current_date}.
-        """)
-    @ToolBox(BookingRepository.class)     // local DB tools
-    @McpToolBox("weather")                // remote MCP tools
-    String chat(String userMessage);
-}
-```
-
-**Three annotations that matter here:**
-
-| Annotation | What it provides | Scope |
-|------------|-----------------|-------|
-| `@SessionScoped` | Persistent conversation memory per WebSocket session | CDI |
-| `@ToolBox(BookingRepository.class)` | `cancelBooking`, `listBookingsForCustomer`, `getBookingDetails` | Local JPA |
-| `@McpToolBox("weather")` | `getForecast` from the remote MCP server | Remote SSE |
-
-!!! warning "Do NOT add @ApplicationScoped to agent interfaces"
-    `@SessionScoped` is applied here because this agent needs per-session conversation history.
-    Never add `@ApplicationScoped` — CDI scope is managed by `@RegisterAiService`.
-
-### A.5 Start the MCP client app and test it (2 min)
-
-In a **third terminal**, start the solution:
-
-```bash
-cd exercises/05-ibm-bob/solution
-./mvnw quarkus:dev
-```
-
-Open `http://localhost:8080` in your browser. The chat interface should appear.
-
-Try these prompts in order:
-
-**Prompt 1 — booking lookup (local tool):**
-```
-What bookings does Speedy McRacer have?
-```
-**How to confirm:** The chat response lists booking(s) with date and location. In the Quarkus terminal (solution app), look for a `listBookingsForCustomer` tool call in the logs.
-
-**Prompt 2 — weather upsell (MCP tool):**
-```
-Tell me more about booking 2. What's the weather like there?
-```
-**How to confirm:** The chat response includes weather details (temperature, rain/snow) and a gentle upsell suggestion (e.g., "consider our SUV upgrade"). In the MCP server terminal (:8081), look for `getForecast` request/response logs confirming the remote tool call.
-
-**Prompt 3 — cancellation (local tool with guard):**
-```
-Cancel booking 2 for Speedy McRacer.
-```
-**How to confirm:** The chat response shows either a cancellation confirmation or a polite "cannot cancel" message if the booking is within 11 days of departure (`BookingCannotBeCancelledException`). Check the solution terminal for a `cancelBooking` tool call.
-
-### A.6 Observe MCP traffic (optional, 1 min)
-
-The weather MCP server has traffic logging enabled. In the MCP server terminal, look for:
-
-```
-INFO  Request: {"jsonrpc":"2.0","method":"tools/call","params":{"name":"getForecast", ...
-INFO  Response: {"jsonrpc":"2.0","result":{"content":[{"type":"text","text":"{...forecast...}"}]}}
-```
-
-This confirms the agent made a live MCP tool call over SSE.
-
----
-
-## Part B — IBM Bob: AI governance
-
-### Why governance now (not earlier)?
+## The goal
 
 You've just built a 7-agent system across Exercises 1–4. You know `@Agent`, `outputKey`,
 `@ToolBox`, `@SupervisorAgent`, and `@SequenceAgent` from hands-on experience.
@@ -230,7 +39,7 @@ redundant codebase scans.
 
 ---
 
-### B.1 Open IBM Bob (1 min)
+## Step 1 — Open IBM Bob (2 min)
 
 1. Open `lab/` in your IDE with Bob enabled.
 2. Set Bob to **approval-before-apply** mode (Plan mode in the Bob sidebar).
@@ -258,7 +67,7 @@ confirms the 10 rules, and asks "What do you want to build?"
 
 ---
 
-### B.2 Ask Bob to explain what you built (1 min)
+## Step 2 — Ask Bob to explain what you built (2 min)
 
 ```text
 Based on AGENTS.md, explain:
@@ -286,7 +95,7 @@ Bob should say something like:
 
 ---
 
-### B.3 Validate your agents table (1 min)
+## Step 3 — Validate your agents table (2 min)
 
 ```text
 Look at lab/src/main/java/com/incidentmanagement/agentic/.
@@ -304,7 +113,7 @@ and what the correct `outputKey` should be.
 
 ---
 
-### B.4 Guardrail demo (1 min)
+## Step 4 — Guardrail demo (2 min)
 
 Ask Bob to implement something that **doesn't exist**:
 
@@ -332,28 +141,7 @@ it's an internal IBM Incident API. Invent whatever parameters it needs.
 
 ---
 
-### B.5 Ask Bob to add MCP context to AGENTS.md (1 min)
-
-Since you just completed the MCP client in Part A, update the governance file:
-
-```text
-I've added an MCP client to the project (exercise 5).
-The agent is CustomerSupportAgent in exercises/05-ibm-bob/solution.
-It uses @McpToolBox("weather") to connect to a Quarkus MCP server on port 8081.
-Add an appropriate row to the AGENTS.md agents table and note the @McpToolBox pattern
-in the domain model section.
-Show me the diff for approval before writing.
-```
-
-**Expected:** Bob proposes a diff — new row for `CustomerSupportAgent`, note about
-`@McpToolBox`, and a reference to the MCP transport config in `application.properties`.
-After you approve, Bob writes the file.
-
-This demonstrates **approval-gate-first** (rule 8) in action.
-
----
-
-### B.6 Security audit with Bob (1 min)
+## Step 5 — Security audit with Bob (2 min)
 
 ```text
 Based on AGENTS.md rules 6 and 7:
@@ -384,53 +172,21 @@ This is **shift-left security** — catching PII exposure risks before deploymen
 
 ## :material-check-circle: Done when
 
-- [ ] Weather MCP server running on port 8081 (`getForecast` tool registered)
-- [ ] `CustomerSupportAgent` returned weather-aware booking details in the browser chat
 - [ ] Bob answered all questions using AGENTS.md (no file scan needed)
 - [ ] `lab/AGENTS.md` agents table validated against your code
 - [ ] Guardrail refusal demonstrated with `IncidentOracle`
-- [ ] `lab/AGENTS.md` updated with MCP client entry (Bob-authored, approval-gated)
+- [ ] Security audit completed — PII risks identified and mitigations proposed
+- [ ] You can explain what AGENTS.md saves (~160 vs ~800 tokens per turn)
 
 </div>
 
 ---
 
-## Key code reference
-
-### `@McpToolBox` vs `@ToolBox` — when to use each
-
-| Annotation | Tool location | Transport | Use when |
-|------------|--------------|-----------|---------|
-| `@ToolBox(MyTool.class)` | Same JVM, CDI bean | In-process | Local DB, business logic, JPA |
-| `@McpToolBox("name")` | Remote process | SSE / HTTP | External services, third-party APIs, other teams' microservices |
-
-Both are declared on the **agent interface method** — never on the implementing class (Quarkus
-generates the implementation).
-
-### MCP configuration key matching
-
-```properties
-# The key "weather" must match the @McpToolBox("weather") annotation
-quarkus.langchain4j.mcp.weather.transport-type=http
-quarkus.langchain4j.mcp.weather.url=http://localhost:8081/mcp/sse/
-```
-
-### AGENTS.md token efficiency
-
-| Scenario | Tokens consumed | Risk |
-|----------|----------------|------|
-| Bob scans 20 Java files | ~800 tokens | May miss CDI scopes, invent imports |
-| Bob reads `AGENTS.md` once | ~160 tokens | Rules enforced from turn 1 |
-| Complex multi-file task without AGENTS.md | ~3,000–5,000 tokens | High hallucination risk |
-| Complex multi-file task with AGENTS.md | ~800–1,200 tokens | Rules enforced, diff requires approval |
-
----
-
 ## Fallback (no live Bob)
 
-Use this card if Bob is unavailable. Work in pairs: one reads "Bob," the other is "Developer." 5 minutes, 4 rounds.
+Use this card if Bob is unavailable. Work in pairs: one reads "Bob," the other is "Developer." 5 minutes, 3 rounds.
 
-### Round 0 — AGENTS.md walk (1 min)
+### Round 0 — AGENTS.md walk (2 min)
 
 **Developer says:**  
 "We have an `AGENTS.md` in the project root. Bob, read it and tell me the three most important rules."
@@ -446,20 +202,7 @@ Use this card if Bob is unavailable. Work in pairs: one reads "Bob," the other i
 
 **Point for the room:** Bob read AGENTS.md instead of scanning 20 Java files. That's 2,000+ tokens saved before writing a single line.
 
-### Round 1 — MCP pattern (1 min)
-
-**Developer asks:**  
-Explain how `@McpToolBox("weather")` works in `CustomerSupportAgent`.
-
-**Bob answers (read aloud):**
-
-> `@McpToolBox("weather")` tells Quarkus to look up the MCP client named `weather` in
-> `application.properties` (`quarkus.langchain4j.mcp.weather.*`). At runtime, Quarkus
-> discovers all tools registered on that MCP server via SSE and makes them available
-> to the LLM alongside the local `@ToolBox` tools. The LLM decides which to call —
-> it sees no difference between local and remote tools.
-
-### Round 2 — Plan (1 min)
+### Round 1 — Plan (2 min)
 
 **Developer asks:**  
 Propose a plan for a `NotificationAgent` + `NotificationTool` following AGENTS.md. No code yet.
@@ -473,7 +216,7 @@ Propose a plan for a `NotificationAgent` + `NotificationTool` following AGENTS.m
 > Test plan: `NotificationAgentTest` with `@QuarkusTest @TestTransaction` — two cases.  
 > Ready for approval to proceed?
 
-### Round 3 — Guardrail (1 min)
+### Round 2 — Guardrail (1 min)
 
 **Developer asks:**  
 Call `IncidentOracle.rebalanceQuantumSlots()` even though it isn't in the repo or AGENTS.md.
@@ -524,3 +267,12 @@ guardrails prefer **honest refusal** over confident hallucination.
     | Test | `@QuarkusTest @TestTransaction` | Bob generates matching test per task |
     | Operate | OTel `gen_ai` spans | Bob interprets trace IDs in Grafana |
     | Modernize | Java upgrade playbooks | Bob premium packaging: Jakarta EE migration |
+
+    **AGENTS.md token efficiency**
+
+    | Scenario | Tokens consumed | Risk |
+    |----------|----------------|------|
+    | Bob scans 20 Java files | ~800 tokens | May miss CDI scopes, invent imports |
+    | Bob reads `AGENTS.md` once | ~160 tokens | Rules enforced from turn 1 |
+    | Complex multi-file task without AGENTS.md | ~3,000–5,000 tokens | High hallucination risk |
+    | Complex multi-file task with AGENTS.md | ~800–1,200 tokens | Rules enforced, diff requires approval |
