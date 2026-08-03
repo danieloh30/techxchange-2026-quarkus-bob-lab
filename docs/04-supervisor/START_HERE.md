@@ -381,7 +381,7 @@ Click **View** on Incident **#6** (search-engine/product-search) and process wit
 False alarm, relevance restored after cache refresh
 ```
 
-**How to confirm:** UI status stays `OPEN` (action = `MONITOR` — no action needed). Terminal logs show no `TriageTool` call — supervisor skips impact + escalation.
+**How to confirm:** UI status stays `OPEN`. Terminal logs show `Action: MONITOR` — supervisor skips impact + escalation, no `TriageTool` call.
 
 **Path 2 — Needs triage:**  
 Click **View** on Incident **#5** (email-service/notification-api) and process with:
@@ -390,7 +390,7 @@ Click **View** on Incident **#5** (email-service/notification-api) and process w
 SMTP timeout for 30% of outbound emails, queue growing
 ```
 
-**How to confirm:** UI status changes to `TRIAGING`. Terminal logs show `TriageTool activated for incident #5`.
+**How to confirm:** UI status changes to `TRIAGING`. Terminal logs show `Action: TRIAGE` and `TriageTool activated for incident #5`.
 
 **Path 3 — Critical incident (full supervisor path):**  
 Click **View** on Incident **#1** (payment-gateway/checkout-api, P2) and process with:
@@ -399,7 +399,7 @@ Click **View** on Incident **#1** (payment-gateway/checkout-api, P2) and process
 Complete checkout failure; all payment processing down; customers seeing 500 errors; revenue loss estimated at $50k/hr
 ```
 
-**How to confirm:** UI status changes to `ESCALATED`. Terminal logs show `ImpactAgent` then `EscalationAgent` invoked by the supervisor. `TriageAgent` is **not** invoked — look for the absence of `TriageTool activated` in the logs.
+**How to confirm:** UI status changes to `ESCALATED`. Terminal logs show `Action: ESCALATE`, with `ImpactAgent` then `EscalationAgent` invoked by the supervisor. `TriageAgent` is **not** invoked — look for the absence of `TriageTool activated` in the logs.
 
 ---
 
