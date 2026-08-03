@@ -97,7 +97,7 @@ If you see `Unsatisfied dependency` or `AmbiguousResolutionException`, double-ch
 This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
 
 !!! note "Using a solution project instead of `lab/`?"
-    Stop `lab/` first (`Ctrl+C`), then run either solution:
+    Stop `lab/` first (`Ctrl+C`), then run the solution:
     ```bash
     cd exercises/02-maintenance-agent/solution
     ./mvnw quarkus:dev
@@ -129,8 +129,16 @@ Alert threshold slightly too sensitive, causing a few extra notifications
 
 **How to confirm:** Check the Quarkus terminal logs and the incident status in the UI.
 
-- **With strict threshold:** the response contains `TRIAGE_NOT_REQUIRED` — no `requestTriage` tool call in the terminal logs, incident status stays `OPEN`
-- **With original (lenient) threshold:** a `requestTriage` tool call appears in the terminal logs, incident status changes to `TRIAGING`
+**Expected terminal logs (strict threshold, minor report):**
+```
+ReportAnalysisWorkflow executing...
+  ├─ TriageFeedbackAgent analyzing...
+  └─ DiagnosticFeedbackAgent analyzing...
+IncidentAssignmentWorkflow evaluating conditions...
+ResolutionAgent updating...
+```
+
+Notice: **no** `TriageTool activated` line — the agent decided `TRIAGE_NOT_REQUIRED` because a sensitive alert threshold is not a critical issue. Incident status stays `OPEN` in the UI.
 
 Now press `s` to restart (reset the database), and process the same Incident **#7** with a critical report:
 
@@ -138,7 +146,17 @@ Now press `s` to restart (reset the database), and process the same Incident **#
 Complete monitoring blackout — zero alerts firing, all dashboards showing stale data, on-call has no visibility
 ```
 
-**Expected:** even with the strict threshold, `requestTriage` is called — the report is critical enough to meet the bar. Check the terminal logs for the tool call and the UI for status → `TRIAGING`.
+**Expected terminal logs (strict threshold, critical report):**
+```
+ReportAnalysisWorkflow executing...
+  ├─ TriageFeedbackAgent analyzing...
+  └─ DiagnosticFeedbackAgent analyzing...
+IncidentAssignmentWorkflow evaluating conditions...
+  └─ TriageTool activated for incident #7
+ResolutionAgent updating...
+```
+
+This time `TriageTool activated` appears — the report is critical enough to meet even the strict bar. Incident status changes to `TRIAGING` in the UI.
 
 !!! warning "Key insight"
     You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
