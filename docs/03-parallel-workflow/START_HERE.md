@@ -173,7 +173,7 @@ This page visualizes every agent's type, `outputKey`, and sub-agent wiring — u
 
 ---
 
-## Step 4 — Test parallel execution (3 min)
+## Step 4 — Test parallel execution (2 min)
 
 The full workflow isn't wired in `lab/` yet (that happens in Exercise 4), so you'll run this test from the **solution project**.
 
