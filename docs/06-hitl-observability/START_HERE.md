@@ -70,14 +70,17 @@ flowchart TD
 
 ## Test the HITL gate (3 min)
 
-Process Incident **#1** (payment-gateway/checkout-api, P2) with:
+Open **http://localhost:8080**, click **View** on Incident **#1** (payment-gateway/checkout-api, P2), and process with:
 ```text
 Complete checkout failure, all transactions failing, revenue loss confirmed at $50k/hr
 ```
 
-UI shows **"Awaiting Approval"**:
-- **Escalate to Management** → status becomes `ESCALATED`
-- Repeat with same incident (reset DB or use Incident #3) → **Keep at Team Level** → status becomes `IN_PROGRESS`
+**How to confirm:** The UI shows an **"Awaiting Approval"** modal with two buttons. This is the HITL gate — the system has paused and is waiting for a human decision.
+
+- Click **Escalate to Management** → check that the UI status changes to `ESCALATED`
+- Now press `s` in the Quarkus terminal to restart (reset the database). Process Incident **#1** again with the same report → this time click **Keep at Team Level** → check that the UI status changes to `IN_PROGRESS`
+
+In the Quarkus terminal logs, look for the `HumanApprovalAgent` span showing the approval decision.
 
 <img src="../../images/hitl-approval-modal.png" alt="Human-in-the-loop approval modal" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 

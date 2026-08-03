@@ -371,22 +371,24 @@ Save. Quarkus hot-reloads.
 
     Now open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the first exercise where a **root agent** appears. The topology view visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
 
+Open **http://localhost:8080** to test all three paths. After each, check the **Quarkus terminal logs** for tool calls and the **UI** for status changes.
+
 **Path 1 — Minor incident:**  
-Process Incident **#6** (search-engine/product-search) with `"False alarm, relevance restored after cache refresh"`.  
-Expected: status = `RESOLVED`, no tool calls, supervisor skips impact + escalation.
+Click **View** on Incident **#6** (search-engine/product-search) and process with `"False alarm, relevance restored after cache refresh"`.  
+**How to confirm:** UI status stays `RESOLVED`. Terminal logs show no `TriageTool` call — supervisor skips impact + escalation.
 
 **Path 2 — Needs triage:**  
-Process Incident **#5** (email-service/notification-api) with `"SMTP timeout for 30% of outbound emails, queue growing"`.  
-Expected: status = `TRIAGING`, logs show `TriageTool` called.
+Click **View** on Incident **#5** (email-service/notification-api) and process with `"SMTP timeout for 30% of outbound emails, queue growing"`.  
+**How to confirm:** UI status changes to `TRIAGING`. Terminal logs show `TriageTool activated for incident #5`.
 
 **Path 3 — Critical incident (full supervisor path):**  
-Process Incident **#1** (payment-gateway/checkout-api, P2) with:
+Click **View** on Incident **#1** (payment-gateway/checkout-api, P2) and process with:
 
 ```
 Complete checkout failure; all payment processing down; customers seeing 500 errors; revenue loss estimated at $50k/hr
 ```
 
-Expected: status = `ESCALATED`, logs show `ImpactAgent` then `EscalationAgent` invoked by the supervisor. `TriageAgent` is **not** invoked.
+**How to confirm:** UI status changes to `ESCALATED`. Terminal logs show `ImpactAgent` then `EscalationAgent` invoked by the supervisor. `TriageAgent` is **not** invoked — look for the absence of `TriageTool activated` in the logs.
 
 ---
 
