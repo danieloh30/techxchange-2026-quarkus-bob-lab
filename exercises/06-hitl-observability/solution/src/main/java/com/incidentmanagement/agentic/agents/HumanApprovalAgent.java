@@ -3,7 +3,6 @@ package com.incidentmanagement.agentic.agents;
 import com.incidentmanagement.model.ApprovalProposal;
 import com.incidentmanagement.model.IncidentInfo;
 import com.incidentmanagement.service.ApprovalService;
-import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.agentic.declarative.HumanInTheLoop;
 import io.quarkus.arc.Arc;
 import io.quarkus.logging.Log;
@@ -14,7 +13,6 @@ import java.util.concurrent.TimeoutException;
 
 public interface HumanApprovalAgent {
 
-    @Agent(outputKey = "approvalDecision", description = "Coordinates human approval for critical incident escalations")
     @HumanInTheLoop(outputKey = "approvalDecision", description = "Coordinates human approval for critical incident escalations")
     static String reviewEscalationProposal(
             IncidentInfo incidentInfo,
