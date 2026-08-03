@@ -444,12 +444,15 @@ function createApprovalCard(proposal) {
                 <span class="incident-icon">&#9888;</span>
                 <h3>${proposal.incidentPriority} - ${proposal.incidentSystem} / ${proposal.incidentService}</h3>
             </div>
-            <div class="impact-value">${proposal.businessImpact}</div>
-        </div>
-        <div class="approval-card-body">
             <div class="info-row">
                 <span class="info-label">Incident #${proposal.incidentNumber}</span>
-                <span class="info-label">Description: ${proposal.incidentDescription}</span>
+                <span class="info-label">${proposal.incidentDescription}</span>
+            </div>
+        </div>
+        <div class="approval-card-body">
+            <div class="damage-section">
+                <div class="section-title">Business Impact</div>
+                <div class="impact-text">${proposal.businessImpact || 'No impact assessment'}</div>
             </div>
             <div class="damage-section">
                 <div class="section-title">Incident Report</div>
