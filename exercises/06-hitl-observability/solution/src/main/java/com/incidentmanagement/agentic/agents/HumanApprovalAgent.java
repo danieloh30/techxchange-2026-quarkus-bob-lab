@@ -23,6 +23,10 @@ public interface HumanApprovalAgent {
             String escalationProposal,
             String report
     ) {
+        if (escalationProposal != null && escalationProposal.contains("KEEP_AT_TEAM_LEVEL")) {
+            Log.infof("HITL: Skipping approval gate for incident %d — proposal is KEEP_AT_TEAM_LEVEL", incidentNumber);
+            return "Human Decision: SKIPPED — No escalation proposed";
+        }
 
         Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [P%d]",
                 incidentNumber, incidentInfo.system, incidentInfo.service, incidentInfo.priority);
