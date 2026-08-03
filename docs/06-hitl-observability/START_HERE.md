@@ -96,11 +96,19 @@ In the Quarkus terminal logs, look for `WORKFLOW PAUSED` and `WORKFLOW RESUMED` 
 
 ## Step 3 — Read OTel spans in Grafana (4 min)
 
-Open **[http://localhost:3000](http://localhost:3000){:target="_blank"}** → Explore → Tempo → service `incident-management`.
+Open **[http://localhost:3000](http://localhost:3000){:target="_blank"}** and navigate to traces:
+
+1. Click the **hamburger menu** (&#9776;) in the top-left → **Explore**
+2. In the data source dropdown (top-left of the Explore panel), select **Tempo**
+3. Switch the **Query type** tab from "TraceQL" to **Search**
+4. In the **Service Name** dropdown, select **incident-management**
+5. Click **Run query** (blue button, top-right) — you should see a list of traces
+
+Click any **Trace ID** link to expand the span waterfall. Look for the `POST /api/incidents/{id}/process` trace — it contains the full agent workflow.
 
 <img src="../../images/grafana-dashboard.png" alt="Grafana Tempo trace view" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
-Find spans and read:
+Inside the span detail, find:
 
 | Attribute | What to look for |
 |-----------|-----------------|
