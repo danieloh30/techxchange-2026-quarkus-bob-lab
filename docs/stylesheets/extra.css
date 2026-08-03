@@ -40,6 +40,8 @@
 
 .done-when h2:first-child {
   margin-top: 0;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .done-when .task-list-control + .task-list-indicator + span,
