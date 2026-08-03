@@ -8,9 +8,7 @@
 **Files to edit:** `lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java`
 
 !!! tip "Solution fallback"
-    [`exercises/02-maintenance-agent/solution-composed`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-maintenance-agent/solution-composed){:target="_blank"} — includes `DiagnosticAgent` wired into a conditional workflow.
-
-    [`exercises/02-maintenance-agent/solution-sequence`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-maintenance-agent/solution-sequence){:target="_blank"} — sequence variant (TriageAgent + ResolutionAgent only).
+    [`exercises/02-maintenance-agent/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-maintenance-agent/solution){:target="_blank"} — includes `DiagnosticAgent` wired into a composed workflow.
 
 ---
 
@@ -101,7 +99,7 @@ This is one of the most important insights in this lab: **`@SystemMessage` is a 
 !!! note "Using a solution project instead of `lab/`?"
     Stop `lab/` first (`Ctrl+C`), then run either solution:
     ```bash
-    cd exercises/02-maintenance-agent/solution-sequence
+    cd exercises/02-maintenance-agent/solution
     ./mvnw quarkus:dev
     ```
     The `TriageAgent.java` to edit below lives in the same relative path inside the solution project.
