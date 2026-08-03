@@ -462,7 +462,7 @@ function createApprovalCard(proposal) {
                 <div class="section-title">AI Recommendation</div>
                 <div class="proposal-action">
                     <span class="action-badge">${proposal.proposedEscalation}</span>
-                    <span class="action-reason">${proposal.escalationReason}</span>
+                    ${proposal.escalationReason ? `<span class="action-reason">${proposal.escalationReason}</span>` : ''}
                 </div>
             </div>
         </div>
