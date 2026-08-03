@@ -157,10 +157,7 @@ Save both files. Quarkus hot-reloads.
 
 ---
 
-## Step 3 — Verify agent registration (2 min)
-
-!!! note "End-to-end testing starts in Exercise 4"
-    `IncidentProcessingWorkflow` is still a TODO stub in `lab/`, so processing an incident from the UI won't trigger the parallel workflow yet. In this step you verify that the agents **compiled and registered** correctly. You'll see them run end-to-end (with overlapping timestamps proving parallelism) after wiring the full pipeline in Exercise 4.
+## Step 3 — Verify in the Dev UI (1 min)
 
 Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the agent graph. Look for these two entries:
 
@@ -171,11 +168,55 @@ Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-age
 
 This page visualizes every agent's type, `outputKey`, and sub-agent wiring — use it after every exercise to confirm your changes compiled and registered correctly.
 
-!!! info "Topology view"
-    If you check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"}, you'll see "No root agents detected" — that's expected. `IncidentProcessingWorkflow` (the root) already `extends MonitoredAgent`, but its `@SequenceAgent` method is still a TODO stub in `lab/`. The topology tree will appear after you wire it in **Exercise 4, Step 5**. (If you're running the [solution fallback](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-parallel-workflow/solution){:target="_blank"}, the topology will already show the full tree.)
-
 ??? question "Why not a Java `for` loop instead of `itemsProvider`?"
     `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
+
+---
+
+## Step 4 — Test parallel execution (3 min)
+
+The full workflow isn't wired in `lab/` yet (that happens in Exercise 4), so you'll run this test from the **solution project**.
+
+Stop `lab/` first (`Ctrl+C`), then start the solution:
+
+```bash
+cd exercises/03-parallel-workflow/solution
+./mvnw quarkus:dev
+```
+
+Open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this solution has `IncidentProcessingWorkflow` fully wired, so the full agent tree is visible.
+
+Open **http://localhost:8080**, click **View** on Incident **#5** (email-service/notification-api), and process with:
+
+```
+SMTP timeout for 30% of outbound emails, queue growing
+```
+
+**How to confirm:** Watch the Quarkus terminal logs. You should see three parallel analysis calls with **overlapping timestamps** — this is the key proof that `@ParallelMapperAgent` runs concurrently, not sequentially:
+
+```
+ResolutionAgent updating...
+```
+
+Check the UI — incident status should change (e.g., `TRIAGING` or `IN_PROGRESS` depending on the analysis results).
+
+Now process Incident **#6** (search-engine/product-search) with:
+
+```
+False alarm, relevance restored after cache refresh
+```
+
+**How to confirm:** Check the UI — incident status stays `OPEN` (action = `MONITOR`). The parallel analysis determined this is a low-severity, low-impact false alarm.
+
+!!! tip "Parallelism proof"
+    Wall-clock time for 3 parallel analyses ≈ time for 1 call. If they ran sequentially, processing would take ~3x longer. Compare the timestamp of the first log line to `ResolutionAgent updating...` — you'll see the total time is close to a single LLM call, not the sum of three.
+
+Stop the solution (`Ctrl+C`) and restart `lab/`:
+
+```bash
+cd ../../../lab
+./mvnw quarkus:dev
+```
 
 ---
 
@@ -185,6 +226,7 @@ This page visualizes every agent's type, `outputKey`, and sub-agent wiring — u
 
 - [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear in the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"}
 - [ ] No compile errors in the Quarkus terminal after hot reload
+- [ ] Parallel execution tested via solution — overlapping timestamps in logs
 - [ ] You can explain `outputKey` and `@Output` from memory
 - [ ] You can explain how dynamic SystemMessage enables one interface for 3 tasks
 
