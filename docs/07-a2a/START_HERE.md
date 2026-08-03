@@ -19,7 +19,7 @@ Solution: convert `ImpactAgent` into a **remote agent** using the A2A (Agent-to-
 
 ---
 
-## Start (two terminals)
+## Start (two terminals) (3 min)
 
 Stop any running Quarkus process first (`Ctrl+C`).
 
@@ -59,7 +59,7 @@ Expected:
 
 ---
 
-## The A2A architecture
+## The A2A architecture (2 min)
 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
@@ -109,7 +109,7 @@ flowchart LR
 
 ---
 
-## Try it
+## Try it (3 min)
 
 Open **http://localhost:8080**, click **View** on an incident that will trigger escalation (e.g., Incident **#1**, payment-gateway/checkout-api), and process with:
 ```text
@@ -126,7 +126,7 @@ The key observation: the same `ImpactAgent` interface runs, but execution happen
 
 ---
 
-## MCP vs A2A — when to use each
+## MCP vs A2A — when to use each (1 min)
 
 You haven't built an MCP integration in this lab, but the distinction matters for architecture decisions:
 
@@ -146,7 +146,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 
 ---
 
-## Trade-offs
+## Trade-offs (1 min)
 
 | Factor | Local agent (Ex 4) | Remote A2A agent |
 |--------|-------------|-----------------|
