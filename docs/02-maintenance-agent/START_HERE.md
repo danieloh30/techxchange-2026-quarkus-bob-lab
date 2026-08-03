@@ -96,15 +96,16 @@ If you see `Unsatisfied dependency` or `AmbiguousResolutionException`, double-ch
 
 This is one of the most important insights in this lab: **`@SystemMessage` is a policy declaration, not code logic**.
 
-!!! note "Using a solution project instead of `lab/`?"
-    Stop `lab/` first (`Ctrl+C`), then run the solution:
-    ```bash
-    cd exercises/02-maintenance-agent/solution
-    ./mvnw quarkus:dev
-    ```
-    The `TriageAgent.java` to edit below lives in the same relative path inside the solution project.
+The full workflow isn't wired in `lab/` yet (that happens in Exercise 4), so you'll run this experiment from the **solution project**.
 
-Open `TriageAgent.java` and find this line in the `@SystemMessage`:
+Stop `lab/` first (`Ctrl+C`), then start the solution:
+
+```bash
+cd exercises/02-maintenance-agent/solution
+./mvnw quarkus:dev
+```
+
+Open `TriageAgent.java` in the solution project and find this line in the `@SystemMessage`:
 
 ```
 If no triage action is needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
