@@ -45,31 +45,9 @@ updates:
         patterns:
           - "io.quarkiverse.langchain4j*"
 
-  # ── exercise 02 (sequence) ─────────────────────────────────────────────────
+  # ── exercise 02 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/02-maintenance-agent/solution-sequence
-    schedule:
-      interval: daily
-      time: "06:00"
-      timezone: "America/New_York"
-    open-pull-requests-limit: 3
-    labels:
-      - dependencies
-      - java
-    commit-message:
-      prefix: "chore(deps)"
-    groups:
-      quarkus-platform:
-        patterns:
-          - "io.quarkus*"
-          - "io.quarkus.platform*"
-      quarkus-langchain4j:
-        patterns:
-          - "io.quarkiverse.langchain4j*"
-
-  # ── exercise 02 (composed) ─────────────────────────────────────────────────
-  - package-ecosystem: maven
-    directory: /exercises/02-maintenance-agent/solution-composed
+    directory: /exercises/02-maintenance-agent/solution
     schedule:
       interval: daily
       time: "06:00"
