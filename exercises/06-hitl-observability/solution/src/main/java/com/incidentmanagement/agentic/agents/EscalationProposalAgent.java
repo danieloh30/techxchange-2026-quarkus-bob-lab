@@ -1,14 +1,10 @@
 package com.incidentmanagement.agentic.agents;
 
+import com.incidentmanagement.model.IncidentInfo;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
-/**
- * Agent that creates escalation proposals for critical incidents requiring management attention.
- * This agent analyzes the incident and creates a proposal that will be reviewed
- * by the HumanApprovalAgent if the incident is P1/P2 on a revenue-critical system.
- */
 public interface EscalationProposalAgent {
 
     @SystemMessage("""
@@ -39,23 +35,20 @@ public interface EscalationProposalAgent {
         """)
     @UserMessage("""
         Create an escalation proposal for this incident:
-        - System: {incidentSystem}
-        - Service: {incidentService}
-        - Priority: {incidentPriority}
+        - System: {incidentInfo.system}
+        - Service: {incidentInfo.service}
+        - Priority: P{incidentInfo.priority}
         - Incident Number: {incidentNumber}
-        - Current Description: {incidentDescription}
+        - Current Description: {incidentInfo.description}
         - Estimated Revenue Impact: {businessImpact}
-        - Incident Report: {feedback}
+        - Incident Report: {report}
 
         Provide your escalation proposal with clear reasoning.
         """)
     @Agent(outputKey = "escalationProposal", description = "Creates escalation proposals for critical incidents requiring management attention")
     String createEscalationProposal(
-            String incidentSystem,
-            String incidentService,
-            String incidentPriority,
+            IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String incidentDescription,
             String businessImpact,
-            String feedback);
+            String report);
 }

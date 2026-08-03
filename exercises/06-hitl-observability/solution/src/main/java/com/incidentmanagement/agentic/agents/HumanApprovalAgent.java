@@ -1,6 +1,7 @@
 package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.ApprovalProposal;
+import com.incidentmanagement.model.IncidentInfo;
 import com.incidentmanagement.service.ApprovalService;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.agentic.declarative.HumanInTheLoop;
@@ -13,40 +14,34 @@ import java.util.concurrent.TimeoutException;
 
 public interface HumanApprovalAgent {
 
-    @Agent(outputKey = "approvalDecision", description = "Coordinates human approval for critical incident escalations using the requestHumanApproval tool")
-    @HumanInTheLoop(outputKey = "approvalDecision", description = "Coordinates human approval for critical incident escalations using the requestHumanApproval tool")
+    @Agent(outputKey = "approvalDecision", description = "Coordinates human approval for critical incident escalations")
+    @HumanInTheLoop(outputKey = "approvalDecision", description = "Coordinates human approval for critical incident escalations")
     static String reviewEscalationProposal(
-            String incidentSystem,
-            String incidentService,
-            String incidentPriority,
+            IncidentInfo incidentInfo,
             Integer incidentNumber,
             String businessImpact,
             String escalationProposal,
-            String escalationReason,
-            String incidentDescription,
-            String feedback
+            String report
     ) {
 
-        Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [%s]",
-                incidentNumber, incidentSystem, incidentService, incidentPriority);
+        Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [P%d]",
+                incidentNumber, incidentInfo.system, incidentInfo.service, incidentInfo.priority);
         Log.info("WORKFLOW PAUSED - Waiting for human approval decision via UI");
 
         ApprovalService approvalService = Arc.container().instance(ApprovalService.class).get();
 
         try {
-            // Create proposal and get CompletableFuture that completes when human decides
             CompletableFuture<ApprovalProposal> approvalFuture =
                     approvalService.createProposalAndWaitForDecision(
-                            incidentNumber, incidentSystem, incidentService, incidentPriority, businessImpact,
-                            escalationProposal, escalationReason, incidentDescription, feedback
+                            incidentNumber, incidentInfo.system, incidentInfo.service,
+                            "P" + incidentInfo.priority, businessImpact,
+                            escalationProposal, null, incidentInfo.description, report
                     );
 
-            // BLOCK HERE until human makes decision (with 5 minute timeout)
             ApprovalProposal result = approvalFuture.get(5, TimeUnit.MINUTES);
 
             Log.infof("WORKFLOW RESUMED - Human decision received: %s", result.decision);
 
-            // Format response for the agent
             return String.format("""
                 Human Decision: %s
                 Reason: %s
