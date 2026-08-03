@@ -36,33 +36,19 @@ public class ApprovalProposal extends PanacheEntity {
      */
     public String incidentPriority;
 
-    /**
-     * Estimated revenue impact
-     */
+    @Column(columnDefinition = "TEXT")
     public String businessImpact;
 
-    /**
-     * Proposed escalation action (ESCALATE_TO_VP, ESCALATE_TO_CTO, KEEP_AT_TEAM_LEVEL)
-     */
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     public String proposedEscalation;
 
-    /**
-     * Reasoning for the proposed escalation
-     */
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     public String escalationReason;
 
-    /**
-     * Current incident description
-     */
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     public String incidentDescription;
 
-    /**
-     * Incident report that triggered this proposal
-     */
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     public String incidentReport;
 
     /**
