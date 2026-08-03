@@ -118,25 +118,27 @@ data loss or corruption, security breaches, or cascading failures affecting mult
 For intermittent errors, slow responses, or single-user complaints, respond with "TRIAGE_NOT_REQUIRED".
 ```
 
-Quarkus hot-reloads in ~1 second. Now process Incident **#7** (monitoring/alerting-api) with:
+Quarkus hot-reloads in ~1 second. Open **http://localhost:8080**, click **View** on Incident **#7** (monitoring/alerting-api), and process it with:
 
 ```
 Alert threshold slightly too sensitive, causing a few extra notifications
 ```
 
-- **With original threshold:** tool may be called (triage requested)
-- **With strict threshold:** `TRIAGE_NOT_REQUIRED` — no tool call, no status change
-
 !!! tip "Incident status changed?"
     If Incident #7 is no longer `OPEN`, press `s` in the Quarkus terminal to force a restart — the H2 dev database resets to seed data. Or use any other `OPEN` incident.
 
-Now try the same incident with a critical report:
+**How to confirm:** Check the Quarkus terminal logs and the incident status in the UI.
+
+- **With strict threshold:** the response contains `TRIAGE_NOT_REQUIRED` — no `requestTriage` tool call in the terminal logs, incident status stays `OPEN`
+- **With original (lenient) threshold:** a `requestTriage` tool call appears in the terminal logs, incident status changes to `TRIAGING`
+
+Now press `s` to restart (reset the database), and process the same Incident **#7** with a critical report:
 
 ```
 Complete monitoring blackout — zero alerts firing, all dashboards showing stale data, on-call has no visibility
 ```
 
-- **Expected with strict threshold:** `requestTriage` is called — critical enough to meet the threshold
+**Expected:** even with the strict threshold, `requestTriage` is called — the report is critical enough to meet the bar. Check the terminal logs for the tool call and the UI for status → `TRIAGING`.
 
 !!! warning "Key insight"
     You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
