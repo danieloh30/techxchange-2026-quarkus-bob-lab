@@ -136,10 +136,10 @@ Now try the same incident with a critical report:
 Complete monitoring blackout — zero alerts firing, all dashboards showing stale data, on-call has no visibility
 ```
 
-- **Expected with strict threshold:** `requestTriage` IS called — critical enough to meet the threshold
+- **Expected with strict threshold:** `requestTriage` is called — critical enough to meet the threshold
 
 !!! warning "Key insight"
-    You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` IS the policy. This is what "declarative AI engineering" means.
+    You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
 
 **Revert** the `@SystemMessage` back to the original (simpler) version before moving on.
 
