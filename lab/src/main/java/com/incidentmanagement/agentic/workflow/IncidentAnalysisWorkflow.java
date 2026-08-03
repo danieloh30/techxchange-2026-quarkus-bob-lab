@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface IncidentAnalysisWorkflow {
 
-    // TODO Exercise 3 — Step 2: See docs/03-parallel-workflow/START_HERE.md
+    // TODO Exercise 3 — Step 2a: @ParallelMapperAgent method — See docs/03-parallel-workflow/START_HERE.md
+
+    // TODO Exercise 3 — Step 2b: @Output static method — See docs/03-parallel-workflow/START_HERE.md
 
 }
