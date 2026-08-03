@@ -147,7 +147,7 @@ Now press `s` to restart (reset the database), and process the same Incident **#
 Complete monitoring blackout — zero alerts firing, all dashboards showing stale data, on-call has no visibility
 ```
 
-**How to confirm:** Check the UI — incident status changes to `TRIAGING`. The report is critical enough to meet even the strict bar. You may also see `TriageTool activated for incident #7` in the terminal logs.
+**How to confirm:** Check the UI — incident status changes to `IN_PROGRESS`. The report is critical enough that the `DiagnosticFeedbackAgent` flags it for investigation, overriding the strict triage threshold.
 
 !!! warning "Key insight"
     You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
