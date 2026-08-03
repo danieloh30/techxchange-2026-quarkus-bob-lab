@@ -104,7 +104,7 @@ Open **[http://localhost:3000](http://localhost:3000){:target="_blank"}** and na
 4. In the **Service Name** dropdown, select **incident-management**
 5. Click **Run query** (blue button, top-right) — you should see a list of traces
 
-Click any **Trace ID** link to expand the span waterfall. Look for the `POST /api/incidents/{id}/process` trace — it contains the full agent workflow.
+Click any **Trace ID** link to expand the span waterfall. Look for the `POST /incident-management/process/{id}` trace — it contains the full agent workflow.
 
 <img src="../../images/grafana-dashboard.png" alt="Grafana Tempo trace view" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
