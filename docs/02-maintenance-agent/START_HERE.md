@@ -130,7 +130,7 @@ Alert threshold slightly too sensitive, causing a few extra notifications
 
 **How to confirm:** Check the Quarkus terminal logs and the incident status in the UI.
 
-**Expected terminal logs (strict threshold, minor report):**
+**Expected terminal logs:**
 ```
 ReportAnalysisWorkflow executing...
   ├─ TriageFeedbackAgent analyzing...
@@ -139,7 +139,7 @@ IncidentAssignmentWorkflow evaluating conditions...
 ResolutionAgent updating...
 ```
 
-Notice: **no** `TriageTool activated` line — the agent decided `TRIAGE_NOT_REQUIRED` because a sensitive alert threshold is not a critical issue. Incident status stays `OPEN` in the UI.
+With the strict threshold, `TriageTool activated` does **not** appear — the agent decided `TRIAGE_NOT_REQUIRED` because a sensitive alert threshold is not a critical issue. Incident status stays `OPEN` in the UI.
 
 Now press `s` to restart (reset the database), and process the same Incident **#7** with a critical report:
 
@@ -147,17 +147,7 @@ Now press `s` to restart (reset the database), and process the same Incident **#
 Complete monitoring blackout — zero alerts firing, all dashboards showing stale data, on-call has no visibility
 ```
 
-**Expected terminal logs (strict threshold, critical report):**
-```
-ReportAnalysisWorkflow executing...
-  ├─ TriageFeedbackAgent analyzing...
-  └─ DiagnosticFeedbackAgent analyzing...
-IncidentAssignmentWorkflow evaluating conditions...
-  └─ TriageTool activated for incident #7
-ResolutionAgent updating...
-```
-
-This time `TriageTool activated` appears — the report is critical enough to meet even the strict bar. Incident status changes to `TRIAGING` in the UI.
+**How to confirm:** Check the UI — incident status changes to `TRIAGING`. The report is critical enough to meet even the strict bar. You may also see `TriageTool activated for incident #7` in the terminal logs.
 
 !!! warning "Key insight"
     You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
