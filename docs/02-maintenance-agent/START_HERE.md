@@ -139,7 +139,7 @@ IncidentAssignmentWorkflow evaluating conditions...
 ResolutionAgent updating...
 ```
 
-With the strict threshold, `TriageTool activated` does **not** appear — the agent decided `TRIAGE_NOT_REQUIRED` because a sensitive alert threshold is not a critical issue. Incident status stays `OPEN` in the UI.
+With the strict threshold, `TriageTool activated` does **not** appear — the agent decided `TRIAGE_NOT_REQUIRED` because a sensitive alert threshold is not a critical issue. Incident status changes to `RESOLVED` in the UI — no triage, no diagnostic, so the workflow resolves it.
 
 Now press `s` to restart (reset the database), and process the same Incident **#7** with a critical report:
 
