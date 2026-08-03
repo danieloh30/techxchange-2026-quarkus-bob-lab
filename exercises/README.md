@@ -25,10 +25,10 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
 | Ex 1 | [`01-first-agent/solution`](01-first-agent/solution) | `TriageAgent` + `TriageTool` |
-| Ex 2 | [`03-parallel-workflow/solution`](03-parallel-workflow/solution) | `DiagnosticAgent` + full agent set |
+| Ex 2 | [`02-maintenance-agent/solution-sequence`](02-maintenance-agent/solution-sequence) | `DiagnosticAgent` + `@SequenceAgent` chain |
 | Ex 3 | [`03-parallel-workflow/solution`](03-parallel-workflow/solution) | `IncidentAnalysisWorkflow` + `@ParallelMapperAgent` |
 | Ex 4 | [`04-supervisor/solution`](04-supervisor/solution) | Complete multi-agent supervisor pipeline |
-| Ex 5 | [`04-supervisor/solution`](04-supervisor/solution) | Same project — Bob validates this codebase |
+| Ex 5 | [`05-ibm-bob/solution`](05-ibm-bob/solution) | MCP client with `@McpToolBox` — Bob validates `lab/AGENTS.md` |
 | Ex 6 | [`06-hitl-observability/solution`](06-hitl-observability/solution) | `@HumanInTheLoop` + OTel |
 | Ex 7 | [`07-a2a/solution`](07-a2a/solution) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
 

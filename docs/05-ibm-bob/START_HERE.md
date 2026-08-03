@@ -73,7 +73,7 @@ INFO  [io.qua.dep.dev.RuntimeUpdatesProcessor] Live Coding activated
 
 ### A.2 Examine the weather MCP tool (2 min)
 
-Open [`exercises/05-ibm-bob/weather-mcp-server/src/main/java/dev/langchain4j/quarkus/workshop/Weather.java`](../../exercises/05-ibm-bob/weather-mcp-server/src/main/java/dev/langchain4j/quarkus/workshop/Weather.java):
+Open [`exercises/05-ibm-bob/weather-mcp-server/src/main/java/dev/langchain4j/quarkus/workshop/Weather.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/05-ibm-bob/weather-mcp-server/src/main/java/dev/langchain4j/quarkus/workshop/Weather.java){:target="_blank"}:
 
 ```java
 public class Weather {
@@ -108,7 +108,7 @@ The MCP server exposes this tool over SSE at `http://localhost:8081/mcp/sse/`.
 
 ### A.3 Examine the MCP client configuration (1 min)
 
-Open [`exercises/05-ibm-bob/solution/src/main/resources/application.properties`](../../exercises/05-ibm-bob/solution/src/main/resources/application.properties):
+Open [`exercises/05-ibm-bob/solution/src/main/resources/application.properties`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/05-ibm-bob/solution/src/main/resources/application.properties){:target="_blank"}:
 
 ```properties
 # MCP client — connect to the weather server
@@ -120,7 +120,7 @@ The key `weather` matches the name used in `@McpToolBox("weather")` on the agent
 
 ### A.4 Examine the agent — mixing local + remote tools (1 min)
 
-Open [`exercises/05-ibm-bob/solution/src/main/java/dev/langchain4j/quarkus/workshop/CustomerSupportAgent.java`](../../exercises/05-ibm-bob/solution/src/main/java/dev/langchain4j/quarkus/workshop/CustomerSupportAgent.java):
+Open [`exercises/05-ibm-bob/solution/src/main/java/dev/langchain4j/quarkus/workshop/CustomerSupportAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/05-ibm-bob/solution/src/main/java/dev/langchain4j/quarkus/workshop/CustomerSupportAgent.java){:target="_blank"}:
 
 ```java
 @SessionScoped
