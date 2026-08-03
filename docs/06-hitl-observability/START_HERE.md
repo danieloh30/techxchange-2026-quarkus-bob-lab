@@ -86,7 +86,7 @@ In the Quarkus terminal logs, look for the `HumanApprovalAgent` span showing the
 
 ---
 
-## Read OTel spans in Grafana (3 min)
+## Read OTel spans in Grafana (4 min)
 
 Open **http://localhost:3000** → Explore → Tempo → service `incident-management`.
 
