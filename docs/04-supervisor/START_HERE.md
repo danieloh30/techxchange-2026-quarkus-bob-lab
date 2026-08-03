@@ -375,11 +375,21 @@ Save. Quarkus hot-reloads.
 Open **http://localhost:8080** to test all three paths. After each, check the **Quarkus terminal logs** for tool calls and the **UI** for status changes.
 
 **Path 1 — Minor incident:**  
-Click **View** on Incident **#6** (search-engine/product-search) and process with `"False alarm, relevance restored after cache refresh"`.  
+Click **View** on Incident **#6** (search-engine/product-search) and process with:
+
+```
+False alarm, relevance restored after cache refresh
+```
+
 **How to confirm:** UI status stays `OPEN` (action = `MONITOR` — no action needed). Terminal logs show no `TriageTool` call — supervisor skips impact + escalation.
 
 **Path 2 — Needs triage:**  
-Click **View** on Incident **#5** (email-service/notification-api) and process with `"SMTP timeout for 30% of outbound emails, queue growing"`.  
+Click **View** on Incident **#5** (email-service/notification-api) and process with:
+
+```
+SMTP timeout for 30% of outbound emails, queue growing
+```
+
 **How to confirm:** UI status changes to `TRIAGING`. Terminal logs show `TriageTool activated for incident #5`.
 
 **Path 3 — Critical incident (full supervisor path):**  
