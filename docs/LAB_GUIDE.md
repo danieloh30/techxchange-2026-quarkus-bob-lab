@@ -71,7 +71,7 @@ docs/                                 # All lab instructions + images
 
 exercises/                            # Completed Quarkus solution projects
 ├── 01-first-agent/solution
-├── 02-maintenance-agent/{solution-sequence, solution-composed}
+├── 02-maintenance-agent/solution
 ├── 03-parallel-workflow/solution
 ├── 04-supervisor/solution
 ├── 05-ibm-bob/{solution, weather-mcp-server}
