@@ -19,6 +19,9 @@ With `@HumanInTheLoop`, the system proposes and pauses — a human approves or r
 
 This exercise introduces two concepts: **`EscalationProposalAgent`** (an LLM agent that creates escalation proposals) and **`@HumanInTheLoop`** (a gate that pauses the workflow until a human decides).
 
+!!! info "Why run + read instead of code-along?"
+    Quarkus validates all `@Agent` parameters at **build time** against the workflow's `AgenticScope` output keys. HITL agents depend on outputs from each other (`escalationProposal` → `approvalDecision`), so adding a stub to `lab/` without wiring the full chain causes `IllegalConfigurationException`. Plus, `HumanApprovalAgent` is infrastructure code (`CompletableFuture`, `ApprovalService`, timeout handling) — not a 3-minute paste. So you run the working solution and focus on **understanding the pattern** rather than fighting build errors.
+
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
