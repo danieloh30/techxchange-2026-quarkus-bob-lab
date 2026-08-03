@@ -19,7 +19,9 @@ public interface TriageAgent {
         It is your job to submit a request to the provided requestTriage function
         to take action based on the provided incident report.
         Be specific about what triage actions are needed.
-        If no triage action is needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
+        Only request triage for CRITICAL issues: complete service outages,
+        data loss or corruption, security breaches, or cascading failures affecting multiple systems.
+        For intermittent errors, slow responses, or single-user complaints, respond with "TRIAGE_NOT_REQUIRED".
         """)
     @UserMessage("""
         Incident Information:
