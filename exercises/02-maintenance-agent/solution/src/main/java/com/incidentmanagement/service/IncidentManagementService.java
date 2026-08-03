@@ -42,6 +42,7 @@ public class IncidentManagementService {
         IncidentOutcome incidentOutcome = incidentProcessingWorkflow.processIncident(incidentInfo, incidentNumber, report);
 
         Log.info("ResolutionAgent updating...");
+        Log.infof("  └─ Action: %s → %s", incidentOutcome.incidentAction(), incidentOutcome.resolution());
 
         // Update the incident's description with the resolution
         incidentInfo.description = incidentOutcome.resolution();
