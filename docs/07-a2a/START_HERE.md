@@ -111,16 +111,18 @@ flowchart LR
 
 ## Try it
 
-Process an incident that requires impact assessment + escalation:
+Open **http://localhost:8080**, click **View** on an incident that will trigger escalation (e.g., Incident **#1**, payment-gateway/checkout-api), and process with:
 ```text
 Complete service outage, all API endpoints returning 503, cascading failures across dependent services
 ```
 
-Correlate logs across **both** processes:
-- **Client (8080):** `[A2AClient] sending task to http://localhost:8888/a2a`
-- **Remote (8888):** `[AgentExecutor] received task, invoking ImpactAgent`
-- **Remote (8888):** `[ImpactAgent] Business Impact: HIGH, Revenue Loss: $50,000/hr`
-- **Client (8080):** `[A2AClient] task completed, result: HIGH / $50,000/hr`
+**How to confirm:** Check the UI for the final incident status (should reach `ESCALATED`). Then correlate logs across **both** terminal windows:
+
+- **Terminal 2 — Client (8080):** look for `sending task to http://localhost:8888/a2a` — confirms the A2A call was made
+- **Terminal 1 — Remote (8888):** look for `received task, invoking ImpactAgent` and the impact assessment result (e.g., `Business Impact: HIGH`)
+- **Terminal 2 — Client (8080):** look for `task completed` — confirms the round-trip succeeded
+
+The key observation: the same `ImpactAgent` interface runs, but execution happened in a completely separate JVM on port 8888.
 
 ---
 

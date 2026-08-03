@@ -174,21 +174,19 @@ Try these prompts in order:
 ```
 What bookings does Speedy McRacer have?
 ```
-Expected: The agent calls `listBookingsForCustomer` → returns booking(s) with date and location.
+**How to confirm:** The chat response lists booking(s) with date and location. In the Quarkus terminal (solution app), look for a `listBookingsForCustomer` tool call in the logs.
 
 **Prompt 2 — weather upsell (MCP tool):**
 ```
 Tell me more about booking 2. What's the weather like there?
 ```
-Expected: The agent calls `getBookingDetails` (local), then `getForecast` (MCP), then upsells
-a premium car ("given the rainy conditions, consider our SUV upgrade for safer driving").
+**How to confirm:** The chat response includes weather details (temperature, rain/snow) and a gentle upsell suggestion (e.g., "consider our SUV upgrade"). In the MCP server terminal (:8081), look for `getForecast` request/response logs confirming the remote tool call.
 
 **Prompt 3 — cancellation (local tool with guard):**
 ```
 Cancel booking 2 for Speedy McRacer.
 ```
-Expected: The agent calls `cancelBooking`. If the booking is within 11 days of departure, it
-returns a polite "cannot cancel" message from the `BookingCannotBeCancelledException`.
+**How to confirm:** The chat response shows either a cancellation confirmation or a polite "cannot cancel" message if the booking is within 11 days of departure (`BookingCannotBeCancelledException`). Check the solution terminal for a `cancelBooking` tool call.
 
 ### A.6 Observe MCP traffic (optional, 1 min)
 
