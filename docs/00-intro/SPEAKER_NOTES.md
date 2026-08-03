@@ -92,7 +92,8 @@ Each exercise adds a new capability, guided by a persona facing a real IT operat
 
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses IBM Bob to govern and validate the system you built.  
-**Exercises 6–7** run pre-built solutions to explore production patterns.
+**Exercise 6** codes `EscalationProposalAgent` in `lab/`, then tests the full HITL flow and OTel tracing from the solution.  
+**Exercise 7** runs a pre-built A2A solution to explore remote agent patterns.
 
 ---
 
