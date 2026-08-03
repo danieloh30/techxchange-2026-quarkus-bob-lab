@@ -404,7 +404,7 @@ Placing the Bob exercise after Exercises 1–4 is deliberate:
 
 ## Exercise 6 — Human Gate + Tracing (~10 min)
 
-**Story:** Alex in compliance is firm: no autonomous escalation of **P1/P2 incidents on revenue-critical systems**. Every LLM call must be traceable for cost auditing and SOX-style event logs. This exercise adds a **human gate** (approve/reject before escalation) and **tracing** (OpenTelemetry spans for every agent decision).
+**Story:** Alex in compliance is firm: no autonomous escalation of **P1/P2 incidents on revenue-critical systems**. Every LLM call must be traceable for cost auditing and SOX-style event logs. You'll implement `EscalationProposalAgent` in `lab/`, then test the full HITL flow and OTel tracing from the solution.
 
 **Goals**
 
