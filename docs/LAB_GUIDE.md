@@ -620,7 +620,7 @@ Your answer directly shapes next year's lab content.
 | Port in use | Prior process still running | `lsof -i :8080` (or `:8888`); `kill -9 <pid>` |
 | Agent never calls tools | `@Tool` desc too vague, `@ToolBox` missing, or `@SystemMessage` too permissive | Tighten `@SystemMessage`; verify `@ToolBox(WidgetTool.class)` annotation |
 | `outputKey` resolution error | Missing `outputKey` on a workflow agent | Every agent used inside `@SequenceAgent` or `@SupervisorAgent` needs `@Agent(outputKey="...")` |
-| A2A timeout | Impact assessment service not started first | Start `:8888` before `:8080`; verify `GET http://localhost:8888/.well-known/agent.json` |
+| A2A timeout | Impact assessment service not started first | Start `:8888` before `:8080`; verify `GET http://localhost:8888/.well-known/agent-card.json` |
 | Supervisor invokes wrong agents | `@SupervisorRequest` prompt ambiguous | Add explicit `DO NOT invoke X` instructions for negative cases |
 | Bob invents APIs | AGENTS.md not loaded | Explicitly instruct Bob: "Read AGENTS.md before answering" |
 | Bob unavailable | Network / seats | Use `docs/05-ibm-bob/FALLBACK.md`; continue with remaining exercises |
