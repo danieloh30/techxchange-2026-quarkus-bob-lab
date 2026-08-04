@@ -37,7 +37,7 @@ Before the lab starts, confirm:
 |-------------|-------|
 | **Java 25+** (`java -version`) | ✓ |
 | **Maven 3.9+** (or use included `./mvnw`) | ✓ |
-| **IBM Enterprise Build of Quarkus** / Quarkus **3.37.4** | ✓ |
+| **IBM Enterprise Build of Quarkus** / Quarkus **3.38.0** | ✓ |
 | **IBM Bob** installed and signed in ([bob.ibm.com](https://bob.ibm.com/){:target="_blank"}) | ✓ |
 | LLM API key — instructors provide `OPENAI_API_KEY` or lab endpoint | ✓ |
 | Ports **8080**, **8888** free | ✓ |
@@ -176,7 +176,7 @@ flowchart TD
 
 | Layer | IBM component | Role |
 |-------|--------------|------|
-| Runtime | IBM Enterprise Build of Quarkus 3.37.4 | Build-time agent validation, fast startup |
+| Runtime | IBM Enterprise Build of Quarkus 3.38.0 | Build-time agent validation, fast startup |
 | AI extension | Quarkus LangChain4j 1.12.0 | Declarative agents, workflows, A2A |
 | Dev tooling | IBM Bob | SDLC partner: plan → code → test → secure |
 | Context efficiency | `AGENTS.md` (project root) | Targeted Bob context — avoids token-bloat scans |

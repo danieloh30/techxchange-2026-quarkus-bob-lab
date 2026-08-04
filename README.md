@@ -40,7 +40,7 @@ Open http://localhost:8080
 
 - **Java 25+**
 - Maven 3.9+ (or use `./mvnw` in each exercise)
-- Quarkus **3.37.4** (Java 25) — kept current via Dependabot
+- Quarkus **3.38.0** (Java 25) — kept current via Dependabot
 - IBM Bob ([bob.ibm.com](https://bob.ibm.com/))
 - LLM API key (provided in the room)
 - Free ports **8080**, **8888**
