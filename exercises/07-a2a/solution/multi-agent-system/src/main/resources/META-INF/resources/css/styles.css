@@ -678,106 +678,109 @@ tr.highlight-row { animation: row-flash 3s ease-out; }
 .approval-card-header {
     background: linear-gradient(135deg, var(--bg-secondary) 0%, #243447 100%);
     color: var(--text-primary);
-    padding: 20px;
+    padding: 14px 18px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 8px;
     border-bottom: 1px solid var(--border);
 }
 
-.incident-title { display: flex; align-items: center; gap: 12px; }
-.incident-icon { font-size: 1.5em; }
+.incident-title { display: flex; align-items: center; gap: 8px; }
+.incident-icon { font-size: 1.1em; }
 
 .incident-title h3 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--text-primary);
 }
 
-.impact-value {
-    font-size: 1.2em;
-    font-weight: 700;
-    color: var(--orange);
-    background: rgba(255, 131, 43, 0.1);
-    padding: 6px 14px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(255, 131, 43, 0.2);
-}
-
-.approval-card-body { padding: 20px; }
+.approval-card-body { padding: 14px 18px; }
 
 .info-row {
     display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .info-label {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
     background: var(--bg-primary);
-    padding: 4px 10px;
+    padding: 2px 8px;
     border-radius: var(--radius);
 }
 
-.damage-section, .proposal-section { margin-bottom: 16px; }
+.damage-section, .proposal-section { margin-bottom: 12px; }
 
 .section-title {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+}
+
+.impact-text {
+    background: rgba(255, 131, 43, 0.08);
+    border-left: 3px solid var(--orange);
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-height: 120px;
+    overflow-y: auto;
 }
 
 .damage-text {
     background: var(--bg-primary);
     border-left: 3px solid var(--red);
-    padding: 12px;
+    padding: 10px 12px;
     border-radius: 4px;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: 0.8rem;
+    line-height: 1.5;
     color: var(--text-secondary);
+    max-height: 100px;
+    overflow-y: auto;
 }
 
-.proposal-action { display: flex; flex-direction: column; gap: 8px; }
+.proposal-action { display: flex; flex-direction: column; gap: 6px; }
 
 .action-badge {
     display: inline-block;
     background: linear-gradient(135deg, var(--accent), #00b894);
     color: var(--bg-primary);
-    padding: 6px 14px;
+    padding: 4px 12px;
     border-radius: 20px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     align-self: flex-start;
 }
 
 .action-reason {
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
 .approval-card-footer {
-    padding: 16px 20px;
+    padding: 12px 18px;
     background: rgba(0, 0, 0, 0.15);
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 10px;
     border-top: 1px solid var(--border);
 }
 
 .btn-approve, .btn-reject {
-    padding: 10px 24px;
+    padding: 8px 20px;
     border: none;
     border-radius: var(--radius);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -874,7 +877,7 @@ tr.highlight-row { animation: row-flash 3s ease-out; }
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     width: 90%;
-    max-width: 800px;
+    max-width: 680px;
     max-height: 90vh;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -889,13 +892,13 @@ tr.highlight-row { animation: row-flash 3s ease-out; }
 .approval-modal-header {
     background: linear-gradient(135deg, var(--orange), #e67e22);
     color: white;
-    padding: 20px 24px;
+    padding: 14px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.approval-modal-header h2 { margin: 0; font-size: 1.3rem; font-weight: 700; }
+.approval-modal-header h2 { margin: 0; font-size: 1rem; font-weight: 700; }
 
 .approval-modal-close {
     background: none;
@@ -919,8 +922,8 @@ tr.highlight-row { animation: row-flash 3s ease-out; }
 }
 
 .approval-modal-body {
-    padding: 24px;
-    max-height: calc(90vh - 100px);
+    padding: 16px;
+    max-height: calc(90vh - 80px);
     overflow-y: auto;
 }
 

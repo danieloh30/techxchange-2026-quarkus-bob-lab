@@ -454,12 +454,15 @@ function createApprovalCard(proposal) {
                 <span class="incident-icon">&#9888;</span>
                 <h3>${proposal.incidentPriority} - ${proposal.incidentSystem} / ${proposal.incidentService}</h3>
             </div>
-            <div class="impact-value">${proposal.businessImpact}</div>
-        </div>
-        <div class="approval-card-body">
             <div class="info-row">
                 <span class="info-label">Incident #${proposal.incidentNumber}</span>
-                <span class="info-label">Description: ${proposal.incidentDescription}</span>
+                <span class="info-label">${proposal.incidentDescription}</span>
+            </div>
+        </div>
+        <div class="approval-card-body">
+            <div class="damage-section">
+                <div class="section-title">Business Impact</div>
+                <div class="impact-text">${proposal.businessImpact || 'No impact assessment'}</div>
             </div>
             <div class="damage-section">
                 <div class="section-title">Incident Report</div>
@@ -469,13 +472,13 @@ function createApprovalCard(proposal) {
                 <div class="section-title">AI Recommendation</div>
                 <div class="proposal-action">
                     <span class="action-badge">${proposal.proposedEscalation}</span>
-                    <span class="action-reason">${proposal.escalationReason}</span>
+                    ${proposal.escalationReason ? `<span class="action-reason">${proposal.escalationReason}</span>` : ''}
                 </div>
             </div>
         </div>
         <div class="approval-card-footer">
-            <button class="btn-approve" onclick="handleProposalDecision(${proposal.id}, 'RESOLVE_INCIDENT')">Resolve & Monitor</button>
-            <button class="btn-reject" onclick="handleProposalDecision(${proposal.id}, 'ESCALATE_INCIDENT')">Escalate</button>
+            <button class="btn-approve" onclick="handleProposalDecision(${proposal.id}, 'KEEP_AT_TEAM')">Keep at Team Level</button>
+            <button class="btn-reject" onclick="handleProposalDecision(${proposal.id}, 'ESCALATE_INCIDENT')">Escalate to Management</button>
         </div>
     `;
     return card;
@@ -491,13 +494,13 @@ async function handleProposalDecision(proposalId, decision) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 decision: decision,
-                reason: reason || `${decision === 'RESOLVE_INCIDENT' ? 'Resolve and monitor' : 'Escalate'} decision by human reviewer`,
+                reason: reason || `${decision === 'KEEP_AT_TEAM' ? 'Keep at team level' : 'Escalate to management'} decision by human reviewer`,
                 approvedBy: 'Workshop User'
             })
         });
 
         if (response.ok) {
-            const actionText = decision === 'RESOLVE_INCIDENT' ? 'RESOLVE & MONITOR' : 'ESCALATE';
+            const actionText = decision === 'KEEP_AT_TEAM' ? 'KEEP AT TEAM' : 'ESCALATE';
             showToast(`Decision: ${actionText} - Workflow will complete shortly`);
             const card = document.getElementById(`approval-${proposalId}`);
             if (card) {
