@@ -175,11 +175,14 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 
 | Factor | Local agent (Ex 4) | Remote A2A agent |
 |--------|-------------|-----------------|
-| Latency | In-process | +HTTP round-trip |
-| Ownership | Shared codebase | Independent repo + release |
-| Scaling | Scale whole app | Scale impact service independently |
-| Failure mode | Shared crash domain | Network partition risk |
-| Reuse | Single app | Any A2A-compatible client |
+| **Latency** | In-process | +HTTP round-trip |
+| **Ownership** | Shared codebase | Independent repo + release |
+| **Scaling** | Scale whole app | Scale impact service independently |
+| **Failure mode** | Shared crash domain | Network partition risk |
+| **Reuse** | Single app | Any A2A-compatible client |
+
+!!! tip "When to go remote"
+    Start local. Extract to A2A when the agent needs **independent scaling**, **separate ownership** (another team maintains it), or **cross-system reuse** (multiple apps call the same agent). The network hop is a real cost — don't pay it unless you get one of these benefits.
 
 ---
 
