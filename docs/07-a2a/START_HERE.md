@@ -143,9 +143,9 @@ Complete service outage, all API endpoints returning 503, cascading failures acr
 
 **How to confirm:** Check the UI for the final incident status (should reach `ESCALATED`). Then correlate logs across **both** terminal windows:
 
-- **Terminal 2 — Client (8080):** look for `sending task to http://localhost:8888/a2a` — confirms the A2A call was made
-- **Terminal 1 — Remote (8888):** look for `received task, invoking ImpactAgent` and the impact assessment result (e.g., `Business Impact: HIGH`)
-- **Terminal 2 — Client (8080):** look for `task completed` — confirms the round-trip succeeded
+- **Terminal 2 — Client (8080):** look for `Agent Invocation: AgentInvocation{agentName='impact-agent$0$1', arguments={system=payment-gateway, ...}}` — confirms the supervisor delegated to the A2A agent
+- **Terminal 1 — Remote (8888):** look for `Remote A2A ImpactAgent called` and the response (e.g., `ImpactAgent response: Estimated Impact: $36,000`)
+- **Terminal 2 — Client (8080):** look for `HITL Tool: Creating escalation approval proposal` — confirms the workflow continued after the A2A round-trip
 
 The key observation: the same `ImpactAgent` interface runs, but execution happened in a completely separate JVM on port 8888.
 
