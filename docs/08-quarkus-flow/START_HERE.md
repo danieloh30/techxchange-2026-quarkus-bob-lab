@@ -230,30 +230,22 @@ Compare this with `@SequenceAgent` from Exercise 4 — that runs its sub-agents 
 
 ## Step 3 — Test it (3 min)
 
-Hot reload should have picked up your changes. Generate a report for incident #1:
+Hot reload should have picked up your changes. Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — click any incident in the dashboard, then click **Generate Report**.
 
-```bash
-curl -s -X POST http://localhost:8080/incident-report/1 | jq
-```
-
-**Check the terminal logs** — you should see the loop in action:
+The button triggers the quality loop. While it runs, **watch the terminal logs** — you should see the loop in action:
 
 ```
 Report Draft — iteration 1
-Report Critique — iteration 1: score=5, feedback=Missing root cause analysis...
-Report Draft — iteration 2
-Report Critique — iteration 2: score=7, feedback=Solid report...
-Report quality loop completed for incident #1 — final score: 7
+Report Critique — iteration 1: score=8, feedback=The report is solid...
+Report quality loop completed for incident #1 — final score: 8
 ```
 
-The response JSON contains the full scope state: `report`, `score`, `feedback`, and `iteration`.
+When the loop finishes, the dashboard shows the generated report with its **score** and **iteration count**.
 
-Try different incidents to see how the loop adapts:
+!!! info "How many iterations?"
+    The LLM often produces a good first draft (score >= 7), so the loop may exit after just 1 iteration. Try different incidents — some may need 2-3 rounds to reach the quality threshold.
 
-```bash
-curl -s -X POST http://localhost:8080/incident-report/2 | jq '.score, .iteration'
-curl -s -X POST http://localhost:8080/incident-report/5 | jq '.score, .iteration'
-```
+Try several incidents to see how the loop adapts — P1 incidents with more complexity tend to need more iterations than P4s.
 
 ---
 
