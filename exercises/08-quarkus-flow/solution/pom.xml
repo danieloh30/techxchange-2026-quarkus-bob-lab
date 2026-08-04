@@ -80,6 +80,10 @@
             <groupId>io.quarkiverse.flow</groupId>
             <artifactId>quarkus-flow-langchain4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.flow</groupId>
+            <artifactId>quarkus-flow-dev</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.quarkus</groupId>
