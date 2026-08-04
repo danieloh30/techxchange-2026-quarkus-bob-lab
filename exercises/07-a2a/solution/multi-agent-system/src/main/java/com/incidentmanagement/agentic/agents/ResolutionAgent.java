@@ -19,19 +19,24 @@ public interface ResolutionAgent {
         }
 
         Rules:
-        - Check the ACTUAL EscalationAgent decision in supervisorDecision, not just the analysis
-        - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM (but NOT CLOSE) → ESCALATE
-        - Else if resolutionAnalysis ≠ "ESCALATION_NOT_REQUIRED" → INVESTIGATE
-        - Else if severityAnalysis ≠ "SEVERITY_LOW" → TRIAGE
-        - Else if severityAnalysis = "SEVERITY_LOW" and no escalation and no triage needed → MONITOR
-        - Else → RESOLVE
-        - IMPORTANT: If EscalationAgent decided CLOSE, do NOT assign ESCALATE — check diagnostic/triage instead
-        - resolution: Summarize the action and reason in plain language
+        - CRITICAL: The human approval decision OVERRIDES all other signals.
+          If approvalDecision contains "KEEP_AT_TEAM" or "SKIPPED" → NEVER use ESCALATE.
+          Use INVESTIGATE or TRIAGE instead based on the analysis.
+        - Only use ESCALATE if the human approved the escalation (approvalDecision contains "ESCALATE_INCIDENT" or "APPROVED").
+        - If no human override applies, fall back to analysis:
+          - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM (but NOT CLOSE) → ESCALATE
+          - Else if resolutionAnalysis ≠ "ESCALATION_NOT_REQUIRED" → INVESTIGATE
+          - Else if severityAnalysis ≠ "SEVERITY_LOW" → TRIAGE
+          - Else if severityAnalysis = "SEVERITY_LOW" → MONITOR
+          - Else → RESOLVE
+        - resolution: Summarize the action and reason in plain language, mentioning the human decision if relevant
         """)
     @UserMessage("""
         Incident: P{incidentInfo.priority} {incidentInfo.system}/{incidentInfo.service} (#{incidentNumber})
 
         Supervisor Decision: {supervisorDecision}
+
+        Human Approval Decision: {approvalDecision}
 
         Incident Analysis Results:
         - Resolution: {incidentAnalysisResults.resolutionAnalysis}
@@ -42,5 +47,6 @@ public interface ResolutionAgent {
            outputKey = "incidentOutcome")
     IncidentOutcome analyzeForResolution(IncidentInfo incidentInfo, Integer incidentNumber,
                                           IncidentAnalysisResults incidentAnalysisResults,
-                                          String supervisorDecision);
+                                          String supervisorDecision,
+                                          String approvalDecision);
 }

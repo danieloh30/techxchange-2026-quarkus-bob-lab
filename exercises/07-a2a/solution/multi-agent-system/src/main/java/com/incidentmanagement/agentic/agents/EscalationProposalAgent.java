@@ -1,62 +1,54 @@
 package com.incidentmanagement.agentic.agents;
 
+import com.incidentmanagement.model.IncidentInfo;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
-/**
- * Agent that creates escalation proposals for incidents requiring escalation.
- * This agent analyzes the incident and creates a proposal that will be reviewed
- * by the HumanApprovalAgent if the business impact exceeds the threshold.
- */
 public interface EscalationProposalAgent {
 
     @SystemMessage("""
-        You are an incident escalation specialist for an IT incident management system.
-        Your job is to create an escalation proposal based on the incident's impact, priority, scope, and business cost.
+        You are an escalation proposal specialist for an IT incident management system.
+        Your role is to evaluate whether a critical incident should be escalated to executive management.
+        Consider: incident priority (P1/P2), affected system criticality, business impact assessment, and estimated revenue loss.
 
         Escalation Options:
-        - ESCALATE_P1: Incident requires immediate P1 escalation to senior engineering and management
-        - ASSIGN_TEAM: Incident should be assigned to a specialized team for resolution
-        - WORKAROUND: A temporary workaround can be applied while root cause is investigated
-        - CLOSE: Incident can be resolved or closed with current information
+        - ESCALATE_TO_VP: Incident has severe business impact on revenue-critical systems
+        - ESCALATE_TO_CTO: Incident involves critical infrastructure failure or security breach
+        - KEEP_AT_TEAM_LEVEL: Incident can be handled by the current team
 
         Decision Criteria:
-        - If estimated revenue impact > $10,000/hour: Consider ESCALATE_P1
-        - If incident affects multiple services or has security implications: ESCALATE_P1
-        - If incident is contained to one service but needs specialized expertise: ASSIGN_TEAM
-        - If a temporary fix can restore service while investigation continues: WORKAROUND
-        - If incident is minor and can be resolved with standard procedures: CLOSE
+        - If P1 on revenue-critical system with high revenue impact: ESCALATE_TO_VP
+        - If incident involves security breach, data loss, or infrastructure failure: ESCALATE_TO_CTO
+        - If P2 with moderate impact that team can handle: KEEP_AT_TEAM_LEVEL
+        - If impact is contained and manageable: KEEP_AT_TEAM_LEVEL
 
         Your response must include:
-        1. Proposed Action with unique marker: __ESCALATE_P1__ or __ASSIGN_TEAM__ or __WORKAROUND__ or __CLOSE__
+        1. Proposed Action with unique marker: __ESCALATE_TO_VP__ or __ESCALATE_TO_CTO__ or __KEEP_AT_TEAM_LEVEL__
         2. Reasoning: Clear explanation of your recommendation
 
         Format your response as:
-        Proposed Action: __[ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE]__
+        Proposed Action: __[ESCALATE_TO_VP/ESCALATE_TO_CTO/KEEP_AT_TEAM_LEVEL]__
         Reasoning: [Your detailed explanation]
 
-        CRITICAL: Use double underscores around the action (e.g., __CLOSE__ not CLOSE)
+        CRITICAL: Use double underscores around the action (e.g., __ESCALATE_TO_VP__ not ESCALATE_TO_VP)
         """)
     @UserMessage("""
         Create an escalation proposal for this incident:
-        - System: {incidentSystem}
-        - Service: {incidentService}
-        - Priority: {incidentPriority}
+        - System: {incidentInfo.system}
+        - Service: {incidentInfo.service}
+        - Priority: P{incidentInfo.priority}
         - Incident Number: {incidentNumber}
-        - Current Description: {incidentDescription}
+        - Current Description: {incidentInfo.description}
         - Estimated Revenue Impact: {businessImpact}
         - Incident Report: {report}
 
         Provide your escalation proposal with clear reasoning.
         """)
-    @Agent(outputKey = "escalationProposal", description = "Creates escalation proposals for incidents requiring escalation")
+    @Agent(outputKey = "escalationProposal", description = "Creates escalation proposals for critical incidents requiring management attention")
     String createEscalationProposal(
-            String incidentSystem,
-            String incidentService,
-            String incidentPriority,
+            IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String incidentDescription,
             String businessImpact,
             String report);
 }
