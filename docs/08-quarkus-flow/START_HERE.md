@@ -18,9 +18,12 @@
 
 ## Why programmatic orchestration?
 
-In Exercises 1–4 you used **declarative annotations** — `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` — to wire agents. These are powerful but have a limitation: **they can't loop.** A `@SequenceAgent` runs its sub-agents once and stops. A `@SupervisorAgent` routes to sub-agents via LLM reasoning, but there's no deterministic "retry until quality passes."
+In Exercises 1–4 you used **declarative annotations** — `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` — to wire agents. These are powerful but have a hard limitation:
 
-This exercise introduces **programmatic orchestration** using LangChain4j's builder API backed by [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/index.html){:target="_blank"} — a CNCF Serverless Workflow engine. The builder pattern lets you express loops, conditions, and exit criteria in plain Java:
+!!! failure "Declarative annotations can't loop"
+    A `@SequenceAgent` runs its sub-agents **once** and stops. A `@SupervisorAgent` routes via LLM reasoning, but there's no deterministic **"retry until quality passes."**
+
+This exercise introduces **programmatic orchestration** using LangChain4j's builder API backed by [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/index.html){:target="_blank"} — a CNCF Serverless Workflow engine. The builder pattern lets you express **loops, conditions, and exit criteria** in plain Java:
 
 ```java
 AgenticServices.loopBuilder()
