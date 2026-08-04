@@ -18,7 +18,7 @@ In Exercise 4, every agent ran inside a single process — same JVM, same releas
 **Solution:** convert `ImpactAgent` into a **remote agent** using the A2A (Agent-to-Agent) protocol — the local interface stays the same, but execution happens in a separate process.
 
 !!! info "Why run + read instead of code-along?"
-    A2A requires **two separate Quarkus projects** — a remote agent server (`:8888`) and a client that discovers it via `/.well-known/agent.json`. Setting up cross-project dependencies, A2A agent cards, and the client-side `@A2AClientAgent` wiring in a 10-minute timebox would be mostly configuration, not learning. Running the working solution lets you focus on **how A2A works** — AgentCard discovery, task delegation, and the network boundary — rather than debugging multi-module Maven setup.
+    A2A requires **two separate Quarkus projects** — a remote agent server (`:8888`) and a client that discovers it via `/.well-known/agent-card.json`. Setting up cross-project dependencies, A2A agent cards, and the client-side `@A2AClientAgent` wiring in a 10-minute timebox would be mostly configuration, not learning. Running the working solution lets you focus on **how A2A works** — AgentCard discovery, task delegation, and the network boundary — rather than debugging multi-module Maven setup.
 
 ---
 
@@ -45,16 +45,16 @@ Stop any running Quarkus process first (`Ctrl+C`).
 
 Verify the AgentCard:
 ```bash
-curl http://localhost:8888/.well-known/agent.json
+curl http://localhost:8888/.well-known/agent-card.json
 ```
 
-Expected:
+Expected (key fields):
 ```json
 {
   "name": "impact-agent",
   "description": "Estimates business impact and SLA cost for incident escalation decisions",
-  "url": "http://localhost:8888/a2a",
-  "capabilities": ["impact-assessment", "sla-analysis"]
+  "url": "http://localhost:8888/",
+  "skills": [{"id": "impact-assessment", ...}]
 }
 ```
 
