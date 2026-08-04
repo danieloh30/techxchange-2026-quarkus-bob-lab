@@ -69,6 +69,9 @@ flowchart TD
 
 Stop any running Quarkus process (`Ctrl+C`), then:
 
+!!! warning "Different `lab/` folder"
+    This exercise uses `exercises/08-quarkus-flow/lab/` — **not** the root-level `lab/` folder from Exercises 1–4. Make sure you `cd` to the correct location.
+
 ```bash
 cd exercises/08-quarkus-flow/lab
 export OPENAI_API_KEY=sk-your-key-here
