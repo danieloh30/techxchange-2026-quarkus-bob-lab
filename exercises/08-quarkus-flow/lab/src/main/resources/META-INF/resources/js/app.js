@@ -202,22 +202,7 @@ function openDetailPanel(incidentId) {
 
     const statusClass = getStatusClass(incident.status);
     const priorityLabel = 'P' + incident.priority;
-    const canProcess = ['OPEN', 'TRIAGING', 'IN_PROGRESS'].includes(incident.status);
-
     let formHtml = '';
-    if (canProcess) {
-        formHtml = `
-            <div class="detail-divider"></div>
-            <div class="detail-form-title">Process Incident</div>
-            <textarea id="detail-report" class="detail-textarea" placeholder="Enter incident report details..."></textarea>
-            <button class="btn-process" id="detail-process-btn" onclick="processFromPanel(${incident.id}, '${incident.status}')">Process Incident</button>
-        `;
-    } else {
-        formHtml = `
-            <div class="detail-divider"></div>
-            <div class="detail-resolved-msg">This incident has been ${incident.status === 'RESOLVED' ? 'resolved' : 'escalated'}.</div>
-        `;
-    }
 
     body.innerHTML = `
         <div class="detail-field">
@@ -254,35 +239,6 @@ function closeDetailPanel() {
     populateIncidentTable();
 }
 
-function processFromPanel(incidentId, status) {
-    const report = document.getElementById('detail-report').value;
-    const button = document.getElementById('detail-process-btn');
-
-    button.disabled = true;
-    button.classList.add('loading');
-    button.textContent = 'Processing...';
-
-    const statusLabels = { 'OPEN': 'open incident', 'TRIAGING': 'triage', 'IN_PROGRESS': 'investigation' };
-
-    fetch(`/incident-management/process/${incidentId}?report=${encodeURIComponent(report)}`, { method: 'POST' })
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.text();
-        })
-        .then(() => {
-            lastUpdatedIncidentId = incidentId;
-            showToast(`Incident successfully processed from ${statusLabels[status]}`);
-            closeDetailPanel();
-            loadAllIncidents();
-        })
-        .catch(error => {
-            console.error(`Error processing incident from ${statusLabels[status]}:`, error);
-            showToast(`Failed to process ${statusLabels[status]}. Please try again.`, 'error');
-            button.disabled = false;
-            button.classList.remove('loading');
-            button.textContent = 'Process Incident';
-        });
-}
 
 function getStatusClass(status) {
     switch (status) {

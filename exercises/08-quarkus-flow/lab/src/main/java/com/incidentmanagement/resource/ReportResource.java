@@ -32,7 +32,7 @@ public class ReportResource {
                     .build();
         }
 
-        Log.infof("Starting report quality loop for incident #%d (%s/%s P%d)",
+        Log.infof("Starting report quality loop for incident #%d (%s/%s %s)",
                 incidentId, incident.system, incident.service, incident.priority);
 
         try {
