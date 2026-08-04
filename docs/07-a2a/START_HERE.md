@@ -74,7 +74,7 @@ Expected:
 ```
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080). Notice `ImpactAgent` now shows as **A2AClientAgent** (green badge) instead of a local `Agent` — the framework transparently proxies calls to the remote service.
+    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080). Notice `ImpactAgent` now shows as **A2AClientAgent** (red badge) instead of a local `Agent` — the framework transparently proxies calls to the remote service.
 
     ![ImpactAgent shown as A2AClientAgent in Dev UI](../images/ImpactAgent.png)
 
