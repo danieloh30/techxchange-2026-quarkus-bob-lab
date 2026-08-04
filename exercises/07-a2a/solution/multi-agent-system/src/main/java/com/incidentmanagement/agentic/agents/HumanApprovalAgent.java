@@ -1,8 +1,8 @@
 package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.ApprovalProposal;
+import com.incidentmanagement.model.IncidentInfo;
 import com.incidentmanagement.service.ApprovalService;
-import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.agentic.declarative.HumanInTheLoop;
 import io.quarkus.arc.Arc;
 import io.quarkus.logging.Log;
@@ -13,22 +13,21 @@ import java.util.concurrent.TimeoutException;
 
 public interface HumanApprovalAgent {
 
-    @Agent(outputKey = "approvalDecision", description = "Coordinates human approval for high-impact incident escalations using the requestHumanApproval tool")
-    @HumanInTheLoop(outputKey = "approvalDecision", description = "Coordinates human approval for high-impact incident escalations using the requestHumanApproval tool")
+    @HumanInTheLoop(outputKey = "approvalDecision", description = "Coordinates human approval for critical incident escalations")
     static String reviewEscalationProposal(
-            String incidentSystem,
-            String incidentService,
-            String incidentPriority,
+            IncidentInfo incidentInfo,
             Integer incidentNumber,
             String businessImpact,
             String escalationProposal,
-            String escalationReason,
-            String incidentDescription,
             String report
     ) {
+        if (escalationProposal != null && escalationProposal.contains("KEEP_AT_TEAM_LEVEL")) {
+            Log.infof("HITL: Skipping approval gate for incident %d — proposal is KEEP_AT_TEAM_LEVEL", incidentNumber);
+            return "Human Decision: SKIPPED — No escalation proposed";
+        }
 
-        Log.infof("HITL Tool: Creating approval proposal for incident %d - %s / %s [%s]",
-                incidentNumber, incidentSystem, incidentService, incidentPriority);
+        Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [P%d]",
+                incidentNumber, incidentInfo.system, incidentInfo.service, incidentInfo.priority);
         Log.info("WORKFLOW PAUSED - Waiting for human approval decision via UI");
 
         ApprovalService approvalService = Arc.container().instance(ApprovalService.class).get();
@@ -36,8 +35,9 @@ public interface HumanApprovalAgent {
         try {
             CompletableFuture<ApprovalProposal> approvalFuture =
                     approvalService.createProposalAndWaitForDecision(
-                            incidentNumber, incidentSystem, incidentService, incidentPriority, businessImpact,
-                            escalationProposal, escalationReason, incidentDescription, report
+                            incidentNumber, incidentInfo.system, incidentInfo.service,
+                            "P" + incidentInfo.priority, businessImpact,
+                            escalationProposal, null, incidentInfo.description, report
                     );
 
             ApprovalProposal result = approvalFuture.get(5, TimeUnit.MINUTES);
