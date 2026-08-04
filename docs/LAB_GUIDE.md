@@ -464,7 +464,7 @@ flowchart TD
 
 ## Exercise 7 — Remote Agents (A2A) (~10 min)
 
-**Story:** Riley's SRE team must own business impact assessment as an independent service. It needs a separate release cycle, independent scalability, and the ability to be reused by other systems. Solution: convert `ImpactAgent` into a **remote agent** using the A2A protocol.
+**Story:** Riley's SRE team must own business impact assessment as an independent service. It needs a separate release cycle, independent scalability, and the ability to be reused by other systems. **Solution:** convert `ImpactAgent` into a **remote agent** using the A2A protocol.
 
 **Goals**
 
