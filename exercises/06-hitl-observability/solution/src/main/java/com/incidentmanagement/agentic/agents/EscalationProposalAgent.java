@@ -18,10 +18,11 @@ public interface EscalationProposalAgent {
         - KEEP_AT_TEAM_LEVEL: Incident can be handled by the current team
 
         Decision Criteria:
-        - If P1 on revenue-critical system with high revenue impact: ESCALATE_TO_VP
+        - If revenue-critical system (payment, checkout, billing) with estimated revenue impact > $10,000: ESCALATE_TO_VP
+        - If P1 on any system with high revenue impact: ESCALATE_TO_VP
         - If incident involves security breach, data loss, or infrastructure failure: ESCALATE_TO_CTO
-        - If P2 with moderate impact that team can handle: KEEP_AT_TEAM_LEVEL
-        - If impact is contained and manageable: KEEP_AT_TEAM_LEVEL
+        - If P3/P4 with low impact on non-critical system: KEEP_AT_TEAM_LEVEL
+        - When in doubt for P1/P2 on critical systems, prefer ESCALATE over KEEP_AT_TEAM_LEVEL
 
         Your response must include:
         1. Proposed Action with unique marker: __ESCALATE_TO_VP__ or __ESCALATE_TO_CTO__ or __KEEP_AT_TEAM_LEVEL__
