@@ -31,7 +31,7 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 | Ex 5 | [`05-ibm-bob/solution`](05-ibm-bob/solution) | MCP client with `@McpToolBox` — Bob validates `lab/AGENTS.md` |
 | Ex 6 | [`06-hitl-observability/solution`](06-hitl-observability/solution) | `@HumanInTheLoop` + OTel |
 | Ex 7 | [`07-a2a/solution`](07-a2a/solution) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
-| Ex 8 (bonus) | [`08-quarkus-flow/solution`](08-quarkus-flow/solution) | Programmatic loop with `AgenticServices.loopBuilder()` + Quarkus Flow |
+| Ex 8 (bonus) | [`08-quarkus-flow/lab`](08-quarkus-flow/lab) | Programmatic loop with `AgenticServices.loopBuilder()` + Quarkus Flow |
 
 ### Additional reference projects
 
