@@ -258,7 +258,7 @@ Try several incidents to see how the loop adapts — P1 incidents with more comp
 | **Data flow** | Automatic via `AgenticScope` keys | Explicit `scope.readState/writeState` |
 | **Orchestration** | `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` | `sequenceBuilder()`, `parallelBuilder()`, `loopBuilder()` |
 | **Best for** | Standard agent pipelines | Complex control flow, retry logic |
-| **Dev UI** | Full topology visualization | Workflow visible in Quarkus Flow Dev UI |
+| **Observability** | Full topology in Dev UI | Loop progress visible in terminal logs |
 
 !!! tip "Start declarative, go programmatic when you need loops or complex branching"
     Annotations handle 80% of use cases. Switch to builders when you need deterministic loops, multi-branch conditionals, or mixed orchestration (agents + HTTP calls + events in one workflow).
