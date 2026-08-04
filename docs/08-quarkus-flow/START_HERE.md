@@ -230,7 +230,7 @@ Compare this with `@SequenceAgent` from Exercise 4 — that runs its sub-agents 
 
 ## Step 3 — Test it (3 min)
 
-Hot reload should have picked up your changes. Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — click any incident in the dashboard, then click **Generate Report**.
+Hot reload should have picked up your changes. Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — click a **Resolved** or **Escalated** incident (e.g., #1 or #2), then click **Generate Report**.
 
 The button triggers the quality loop. While it runs, **watch the terminal logs** — you should see the loop in action:
 
