@@ -45,16 +45,31 @@ Stop any running Quarkus process first (`Ctrl+C`).
 
 Verify the AgentCard:
 ```bash
-curl http://localhost:8888/.well-known/agent-card.json
+curl -s http://localhost:8888/.well-known/agent-card.json | jq
 ```
 
-Expected (key fields):
+Expected:
 ```json
 {
   "name": "impact-agent",
   "description": "Estimates business impact and SLA cost for incident escalation decisions",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false
+  },
+  "defaultInputModes": ["text"],
+  "defaultOutputModes": ["text"],
+  "skills": [
+    {
+      "id": "impact-assessment",
+      "name": "Business impact assessment",
+      "description": "Estimates business impact and SLA cost for incident escalation decisions",
+      "tags": ["impact-assessment", "sla-analysis"]
+    }
+  ],
   "url": "http://localhost:8888/",
-  "skills": [{"id": "impact-assessment", ...}]
+  "preferredTransport": "JSONRPC"
 }
 ```
 
