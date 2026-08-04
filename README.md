@@ -36,6 +36,16 @@ cd lab
 
 Open http://localhost:8080
 
+## Reset labs
+
+To revert all working code back to the original TODO stubs:
+
+```bash
+./reset-labs.sh          # Reset both lab/ (Ex 1-4) and Exercise 08
+./reset-labs.sh lab      # Reset root lab only (Exercises 1-4)
+./reset-labs.sh ex08     # Reset Exercise 08 lab only
+```
+
 ## Prerequisites
 
 - **Java 25+**
