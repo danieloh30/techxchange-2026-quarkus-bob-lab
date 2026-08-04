@@ -223,10 +223,12 @@ function openDetailPanel(incidentId) {
             <div class="detail-label">Description</div>
             <div class="detail-value">${incident.description || 'N/A'}</div>
         </div>
+        ${['RESOLVED', 'ESCALATED'].includes(incident.status) ? `
         <div class="detail-divider"></div>
         <div class="detail-form-title">Generate Post-Incident Report</div>
         <button class="btn-process" id="detail-report-btn" onclick="generateReport(${incident.id})">Generate Report</button>
         <div id="report-result" style="display:none; margin-top:1rem;"></div>
+        ` : ''}
     `;
 
     document.getElementById('detail-panel').classList.add('open');
