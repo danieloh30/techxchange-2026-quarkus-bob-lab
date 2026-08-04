@@ -202,8 +202,6 @@ function openDetailPanel(incidentId) {
 
     const statusClass = getStatusClass(incident.status);
     const priorityLabel = 'P' + incident.priority;
-    let formHtml = '';
-
     body.innerHTML = `
         <div class="detail-field">
             <div class="detail-label">Status</div>
@@ -225,11 +223,56 @@ function openDetailPanel(incidentId) {
             <div class="detail-label">Description</div>
             <div class="detail-value">${incident.description || 'N/A'}</div>
         </div>
-        ${formHtml}
+        <div class="detail-divider"></div>
+        <div class="detail-form-title">Generate Post-Incident Report</div>
+        <button class="btn-process" id="detail-report-btn" onclick="generateReport(${incident.id})">Generate Report</button>
+        <div id="report-result" style="display:none; margin-top:1rem;"></div>
     `;
 
     document.getElementById('detail-panel').classList.add('open');
     document.getElementById('detail-overlay').classList.add('open');
+}
+
+function generateReport(incidentId) {
+    const button = document.getElementById('detail-report-btn');
+    const resultDiv = document.getElementById('report-result');
+
+    button.disabled = true;
+    button.classList.add('loading');
+    button.textContent = 'Generating...';
+    resultDiv.style.display = 'none';
+
+    fetch(`/incident-report/${incidentId}`, { method: 'POST' })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            const score = data.score || 'N/A';
+            const iteration = data.iteration || 'N/A';
+            const report = data.report || 'No report generated';
+            resultDiv.innerHTML = `
+                <div style="padding:0.75rem;background:var(--bg-secondary);border-radius:8px;border:1px solid var(--border-color);">
+                    <div style="display:flex;gap:1rem;margin-bottom:0.75rem;">
+                        <span class="priority-badge priority-1">Score: ${score}</span>
+                        <span class="priority-badge priority-3">Iterations: ${iteration}</span>
+                    </div>
+                    <div style="font-size:0.85rem;white-space:pre-wrap;max-height:300px;overflow-y:auto;">${report}</div>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+            showToast(`Report generated — score: ${score}, iterations: ${iteration}`);
+            button.disabled = false;
+            button.classList.remove('loading');
+            button.textContent = 'Generate Report';
+        })
+        .catch(error => {
+            console.error('Error generating report:', error);
+            showToast('Failed to generate report. Check terminal logs.', 'error');
+            button.disabled = false;
+            button.classList.remove('loading');
+            button.textContent = 'Generate Report';
+        });
 }
 
 function closeDetailPanel() {
