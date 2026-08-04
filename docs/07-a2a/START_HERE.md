@@ -74,9 +74,13 @@ Expected:
 ```
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080) and check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the final evolution of the agent tree. Compare it to Exercise 4: `ImpactAgent` is now backed by `@A2AClientAgent` instead of a local `@Agent`.
+    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080). Notice `ImpactAgent` now shows as **A2AClientAgent** (green badge) instead of a local `Agent` — the framework transparently proxies calls to the remote service.
 
-    Note: the topology doesn't visually distinguish A2A agents from local ones yet. The definitive proof is in the **logs** — look for `sending task to http://localhost:8888` in Terminal 2 and `received task` in Terminal 1 when you process an incident in the "Try it" section below.
+    ![ImpactAgent shown as A2AClientAgent in Dev UI](../images/ImpactAgent.png)
+
+    Check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the final evolution of the agent tree. Compare it to Exercise 4: `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
+
+    ![Full agent topology with ImpactAgent as A2A remote node](../images/ImpactAgent_Topology.png)
 
 ---
 
