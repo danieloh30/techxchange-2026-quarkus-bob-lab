@@ -40,6 +40,9 @@ Stop any running Quarkus process first (`Ctrl+C`).
     ./mvnw quarkus:dev   # port :8080
     ```
 
+!!! warning "Start order matters"
+    Wait until Terminal 1 shows `Listening on: http://localhost:8888` before starting Terminal 2. The main system discovers the remote agent via its AgentCard at startup — if the remote agent isn't ready, the A2A call will fail.
+
 Verify the AgentCard:
 ```bash
 curl http://localhost:8888/.well-known/agent.json
