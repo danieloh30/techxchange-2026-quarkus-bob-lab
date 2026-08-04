@@ -173,7 +173,7 @@ function populateIncidentTable() {
         }
 
         const statusClass = getStatusClass(incident.status);
-        const priorityLabel = 'P' + incident.priority;
+        const priorityLabel = String(incident.priority).startsWith('P') ? incident.priority : 'P' + incident.priority;
 
         row.innerHTML = `
             <td><span style="color:var(--accent);font-weight:600">#${incident.id}</span></td>
@@ -201,7 +201,7 @@ function openDetailPanel(incidentId) {
     title.textContent = `Incident #${incident.id}`;
 
     const statusClass = getStatusClass(incident.status);
-    const priorityLabel = 'P' + incident.priority;
+    const priorityLabel = String(incident.priority).startsWith('P') ? incident.priority : 'P' + incident.priority;
     body.innerHTML = `
         <div class="detail-field">
             <div class="detail-label">Status</div>
@@ -250,14 +250,19 @@ function generateReport(incidentId) {
         .then(data => {
             const score = data.score || 'N/A';
             const iteration = data.iteration || 'N/A';
-            const report = data.report || 'No report generated';
+            const report = (data.report || 'No report generated')
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/^- (.+)$/gm, '&bull; $1')
+                .replace(/^\d+\.\s+(.+)$/gm, '&bull; $1')
+                .replace(/\n/g, '<br>');
             resultDiv.innerHTML = `
                 <div style="padding:0.75rem;background:var(--bg-secondary);border-radius:8px;border:1px solid var(--border-color);">
                     <div style="display:flex;gap:1rem;margin-bottom:0.75rem;">
                         <span class="priority-badge priority-1">Score: ${score}</span>
                         <span class="priority-badge priority-3">Iterations: ${iteration}</span>
                     </div>
-                    <div style="font-size:0.85rem;white-space:pre-wrap;max-height:300px;overflow-y:auto;">${report}</div>
+                    <div style="font-size:0.85rem;max-height:300px;overflow-y:auto;line-height:1.6;">${report}</div>
                 </div>
             `;
             resultDiv.style.display = 'block';
