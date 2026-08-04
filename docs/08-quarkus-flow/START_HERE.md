@@ -242,6 +242,8 @@ Report quality loop completed for incident #1 — final score: 8
 
 When the loop finishes, the dashboard shows the generated report with its **score** and **iteration count**.
 
+<img src="../images/generate_report.png" alt="Generate Report result in dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+
 !!! info "How many iterations?"
     The LLM often produces a good first draft (score >= 7), so the loop may exit after just 1 iteration. Try different incidents — some may need 2-3 rounds to reach the quality threshold.
 
