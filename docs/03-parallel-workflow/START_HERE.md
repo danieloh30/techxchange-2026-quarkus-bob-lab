@@ -163,7 +163,7 @@ The full workflow isn't wired in `lab/` yet (that happens in Exercise 4), so you
 Stop `lab/` first (`Ctrl+C`), then start the solution:
 
 ```bash
-cd solutions/03-parallel-workflow
+cd ../solutions/03-parallel-workflow
 ./mvnw quarkus:dev
 ```
 
@@ -197,7 +197,7 @@ False alarm, relevance restored after cache refresh
 Stop the solution (`Ctrl+C`) and restart `lab/`:
 
 ```bash
-cd ../../../lab
+cd ../../lab
 ./mvnw quarkus:dev
 ```
 
