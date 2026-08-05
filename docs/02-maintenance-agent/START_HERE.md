@@ -113,9 +113,6 @@ Quarkus hot-reloads in ~1 second. Open **[http://localhost:8080](http://localhos
 Alert threshold slightly too sensitive, causing a few extra notifications
 ```
 
-!!! tip "Incident status changed?"
-    If Incident #7 is no longer `OPEN`, press `s` in the Quarkus terminal to force a restart — the H2 dev database resets to seed data. Or use any other `OPEN` incident.
-
 **How to confirm:** Check the Quarkus terminal logs and the incident status in the UI.
 
 **Expected terminal logs (minor report):**
