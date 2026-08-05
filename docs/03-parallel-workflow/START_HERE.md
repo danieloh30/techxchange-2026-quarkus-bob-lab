@@ -66,7 +66,7 @@ Each parallel invocation of `IncidentAnalysisAgent` writes its result under `"in
 
 Open [`IncidentAnalysisAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/IncidentAnalysisAgent.java){:target="_blank"}.
 
-Replace the `// TODO` block with the following code **exactly**:
+The method signature is already declared. Add these annotations **above** it:
 
 ```java
 @SystemMessage("{task.systemInstructions}")
@@ -81,8 +81,6 @@ Replace the `// TODO` block with the following code **exactly**:
     """)
 @Agent(description = "Incident analyzer. Using report, determines if action is needed based on task type.",
        outputKey = "incidentAnalysis")
-String analyzeIncident(AnalysisTask task, IncidentInfo incidentInfo,
-                       Integer incidentNumber, String report);
 ```
 
 ??? info "Dynamic `@SystemMessage` — one interface, three roles"

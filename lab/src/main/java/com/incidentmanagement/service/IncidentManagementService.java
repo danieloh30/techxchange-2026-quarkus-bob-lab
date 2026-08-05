@@ -5,7 +5,9 @@ import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import com.incidentmanagement.agentic.agents.DiagnosticAgent;
 import com.incidentmanagement.agentic.agents.TriageAgent;
+import com.incidentmanagement.agentic.workflow.IncidentAnalysisWorkflow;
 import com.incidentmanagement.agentic.workflow.IncidentProcessingWorkflow;
 import com.incidentmanagement.model.IncidentOutcome;
 import com.incidentmanagement.model.IncidentInfo;
@@ -20,6 +22,12 @@ public class IncidentManagementService {
 
     @Inject
     Instance<IncidentProcessingWorkflow> incidentProcessingWorkflow;
+
+    @Inject
+    Instance<DiagnosticAgent> diagnosticAgent;
+
+    @Inject
+    Instance<IncidentAnalysisWorkflow> incidentAnalysisWorkflow;
 
     @Inject
     Instance<TriageAgent> triageAgent;

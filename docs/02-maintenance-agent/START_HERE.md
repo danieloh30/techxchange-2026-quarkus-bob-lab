@@ -24,7 +24,7 @@ This is the key insight: **changing a prompt changes the policy**. No redeploy, 
 
 Open [`DiagnosticAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java){:target="_blank"}.
 
-Replace the `// TODO` block with the following code **exactly**:
+The method signature is already declared. Add these annotations **above** it:
 
 ```java
 @SystemMessage("""
@@ -58,9 +58,6 @@ Replace the `// TODO` block with the following code **exactly**:
     """)
 @Agent(description = "Incident diagnostic specialist. Using incident information and request, determines what diagnostic actions are needed.",
        outputKey = "analysisResult")
-String processDiagnostic(IncidentInfo incidentInfo,
-                          Integer incidentNumber,
-                          String diagnosticRequest);
 ```
 
 ??? info "Why no `@ToolBox` here?"
