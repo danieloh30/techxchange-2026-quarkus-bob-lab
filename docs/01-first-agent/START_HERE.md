@@ -160,10 +160,13 @@ Enter this report in the detail panel:
 Order confirmation emails failing for 30% of customers, bounce rate spiking
 ```
 
-**Expected terminal log:**
+**Expected terminal logs:**
 ```
+WARN  [de.la.ag.ag.AgentInvocationHandler] Improper invocation of a standalone agent outside of an agentic system, consider using AiServices instead.
 INFO  [co.in.ag.to.TriageTool]   └─ TriageTool activated for incident #5
 ```
+
+The warning is expected — `TriageAgent` has `@Agent` but isn't part of a workflow yet. Exercise 4 wires it into the full pipeline and the warning disappears.
 
 **Expected UI:** Incident #5 status → `TRIAGING`
 
@@ -175,7 +178,7 @@ Now process Incident **#6** (search-engine/product-search, status: `OPEN`) with:
 False alarm, search relevance is back to normal after cache refresh
 ```
 
-**Expected:** Response contains `TRIAGE_NOT_REQUIRED`; status stays `RESOLVED`; **no** tool call in logs.
+**Expected:** Terminal logs show `TRIAGE_NOT_REQUIRED` in the LLM response; status changes to `RESOLVED`; **no** `TriageTool activated` in logs.
 
 ---
 
