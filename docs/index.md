@@ -60,5 +60,6 @@ Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the s
 | `lab/` | Your hands-on Quarkus project (stub files with `// TODO`) |
 | `AGENTS.md` | Project context file for IBM Bob — rules, agent inventory, and conventions loaded once to avoid repeated file scans |
 | `docs/` | These lab instructions (this site) |
-| `exercises/` | Completed Quarkus solution projects |
+| `exercises/*/solution/` | Reference solutions for each exercise — copy files from here if you get stuck |
+| `exercises/08-quarkus-flow/lab/` | Separate starter project for the bonus exercise (not the root `lab/`) |
 
