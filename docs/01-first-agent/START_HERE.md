@@ -41,7 +41,7 @@ Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}** — yo
 
 Open [`TriageAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/agents/TriageAgent.java){:target="_blank"}.
 
-Replace the `// TODO` block with the following code **exactly**:
+The method signature is already declared. Add these annotations **above** it:
 
 ```java
 @SystemMessage("""
@@ -63,7 +63,6 @@ Replace the `// TODO` block with the following code **exactly**:
 @Agent(description = "Triage specialist. Determines initial triage and team assignment.",
        outputKey = "analysisResult")
 @ToolBox(TriageTool.class)
-String processTriage(IncidentInfo incidentInfo, Integer incidentNumber, String report);
 ```
 
 ??? info "Why `outputKey = \"analysisResult\"`?"

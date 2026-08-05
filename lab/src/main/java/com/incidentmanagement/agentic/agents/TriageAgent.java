@@ -10,6 +10,7 @@ import dev.langchain4j.service.UserMessage;
 
 public interface TriageAgent {
 
-    // TODO Exercise 1 — Step 1: See docs/01-first-agent/START_HERE.md
+    // TODO Exercise 1 — Step 1: Add @SystemMessage, @UserMessage, @Agent, and @ToolBox annotations — See docs/01-first-agent/START_HERE.md
+    String processTriage(IncidentInfo incidentInfo, Integer incidentNumber, String report);
 
 }

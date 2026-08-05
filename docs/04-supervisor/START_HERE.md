@@ -302,7 +302,17 @@ static String request(IncidentInfo incidentInfo, Integer incidentNumber,
 
 Open [`IncidentProcessingWorkflow.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java){:target="_blank"}.
 
-Notice the interface already `extends MonitoredAgent` — this is what enables the **topology view** in the Dev UI. The framework registers any `MonitoredAgent` workflow as a root agent, allowing it to visualize the full agent tree.
+First, add `extends MonitoredAgent` to the interface declaration — this enables the **topology view** in the Dev UI. The framework registers any `MonitoredAgent` workflow as a root agent, allowing it to visualize the full agent tree:
+
+```java
+public interface IncidentProcessingWorkflow extends MonitoredAgent {
+```
+
+Add the import:
+
+```java
+import dev.langchain4j.agentic.observability.MonitoredAgent;
+```
 
 The method signature is already declared. Add the `@SequenceAgent` annotation above it:
 
