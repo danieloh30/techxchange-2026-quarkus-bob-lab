@@ -8,6 +8,8 @@ import dev.langchain4j.service.UserMessage;
 
 public interface IncidentAnalysisAgent {
 
-    // TODO Exercise 3 — Step 1: See docs/03-parallel-workflow/START_HERE.md
+    // TODO Exercise 3 — Step 1: Add @SystemMessage, @UserMessage, and @Agent annotations — See docs/03-parallel-workflow/START_HERE.md
+    String analyzeIncident(AnalysisTask task, IncidentInfo incidentInfo,
+                           Integer incidentNumber, String report);
 
 }
