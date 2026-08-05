@@ -1,12 +1,12 @@
 ![Lab cover](docs/images/cover_page.png)
 
-# LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
+# LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Enterprise Build of Quarkus and Bob
 
 **IBM TechXchange 2026 · Hands-On Lab**  
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)  
 **Lab site:** https://danieloh30.github.io/techxchange-2026-quarkus-bob-lab/
 
-Build a multi-agent incident management system with **Quarkus**, **Quarkus LangChain4j**, and **IBM Bob** — covering workflow patterns, supervisor orchestration, human-in-the-loop, observability, and A2A.
+Build a multi-agent incident management system with **IBM Enterprise Build of Quarkus**, **Quarkus LangChain4j**, and **IBM Bob** — covering workflow patterns, supervisor orchestration, human-in-the-loop, observability, and A2A.
 
 ## Repository layout
 
@@ -50,7 +50,7 @@ To revert all working code back to the original TODO stubs:
 
 - **Java 25+**
 - Maven 3.9+ (or use `./mvnw` in each exercise)
-- Quarkus **3.38.0** — kept current via Dependabot
+- IBM Enterprise Build of Quarkus — kept current via Dependabot
 - IBM Bob ([bob.ibm.com](https://bob.ibm.com/))
 - LLM API key (provided in the room)
 - Free ports **8080**, **8888**

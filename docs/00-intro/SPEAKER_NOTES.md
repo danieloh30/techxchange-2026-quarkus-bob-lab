@@ -30,7 +30,7 @@ Apex Systems needs systems that **reason** over messy natural-language incident 
 
 ## What you will build
 
-A production-shaped **agentic incident management platform** on Quarkus — from a single agent to a full supervisor orchestration with human oversight and distributed services.
+A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus — from a single agent to a full supervisor orchestration with human oversight and distributed services.
 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
@@ -103,8 +103,8 @@ Each exercise adds a new capability, guided by a persona facing a real IT operat
 
 | Layer | Component | Role |
 |-------|-----------|------|
-| Runtime | Quarkus 3.38.0 | Build-time agent validation, fast startup |
-| AI extension | Quarkus LangChain4j 1.12.0 | Declarative agents, workflows, A2A |
+| Runtime | IBM Enterprise Build of Quarkus | Build-time agent validation, fast startup |
+| AI extension | Quarkus LangChain4j | Declarative agents, workflows, A2A |
 | Dev tooling | IBM Bob | SDLC partner: plan → code → test → secure |
 | Context efficiency | `AGENTS.md` | Targeted Bob context — avoids token-bloat scans |
 

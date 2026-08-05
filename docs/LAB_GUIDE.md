@@ -3,7 +3,7 @@
 **IBM TechXchange 2026 · Hands-On Lab**  
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)  
 **Level:** Intermediate Java developer  
-**Stack:** Quarkus · Quarkus LangChain4j · IBM Bob · A2A
+**Stack:** IBM Enterprise Build of Quarkus · Quarkus LangChain4j · IBM Bob · A2A
 
 ---
 
@@ -37,7 +37,7 @@ Before the lab starts, confirm:
 |-------------|-------|
 | **Java 25+** (`java -version`) | ✓ |
 | **Maven 3.9+** (or use included `./mvnw`) | ✓ |
-| **Quarkus** / Quarkus **3.38.0** | ✓ |
+| **IBM Enterprise Build of Quarkus** | ✓ |
 | **IBM Bob** installed and signed in ([bob.ibm.com](https://bob.ibm.com/){:target="_blank"}) | ✓ |
 | LLM API key — instructors provide `OPENAI_API_KEY` or lab endpoint | ✓ |
 | Ports **8080**, **8888** free | ✓ |
@@ -177,8 +177,8 @@ flowchart TD
 
 | Layer | IBM component | Role |
 |-------|--------------|------|
-| Runtime | Quarkus 3.38.0 | Build-time agent validation, fast startup |
-| AI extension | Quarkus LangChain4j 1.12.0 | Declarative agents, workflows, A2A |
+| Runtime | IBM Enterprise Build of Quarkus | Build-time agent validation, fast startup |
+| AI extension | Quarkus LangChain4j | Declarative agents, workflows, A2A |
 | Dev tooling | IBM Bob | SDLC partner: plan → code → test → secure |
 | Context efficiency | `AGENTS.md` (project root) | Targeted Bob context — avoids token-bloat scans |
 
@@ -542,7 +542,7 @@ flowchart LR
 
 ## What you built
 
-A production-shaped **agentic incident management platform** on Quarkus:
+A production-shaped **agentic incident management platform** on IBM Enterprise Build of Quarkus:
 
 | # | Pattern | IBM tech | Business value |
 |---|---------|----------|----------------|
@@ -635,7 +635,7 @@ Your answer directly shapes next year's lab content.
 
 **Abstract:**
 
-Enterprise AI is moving beyond chatbots. In this 90-minute hands-on lab, you will build a production-shaped agentic incident management system using the **Quarkus** and **Quarkus LangChain4j**, then use **IBM Bob** to govern and document that system.
+Enterprise AI is moving beyond chatbots. In this 90-minute hands-on lab, you will build a production-shaped agentic incident management system using **IBM Enterprise Build of Quarkus** and **Quarkus LangChain4j**, then use **IBM Bob** to govern and document that system.
 
 You will implement the core agentic workflow patterns (sequence, parallel, supervisor), decompose a monolithic agent into an independently owned service via **A2A**, and add human-in-the-loop gates with **OpenTelemetry** tracing for compliance and FinOps visibility.
 

@@ -25,6 +25,6 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 ## Versions
 
 All projects target:
-- **Java 25** (`maven.compiler.release`)
-- **Quarkus** `3.38.0` (`quarkus.platform.version`)
-- **Quarkus LangChain4j** `1.12.2` (`quarkus-langchain4j.version`)
+- **Java 25+** (`maven.compiler.release`)
+- **IBM Enterprise Build of Quarkus** (`quarkus.platform.version` — kept current via Dependabot)
+- **Quarkus LangChain4j** (`quarkus-langchain4j.version`)
