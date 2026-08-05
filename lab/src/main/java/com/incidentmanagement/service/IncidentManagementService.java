@@ -1,6 +1,7 @@
 package com.incidentmanagement.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class IncidentManagementService {
 
     @Inject
-    IncidentProcessingWorkflow incidentProcessingWorkflow;
+    Instance<IncidentProcessingWorkflow> incidentProcessingWorkflow;
 
     @Transactional
     public String processIncident(Integer incidentNumber, String report) {
@@ -32,7 +33,11 @@ public class IncidentManagementService {
                 AnalysisTask.resolution()
         );
 
-        IncidentOutcome incidentOutcome = incidentProcessingWorkflow.processIncident(
+        if (!incidentProcessingWorkflow.isResolvable()) {
+            return "Workflow not available yet — complete Exercise 4 first.";
+        }
+
+        IncidentOutcome incidentOutcome = incidentProcessingWorkflow.get().processIncident(
                 tasks,
                 incidentInfo,
                 incidentNumber,
