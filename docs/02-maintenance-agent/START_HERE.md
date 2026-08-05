@@ -130,7 +130,7 @@ ResolutionAgent updating...
 
 The key line is `Action: MONITOR` or `RESOLVE` — the agents decided neither triage nor diagnostic escalation is needed for a minor alert sensitivity issue. Status stays `OPEN` or changes to `RESOLVED`. (LLM responses are non-deterministic — the exact action may vary between runs.)
 
-Now press `s` to restart (reset the database), and process the same Incident **#7** with a critical report:
+Now press `s` to restart (reset the database), then **reload the browser** to see incident #7 back to `OPEN`. Process it with a critical report:
 
 ```
 Complete monitoring blackout — zero alerts firing, all dashboards showing stale data, on-call has no visibility
