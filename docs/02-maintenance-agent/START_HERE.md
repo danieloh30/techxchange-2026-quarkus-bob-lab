@@ -128,7 +128,7 @@ ResolutionAgent updating...
   └─ Action: MONITOR → Adjust alert sensitivity settings to reduce false positives...
 ```
 
-The key line is `Action: MONITOR` — the agents decided neither triage nor diagnostic is needed for a minor alert sensitivity issue. Incident status stays `OPEN` in the UI.
+The key line is `Action: MONITOR` or `RESOLVE` — the agents decided neither triage nor diagnostic escalation is needed for a minor alert sensitivity issue. Status stays `OPEN` or changes to `RESOLVED`. (LLM responses are non-deterministic — the exact action may vary between runs.)
 
 Now press `s` to restart (reset the database), and process the same Incident **#7** with a critical report:
 
@@ -146,7 +146,7 @@ ResolutionAgent updating...
   └─ Action: INVESTIGATE → Initiate triage and diagnostics for alerting-api blackout...
 ```
 
-The key difference: `Action: INVESTIGATE` instead of `MONITOR`. The `DiagnosticFeedbackAgent` flagged this as needing root cause analysis. Incident status changes to `IN_PROGRESS` in the UI.
+The key difference: the action should be `INVESTIGATE` or `TRIAGE` — a more aggressive response than the minor report. The `DiagnosticFeedbackAgent` flagged this as needing root cause analysis. Incident status changes to `IN_PROGRESS` or `TRIAGING` in the UI.
 
 !!! warning "Key insight"
     You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
