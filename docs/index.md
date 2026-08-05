@@ -58,7 +58,7 @@ Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the s
 | Path | Purpose |
 |------|---------|
 | `lab/` | Your hands-on Quarkus project (stub files with `// TODO`) |
-| `AGENTS.md` | IBM Bob project context (token efficiency) |
+| `AGENTS.md` | Project context file for IBM Bob — rules, agent inventory, and conventions loaded once to avoid repeated file scans |
 | `docs/` | These lab instructions (this site) |
 | `exercises/` | Completed Quarkus solution projects |
 
