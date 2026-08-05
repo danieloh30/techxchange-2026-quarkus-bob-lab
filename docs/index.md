@@ -1,6 +1,6 @@
 <img src="images/cover_page.png" alt="Lab cover" style="width:100%;max-width:960px;display:block;margin:0 auto 1.5rem auto;">
 
-# LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Quarkus and Bob
+# LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Enterprise Build of Quarkus and Bob
 
 **IBM TechXchange 2026 · Hands-On Lab · 90 minutes**
 
@@ -12,7 +12,7 @@ Confirm these before the lab starts:
 |-------------|-------|
 | **Java 25+** | `java -version` |
 | Maven 3.9+ | or use `./mvnw` in each exercise |
-| Quarkus **3.38.0** (IBM Enterprise Build) | Java 25 target |
+| IBM Enterprise Build of Quarkus | `./mvnw quarkus:dev` |
 | [IBM Bob](https://bob.ibm.com/){:target="_blank"} | Sign in before the lab starts |
 | LLM API key | Provided in the room (`OPENAI_API_KEY`) |
 | Free ports **8080**, **8888** | One process per exercise set |

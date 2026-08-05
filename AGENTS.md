@@ -17,8 +17,8 @@
 | Name | `techxchange-2026-quarkus-bob-lab` |
 | Company | Apex Systems (fictional IT services company) |
 | Lab event | IBM TechXchange 2026 — 90-minute hands-on lab |
-| Runtime | Quarkus 3.38.0 / Java 25 |
-| AI extension | `quarkus-langchain4j` 1.12.0 (`io.quarkiverse.langchain4j`) |
+| Runtime | IBM Enterprise Build of Quarkus / Java 25+ |
+| AI extension | `quarkus-langchain4j` (`io.quarkiverse.langchain4j`) |
 | LLM | OpenAI `gpt-4o` via `${OPENAI_API_KEY}`; temperature = 0 |
 | Build tool | Maven (wrapper `./mvnw`) |
 | Main package | `com.incidentmanagement` |
