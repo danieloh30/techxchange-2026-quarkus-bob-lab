@@ -160,19 +160,9 @@ Enter this report in the detail panel:
 Order confirmation emails failing for 30% of customers, bounce rate spiking
 ```
 
-**Expected terminal logs:**
-```json
-{
-    "role" : "assistant",
-    "tool_calls" : [ {
-      "id" : "call_...",
-      "type" : "function",
-      "function" : {
-        "name" : "requestTriage",
-        "arguments" : "{\"incidentNumber\":5,\"system\":\"email-service\",\"service\":\"notification-api\",\"priority\":2,\"assignOnCall\":true,\"notifyStakeholders\":true,\"createWarRoom\":true,\"linkRelatedIncidents\":true,\"triageNotes\":\"Order confirmation emails are failing for 30% of customers...\"}"
-      }
-    } ]
-}
+**Expected terminal log:**
+```
+INFO  [co.in.ag.to.TriageTool]   └─ TriageTool activated for incident #5
 ```
 
 **Expected UI:** Incident #5 status → `TRIAGING`
