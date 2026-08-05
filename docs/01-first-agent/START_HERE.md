@@ -178,7 +178,7 @@ Now process Incident **#6** (search-engine/product-search, status: `OPEN`) with:
 False alarm, search relevance is back to normal after cache refresh
 ```
 
-**Expected:** Terminal logs show `TRIAGE_NOT_REQUIRED` in the LLM response; status changes to `RESOLVED`; **no** `TriageTool activated` in logs.
+**Expected:** UI status changes to `RESOLVED`; **no** `TriageTool activated` in terminal logs — the LLM decided no action was needed.
 
 ---
 
