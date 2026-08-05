@@ -1,5 +1,6 @@
 package com.incidentmanagement.agentic.agents;
 
+import com.incidentmanagement.model.IncidentInfo;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;

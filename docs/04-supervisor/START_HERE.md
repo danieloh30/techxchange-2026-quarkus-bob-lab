@@ -109,14 +109,6 @@ Replace the `// TODO` block:
 String assessImpact(String system, String service, Integer priority, String incidentDescription);
 ```
 
-Add imports:
-
-```java
-import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
-```
-
 !!! note
     `{current_date}` is a built-in Quarkus LangChain4j template variable — it resolves to today's date automatically. This lets the agent compute SLA breach windows without hardcoding a date.
 
@@ -168,8 +160,6 @@ String processEscalation(String system, String service, Integer priority,
                           String businessImpact, String report);
 ```
 
-Add the same three imports as Step 1.
-
 !!! note
     The `{businessImpact}` placeholder means the supervisor passes the `ImpactAgent` output (e.g., `"Business Impact: HIGH\nRevenue Loss: $50,000/hr"`) directly into this `@UserMessage`. `AgenticScope` wires it — no Java code needed to thread values between agents.
 
@@ -216,14 +206,6 @@ Replace the `// TODO` block:
 IncidentOutcome analyzeForResolution(IncidentInfo incidentInfo, Integer incidentNumber,
                                       IncidentAnalysisResults incidentAnalysisResults,
                                       String supervisorDecision);
-```
-
-Add imports:
-
-```java
-import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
 ```
 
 ??? info "Why return `IncidentOutcome` instead of `String`?"
@@ -308,13 +290,6 @@ static String request(IncidentInfo incidentInfo, Integer incidentNumber,
 }
 ```
 
-Add imports:
-
-```java
-import dev.langchain4j.agentic.declarative.SupervisorAgent;
-import dev.langchain4j.agentic.declarative.SupervisorRequest;
-```
-
 ??? info "Why policy lives in `@SupervisorRequest`"
     The boolean `escalationRequired` is the only Java logic here — it checks whether the upstream `IncidentAnalysisWorkflow` flagged an escalation case. Everything else is natural-language instructions. To change the supervisor's behavior (add a new sub-agent, change escalation rules), you edit this string. No `if/else` chains, no enum routing tables.
 
@@ -349,14 +324,6 @@ static IncidentOutcome output(IncidentOutcome incidentOutcome) {
               + " → " + incidentOutcome.incidentAction());
     return incidentOutcome;
 }
-```
-
-Add imports:
-
-```java
-import dev.langchain4j.agentic.declarative.Output;
-import dev.langchain4j.agentic.declarative.SequenceAgent;
-import io.quarkus.logging.Log;
 ```
 
 Save. Quarkus hot-reloads.

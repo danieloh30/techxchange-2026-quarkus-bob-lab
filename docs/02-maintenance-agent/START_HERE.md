@@ -63,15 +63,6 @@ String processDiagnostic(IncidentInfo incidentInfo,
                           String diagnosticRequest);
 ```
 
-Add these imports at the top:
-
-```java
-import com.incidentmanagement.model.IncidentInfo;
-import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
-```
-
 ??? info "Why no `@ToolBox` here?"
     `DiagnosticAgent` returns a *plan* as text — it does not write to the database. The supervisor in Exercise 4 reads this text plan and decides whether to escalate. Text-only agents are faster and cheaper: no tool-call round-trips to the LLM.
 
