@@ -148,11 +148,14 @@ You'll use these incidents throughout the exercises — processing them with dif
 Keep this handy as you work through the exercises:
 
 ```
-Goal: step-by-step pipeline     → @SequenceAgent
-Goal: concurrent work           → @ParallelMapperAgent
-Goal: data-driven branching     → @ConditionalAgent
-Goal: refine until good enough  → @LoopAgent
-Goal: adaptive multi-agent      → @SupervisorAgent
-Goal: delegate to remote agent  → A2A + @A2AClientAgent
-Goal: human approval            → @HumanInTheLoop
+Goal: single specialist agent        → @Agent + @ToolBox                (Ex 1)
+Goal: policy as prompt               → @SystemMessage                  (Ex 2)
+Goal: step-by-step pipeline          → @SequenceAgent                  (Ex 2–4)
+Goal: concurrent work                → @ParallelMapperAgent            (Ex 3)
+Goal: data-driven branching          → @ConditionalAgent               (Ex 2)
+Goal: adaptive multi-agent           → @SupervisorAgent                (Ex 4)
+Goal: share tools across teams       → MCP + @McpToolBox               (Ex 5)
+Goal: human approval                 → @HumanInTheLoop                 (Ex 6)
+Goal: delegate to remote agent       → A2A + @A2AClientAgent           (Ex 7)
+Goal: programmatic quality loop      → AgenticServices.loopBuilder()   (Ex 8)
 ```
