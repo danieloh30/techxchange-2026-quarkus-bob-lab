@@ -329,17 +329,15 @@ Open [`IncidentProcessingWorkflow.java`](https://github.com/danieloh30/techxchan
 
 Notice the interface already `extends MonitoredAgent` — this is what enables the **topology view** in the Dev UI. The framework registers any `MonitoredAgent` workflow as a root agent, allowing it to visualize the full agent tree.
 
-Replace the `// TODO` block:
+The method signature is already declared. Add the `@SequenceAgent` annotation above it:
 
-**5a — `@SequenceAgent` method:**
+**5a — `@SequenceAgent` annotation:**
 
 ```java
 @SequenceAgent(outputKey = "incidentProcessingAgentResult",
         subAgents = { IncidentAnalysisWorkflow.class,
                       IncidentSupervisorAgent.class,
                       ResolutionAgent.class })
-IncidentOutcome processIncident(List<AnalysisTask> tasks, IncidentInfo incidentInfo,
-                                 Integer incidentNumber, String report);
 ```
 
 **5b — `@Output` static method:**

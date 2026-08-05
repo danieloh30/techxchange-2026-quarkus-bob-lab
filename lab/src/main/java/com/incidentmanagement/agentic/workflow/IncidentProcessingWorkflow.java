@@ -14,7 +14,9 @@ import java.util.List;
 
 public interface IncidentProcessingWorkflow extends MonitoredAgent {
 
-    // TODO Exercise 4 — Step 5a: @SequenceAgent method — See docs/04-supervisor/START_HERE.md
+    // TODO Exercise 4 — Step 5a: Add @SequenceAgent annotation — See docs/04-supervisor/START_HERE.md
+    IncidentOutcome processIncident(List<AnalysisTask> tasks, IncidentInfo incidentInfo,
+                                     Integer incidentNumber, String report);
 
     // TODO Exercise 4 — Step 5b: @Output static method — See docs/04-supervisor/START_HERE.md
 
