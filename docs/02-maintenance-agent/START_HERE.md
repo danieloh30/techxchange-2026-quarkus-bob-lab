@@ -93,10 +93,10 @@ cd solutions/02-maintenance-agent
 ./mvnw quarkus:dev
 ```
 
-Open `TriageAgent.java` in the solution project and find this line in the `@SystemMessage`:
+Open `TriageFeedbackAgent.java` in the solution project and find this line in the `@SystemMessage`:
 
 ```
-If no triage action is needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
+If no triage actions are needed based on the report, respond with "TRIAGE_NOT_REQUIRED".
 ```
 
 **Replace** that line with the strict version:
@@ -106,6 +106,9 @@ Only request triage for CRITICAL issues: complete service outages,
 data loss or corruption, security breaches, or cascading failures affecting multiple systems.
 For intermittent errors, slow responses, or single-user complaints, respond with "TRIAGE_NOT_REQUIRED".
 ```
+
+!!! info "Why `TriageFeedbackAgent` and not `TriageAgent`?"
+    `TriageFeedbackAgent` is the agent that *decides* whether triage is needed — its output (`triageRequest`) feeds into the `@Output` method that picks `MONITOR` vs `TRIAGE`. `TriageAgent` only *executes* triage actions after the decision is already made. Changing the wrong agent's prompt would have no visible effect.
 
 Quarkus hot-reloads in ~1 second. Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click **View** on Incident **#7** (monitoring/alerting-api), and process it with:
 
@@ -148,7 +151,7 @@ The key difference: the action should be `INVESTIGATE` or `TRIAGE` — a more ag
 !!! warning "Key insight"
     You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
 
-**Revert** the `@SystemMessage` back to the original (simpler) version before moving on.
+**Revert** `TriageFeedbackAgent.java`'s `@SystemMessage` back to the original (simpler) version before moving on.
 
 ---
 
