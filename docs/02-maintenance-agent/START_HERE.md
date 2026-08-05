@@ -89,7 +89,7 @@ The full workflow isn't wired in `lab/` yet (that happens in Exercise 4), so you
 Stop `lab/` first (`Ctrl+C`), then start the solution:
 
 ```bash
-cd solutions/02-maintenance-agent
+cd ../solutions/02-maintenance-agent
 ./mvnw quarkus:dev
 ```
 

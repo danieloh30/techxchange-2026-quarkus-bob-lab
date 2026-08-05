@@ -49,7 +49,7 @@ flowchart TD
 Stop your `lab/` Quarkus process first (`Ctrl+C`), then start the solution:
 
 ```bash
-cd solutions/06-hitl-observability
+cd ../solutions/06-hitl-observability
 ./mvnw quarkus:dev
 ```
 
