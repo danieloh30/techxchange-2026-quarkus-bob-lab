@@ -4,7 +4,7 @@
 
 **Timebox:** 15 minutes (self-paced)  
 **Persona:** Jordan — Java platform engineer  
-**You work in:** `exercises/08-quarkus-flow/lab/`  
+**You work in:** `solutions/08-quarkus-flow/lab/`  
 **Files to edit:**
 
 - `src/.../agentic/agents/ReportDrafterAgent.java`
@@ -12,7 +12,7 @@
 - `src/.../agentic/workflow/IncidentReportFlow.java`
 
 !!! tip "Full solution"
-    If stuck, the completed files are in [`exercises/08-quarkus-flow/solution/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/08-quarkus-flow/solution-complete){:target="_blank"} — copy them over your TODO files and restart.
+    If stuck, the completed files are in [`solutions/08-quarkus-flow/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/solutions/08-quarkus-flow){:target="_blank"} — copy them over your TODO files and restart.
 
 ---
 
@@ -70,10 +70,10 @@ flowchart TD
 Stop any running Quarkus process (`Ctrl+C`), then:
 
 !!! warning "Different `lab/` folder"
-    This exercise uses `exercises/08-quarkus-flow/lab/` — **not** the root-level `lab/` folder from Exercises 1–4. Make sure you `cd` to the correct location.
+    This exercise uses `solutions/08-quarkus-flow/lab/` — **not** the root-level `lab/` folder from Exercises 1–4. Make sure you `cd` to the correct location.
 
 ```bash
-cd exercises/08-quarkus-flow/lab
+cd solutions/08-quarkus-flow/lab
 export OPENAI_API_KEY=sk-your-key-here
 ./mvnw quarkus:dev
 ```

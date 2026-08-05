@@ -14,13 +14,13 @@ Build a multi-agent incident management system with **IBM Enterprise Build of Qu
 |------|---------|
 | [`lab/`](lab/) | Your hands-on Quarkus project (stub files with `// TODO`) |
 | [`docs/`](docs/) | All lab instructions (Markdown) and images |
-| [`exercises/`](exercises/) | Completed Quarkus solution projects for each exercise |
+| [`solutions/`](solutions/) | Reference solution projects for each exercise |
 
 Start here:
 
 1. **[docs/LAB_GUIDE.md](docs/LAB_GUIDE.md)** — full 90-minute guide (intro narrative + all exercises)
 2. **[docs/index.md](docs/index.md)** — lab landing page with exercise table
-3. **[exercises/README.md](exercises/README.md)** — exercise → solution mapping
+3. **[solutions/README.md](solutions/README.md)** — exercise → solution mapping
 
 ## Quick start
 

@@ -25,7 +25,7 @@ updates:
 
   # ── exercise 01 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/01-first-agent/solution
+    directory: /solutions/01-first-agent
     schedule:
       interval: daily
       time: "06:00"
@@ -47,7 +47,7 @@ updates:
 
   # ── exercise 02 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/02-maintenance-agent/solution
+    directory: /solutions/02-maintenance-agent
     schedule:
       interval: daily
       time: "06:00"
@@ -69,7 +69,7 @@ updates:
 
   # ── exercise 03 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/03-parallel-workflow/solution
+    directory: /solutions/03-parallel-workflow
     schedule:
       interval: daily
       time: "06:00"
@@ -91,7 +91,7 @@ updates:
 
   # ── exercise 04 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/04-supervisor/solution
+    directory: /solutions/04-supervisor
     schedule:
       interval: daily
       time: "06:00"
@@ -113,7 +113,7 @@ updates:
 
   # ── exercise 05 — MCP client ───────────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/05-ibm-bob/solution
+    directory: /solutions/05-ibm-bob
     schedule:
       interval: daily
       time: "06:00"
@@ -135,7 +135,7 @@ updates:
 
   # ── exercise 05 — weather MCP server ──────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/05-ibm-bob/weather-mcp-server
+    directory: /solutions/05-ibm-bob/weather-mcp-server
     schedule:
       interval: daily
       time: "06:00"
@@ -157,7 +157,7 @@ updates:
 
   # ── exercise 06 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/06-hitl-observability/solution
+    directory: /solutions/06-hitl-observability
     schedule:
       interval: daily
       time: "06:00"
@@ -179,7 +179,7 @@ updates:
 
   # ── exercise 06 — observability reference ─────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/06-hitl-observability/observability-reference
+    directory: /solutions/06-hitl-observability/observability-reference
     schedule:
       interval: daily
       time: "06:00"
@@ -201,7 +201,7 @@ updates:
 
   # ── exercise 07 — multi-agent system ──────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/07-a2a/solution/multi-agent-system
+    directory: /solutions/07-a2a/multi-agent-system
     schedule:
       interval: daily
       time: "06:00"
@@ -223,7 +223,7 @@ updates:
 
   # ── exercise 07 — remote A2A agent ────────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/07-a2a/solution/remote-a2a-agent
+    directory: /solutions/07-a2a/remote-a2a-agent
     schedule:
       interval: daily
       time: "06:00"
@@ -245,7 +245,7 @@ updates:
 
   # ── exercise 08 — lab (Quarkus Flow) ──────────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/08-quarkus-flow/lab
+    directory: /solutions/08-quarkus-flow/lab
     schedule:
       interval: daily
       time: "06:00"
@@ -270,7 +270,7 @@ updates:
 
   # ── exercise 08 — solution (Quarkus Flow) ────────────────────────────────
   - package-ecosystem: maven
-    directory: /exercises/08-quarkus-flow/solution
+    directory: /solutions/08-quarkus-flow
     schedule:
       interval: daily
       time: "06:00"

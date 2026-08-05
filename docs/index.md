@@ -36,7 +36,7 @@ No agent behavior yet: that's Exercise 1.
 <img src="images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 !!! tip "Reference solutions"
-    Solutions live in `exercises/*/solution`. Each exercise guide links to its solution at the top — use them only if you get stuck.
+    Solutions live in `solutions/`. Each exercise guide links to its solution at the top — use them only if you get stuck.
 
 ## Exercises
 
@@ -60,6 +60,6 @@ Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the s
 | `lab/` | Your hands-on Quarkus project (stub files with `// TODO`) |
 | `AGENTS.md` | Project context file for IBM Bob — rules, agent inventory, and conventions loaded once to avoid repeated file scans |
 | `docs/` | These lab instructions (this site) |
-| `exercises/*/solution/` | Reference solutions for each exercise — copy files from here if you get stuck |
-| `exercises/08-quarkus-flow/lab/` | Separate starter project for the bonus exercise (not the root `lab/`) |
+| `solutions/` | Reference solution projects for each exercise — copy files from here if you get stuck |
+| `solutions/08-quarkus-flow/lab/` | Separate starter project for the bonus exercise (not the root `lab/`) |
 

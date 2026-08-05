@@ -8,7 +8,7 @@
 **Files to edit:** `lab/src/main/java/com/incidentmanagement/agentic/agents/DiagnosticAgent.java`
 
 !!! tip "Solution fallback"
-    [`exercises/02-maintenance-agent/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/02-maintenance-agent/solution){:target="_blank"} — includes `DiagnosticAgent` wired into a composed workflow.
+    [`solutions/02-maintenance-agent`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/solutions/02-maintenance-agent){:target="_blank"} — includes `DiagnosticAgent` wired into a composed workflow.
 
 ---
 
@@ -101,7 +101,7 @@ The full workflow isn't wired in `lab/` yet (that happens in Exercise 4), so you
 Stop `lab/` first (`Ctrl+C`), then start the solution:
 
 ```bash
-cd exercises/02-maintenance-agent/solution
+cd solutions/02-maintenance-agent
 ./mvnw quarkus:dev
 ```
 

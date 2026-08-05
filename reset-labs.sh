@@ -5,7 +5,7 @@ REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_ROOT"
 
 LAB_BASE="lab/src/main/java/com/incidentmanagement/agentic"
-EX08_BASE="exercises/08-quarkus-flow/lab/src/main/java/com/incidentmanagement/agentic"
+EX08_BASE="solutions/08-quarkus-flow/lab/src/main/java/com/incidentmanagement/agentic"
 
 LAB_FILES=(
     "$LAB_BASE/agents/TriageAgent.java"
@@ -56,13 +56,13 @@ echo ""
 case "$TARGET" in
     all)
         reset_files "lab/ (Exercises 1-4)" "${LAB_FILES[@]}"
-        reset_files "exercises/08-quarkus-flow/lab/ (Exercise 8)" "${EX08_FILES[@]}"
+        reset_files "solutions/08-quarkus-flow/lab/ (Exercise 8)" "${EX08_FILES[@]}"
         ;;
     lab)
         reset_files "lab/ (Exercises 1-4)" "${LAB_FILES[@]}"
         ;;
     ex08)
-        reset_files "exercises/08-quarkus-flow/lab/ (Exercise 8)" "${EX08_FILES[@]}"
+        reset_files "solutions/08-quarkus-flow/lab/ (Exercise 8)" "${EX08_FILES[@]}"
         ;;
     *)
         usage

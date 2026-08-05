@@ -11,7 +11,7 @@
 - `lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentAnalysisWorkflow.java`
 
 !!! tip "Solution fallback"
-    [`exercises/03-parallel-workflow/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/03-parallel-workflow/solution){:target="_blank"} — open if stuck.
+    [`solutions/03-parallel-workflow`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/solutions/03-parallel-workflow){:target="_blank"} — open if stuck.
 
 ---
 
@@ -180,7 +180,7 @@ The full workflow isn't wired in `lab/` yet (that happens in Exercise 4), so you
 Stop `lab/` first (`Ctrl+C`), then start the solution:
 
 ```bash
-cd exercises/03-parallel-workflow/solution
+cd solutions/03-parallel-workflow
 ./mvnw quarkus:dev
 ```
 

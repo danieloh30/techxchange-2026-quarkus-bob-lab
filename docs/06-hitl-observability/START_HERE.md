@@ -4,10 +4,10 @@
 
 **Timebox:** 10 minutes  
 **Persona:** Alex — Compliance officer  
-**You work in:** `exercises/06-hitl-observability/solution` (run + read)
+**You work in:** `solutions/06-hitl-observability` (run + read)
 
 !!! tip "Solution"
-    [`exercises/06-hitl-observability/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/06-hitl-observability/solution){:target="_blank"}
+    [`solutions/06-hitl-observability`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/solutions/06-hitl-observability){:target="_blank"}
 
 ---
 
@@ -49,7 +49,7 @@ flowchart TD
 Stop your `lab/` Quarkus process first (`Ctrl+C`), then start the solution:
 
 ```bash
-cd exercises/06-hitl-observability/solution
+cd solutions/06-hitl-observability
 ./mvnw quarkus:dev
 ```
 
@@ -64,9 +64,9 @@ incident-management started in ~4s
 
     Check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — compare it to Exercise 4. The tree now includes the HITL agents.
 
-Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java){:target="_blank"} — this is the same `@Agent` pattern you've been coding, with a `@SystemMessage` that defines escalation criteria and a `@UserMessage` template.
+Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/solutions/06-hitl-observability/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java){:target="_blank"} — this is the same `@Agent` pattern you've been coding, with a `@SystemMessage` that defines escalation criteria and a `@UserMessage` template.
 
-Open [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/exercises/06-hitl-observability/solution/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java){:target="_blank"} — this is the HITL gate. Key differences from a regular `@Agent`:
+Open [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/solutions/06-hitl-observability/src/main/java/com/incidentmanagement/agentic/agents/HumanApprovalAgent.java){:target="_blank"} — this is the HITL gate. Key differences from a regular `@Agent`:
 
 | Annotation | Purpose |
 |-----------|---------|
