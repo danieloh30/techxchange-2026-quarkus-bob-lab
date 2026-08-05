@@ -151,7 +151,14 @@ The key difference: the action should be `INVESTIGATE` or `TRIAGE` — a more ag
 !!! warning "Key insight"
     You changed agent *behavior* by editing a string — no conditional logic, no redeploy cycle beyond hot reload. The `@SystemMessage` is the policy. This is what "declarative AI engineering" means.
 
-**Revert** `TriageFeedbackAgent.java`'s `@SystemMessage` back to the original (simpler) version before moving on.
+**Revert** `TriageFeedbackAgent.java`'s `@SystemMessage` back to the original (simpler) version.
+
+Stop the solution (`Ctrl+C`) and restart the lab for the next exercise:
+
+```bash
+cd ../../lab
+./mvnw quarkus:dev
+```
 
 ---
 
