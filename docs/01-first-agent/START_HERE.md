@@ -66,14 +66,6 @@ Replace the `// TODO` block with the following code **exactly**:
 String processTriage(IncidentInfo incidentInfo, Integer incidentNumber, String report);
 ```
 
-Add these imports at the top (below the existing ones):
-
-```java
-import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
-```
-
 ??? info "Why `outputKey = \"analysisResult\"`?"
     `AgenticScope` is a shared context map passed through a workflow. Every agent writes its result under its `outputKey` so the next agent can read it. Without `outputKey`, the result is silently dropped and downstream agents find nothing. This is the single most common cause of workflow failures.
 

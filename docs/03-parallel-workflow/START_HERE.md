@@ -85,14 +85,6 @@ String analyzeIncident(AnalysisTask task, IncidentInfo incidentInfo,
                        Integer incidentNumber, String report);
 ```
 
-Add these imports:
-
-```java
-import dev.langchain4j.agentic.Agent;
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
-```
-
 ??? info "Dynamic `@SystemMessage` — one interface, three roles"
     The `{task.systemInstructions}` placeholder is resolved from the `AnalysisTask` parameter at runtime, not from a compile-time constant. The same interface handles three completely different analysis tasks:
 
@@ -138,13 +130,6 @@ static IncidentAnalysisResults output(AgenticScope scope,
             incidentAnalysisResults.get(2)   // resolutionAnalysis
     );
 }
-```
-
-Add these imports at the top of the file:
-
-```java
-import dev.langchain4j.agentic.declarative.Output;
-import dev.langchain4j.agentic.declarative.ParallelMapperAgent;
 ```
 
 ??? info "Why `itemsProvider = \"tasks\"`?"
