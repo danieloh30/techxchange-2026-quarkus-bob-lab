@@ -6,9 +6,9 @@
 
 Last quarter's post-mortem told the story:
 
-- Three P1 outages lasted **4+ hours due to P3 misclassification** — $200k revenue loss
-- Two incidents were **escalated to the wrong engineering team**, wasting 40 engineer-hours
-- Service managers cannot see *why* an incident was routed or whether escalation was appropriate
+- Two P1 outages (auth failure, API gateway) lasted **4+ hours because manual triage classified them as P3** — $150k combined revenue loss
+- A payment-gateway incident was **routed to the networking team instead of payments**, burning 20 engineer-hours before correction
+- NOC analysts cannot explain *why* an incident was routed or whether escalation was appropriate — no audit trail exists
 
 Leadership mandate: **automate incident triage and routing with AI agents — without losing enterprise control.**
 

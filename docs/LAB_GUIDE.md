@@ -91,9 +91,9 @@ solutions/                            # Reference solution projects
 **Apex Systems** is a mid-size enterprise IT services company managing infrastructure across data centers and cloud regions. The NOC (Network Operations Center) receives free-text incident reports from monitoring tools, tickets, and on-call engineers. Today those reports live in chat threads, email chains, and tribal knowledge.
 
 Last quarter's post-mortem:
-- Three P1 outages lasted **4+ hours due to P3 misclassification** — $200k revenue loss
-- Two incidents were **escalated to the wrong engineering team**, wasting 40 engineer-hours
-- Service managers cannot see *why* an incident was routed `OPEN → TRIAGING → IN_PROGRESS → RESOLVED` or whether it should have been escalated (`ESCALATE_P1` / `ASSIGN_TEAM` / `WORKAROUND` / `CLOSE`)
+- Two P1 outages (auth failure, API gateway) lasted **4+ hours because manual triage classified them as P3** — $150k combined revenue loss
+- A payment-gateway incident was **routed to the networking team instead of payments**, burning 20 engineer-hours before correction
+- NOC analysts cannot explain *why* an incident was routed `OPEN → TRIAGING → IN_PROGRESS → RESOLVED` or whether it should have been escalated (`ESCALATE_P1` / `ASSIGN_TEAM` / `WORKAROUND` / `CLOSE`) — no audit trail exists
 
 Leadership mandate:
 
