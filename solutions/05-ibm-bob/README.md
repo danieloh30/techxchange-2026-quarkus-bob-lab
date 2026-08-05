@@ -6,7 +6,7 @@ This exercise has two linked parts:
 
 - `weather-mcp-server/` — a Quarkus MCP server running on port **8081**  
   Exposes one tool: `getForecast(latitude, longitude)` via SSE transport.
-- `solution/` — the MCP client app running on port **8080**  
+- This directory — the MCP client app running on port **8080**  
   `CustomerSupportAgent` (`@RegisterAiService`, `@SessionScoped`) mixes:
   - `@ToolBox(BookingRepository.class)` — local JPA tools (list, get, cancel bookings)
   - `@McpToolBox("weather")` — remote MCP tool (weather forecast)
@@ -22,11 +22,11 @@ This exercise has two linked parts:
 
 ```bash
 # Terminal 1: MCP server (port 8081)
-cd exercises/05-ibm-bob/weather-mcp-server
+cd solutions/05-ibm-bob/weather-mcp-server
 ./mvnw quarkus:dev
 
 # Terminal 2: MCP client app (port 8080)
-cd exercises/05-ibm-bob/solution
+cd solutions/05-ibm-bob
 ./mvnw quarkus:dev
 ```
 

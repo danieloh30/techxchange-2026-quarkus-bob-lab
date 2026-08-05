@@ -92,20 +92,21 @@ public class WidgetTool {
 ## Project structure (exercises)
 
 ```
-exercises/
-├── 01-first-agent/solution           TriageAgent + TriageTool          [port 8080]
-├── 02-maintenance-agent/
-│   ├── solution-sequence             @SequenceAgent chain               [port 8080]
-│   └── solution-composed             parallel + conditional              [port 8080]
-├── 03-parallel-workflow/solution     IncidentSupervisorAgent             [port 8080]
-├── 04-supervisor/solution            full supervisor stack (Bob lab)     [port 8080]
+solutions/
+├── 01-first-agent/                   TriageAgent + TriageTool          [port 8080]
+├── 02-maintenance-agent/             @SequenceAgent chain               [port 8080]
+├── 03-parallel-workflow/             IncidentSupervisorAgent             [port 8080]
+├── 04-supervisor/                    full supervisor stack (Bob lab)     [port 8080]
 ├── 05-ibm-bob/
-│   ├── solution                      MCP client (@McpToolBox)            [port 8080]
+│   ├── (root)                        MCP client (@McpToolBox)            [port 8080]
 │   └── weather-mcp-server            MCP SSE server                      [port 8081]
-├── 06-hitl-observability/solution    HITL + OTel + LGTM                  [port 8080]
-└── 07-a2a/solution/
-    ├── multi-agent-system            A2A client + supervisor             [port 8080]
-    └── remote-a2a-agent              A2A impact assessment service       [port 8888]
+├── 06-hitl-observability/            HITL + OTel + LGTM                  [port 8080]
+├── 07-a2a/
+│   ├── multi-agent-system            A2A client + supervisor             [port 8080]
+│   └── remote-a2a-agent              A2A impact assessment service       [port 8888]
+└── 08-quarkus-flow/
+    ├── (root)                        Programmatic loop solution           [port 8080]
+    └── lab/                          Bonus exercise starter (TODO stubs)  [port 8080]
 ```
 
 ---

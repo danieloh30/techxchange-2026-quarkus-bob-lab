@@ -4,10 +4,10 @@
 
 **Timebox:** 10 minutes  
 **Persona:** Riley — SRE team lead  
-**You work in:** `exercises/07-a2a/solution/` (run + read)
+**You work in:** `solutions/07-a2a/` (run + read)
 
 !!! tip "Reference solution"
-    [`exercises/07-a2a/solution`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/07-a2a/solution){:target="_blank"}
+    [`solutions/07-a2a`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/solutions/07-a2a){:target="_blank"}
 
 ---
 
@@ -29,14 +29,14 @@ Stop any running Quarkus process first (`Ctrl+C`).
 === "Terminal 1 — impact assessment service (start first)"
 
     ```bash
-    cd exercises/07-a2a/solution/remote-a2a-agent
+    cd solutions/07-a2a/remote-a2a-agent
     ./mvnw quarkus:dev   # port :8888
     ```
 
 === "Terminal 2 — main system"
 
     ```bash
-    cd exercises/07-a2a/solution/multi-agent-system
+    cd solutions/07-a2a/multi-agent-system
     ./mvnw quarkus:dev   # port :8080
     ```
 
@@ -167,7 +167,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 **Rule of thumb:** If the remote service just *does something* when told exactly what to do → MCP. If it *decides something* using its own reasoning → A2A.
 
 !!! example "Optional self-study: Try MCP"
-    The [`exercises/05-ibm-bob/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises/05-ibm-bob){:target="_blank"} folder contains a working MCP weather server (`weather-mcp-server/`) and MCP client app (`solution/`). Start both and see `@McpToolBox` in action — a car rental chatbot that calls a remote weather forecast tool over SSE.
+    The [`solutions/05-ibm-bob/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/solutions/05-ibm-bob){:target="_blank"} folder contains a working MCP weather server (`weather-mcp-server/`) and MCP client app. Start both and see `@McpToolBox` in action — a car rental chatbot that calls a remote weather forecast tool over SSE.
 
 ---
 

@@ -4,7 +4,7 @@ This folder powers the GitHub Pages site (MkDocs Material).
 
 - **Live site:** https://danieloh30.github.io/techxchange-2026-quarkus-bob-lab/
 - **Home page source:** [index.md](index.md)
-- Quarkus projects: [`exercises/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/exercises)
+- Quarkus projects: [`solutions/`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/tree/main/solutions)
 
 ## Local preview
 

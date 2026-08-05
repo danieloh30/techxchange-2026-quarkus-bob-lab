@@ -25,7 +25,7 @@
     **Exercises 1–4 are direct code-along:** open each stub file, read the `// TODO` comments, and type in the code shown in the guide. Hot reload keeps Quarkus running.  
     **Exercise 5** uses IBM Bob to document and validate the agents you built.  
     **Exercises 6–7** run pre-built solutions to explore HITL, observability, and A2A patterns.  
-    Reference solutions in `exercises/` are fallbacks — linked at the top of each exercise guide.
+    Reference solutions in `solutions/` are fallbacks — linked at the top of each exercise guide.
 
 ---
 
@@ -69,14 +69,15 @@ docs/                                 # All lab instructions + images
 ├── 00-intro/ … 07-a2a/               # Per-exercise START_HERE.md + Bob materials
 └── images/
 
-exercises/                            # Completed Quarkus solution projects
-├── 01-first-agent/solution
-├── 02-maintenance-agent/solution
-├── 03-parallel-workflow/solution
-├── 04-supervisor/solution
-├── 05-ibm-bob/{solution, weather-mcp-server}
-├── 06-hitl-observability/{solution, observability-reference}
-└── 07-a2a/solution/{multi-agent-system, remote-a2a-agent}
+solutions/                            # Reference solution projects
+├── 01-first-agent/
+├── 02-maintenance-agent/
+├── 03-parallel-workflow/
+├── 04-supervisor/
+├── 05-ibm-bob/                       # + weather-mcp-server/
+├── 06-hitl-observability/            # + observability-reference/
+├── 07-a2a/{multi-agent-system, remote-a2a-agent}
+└── 08-quarkus-flow/                  # + lab/ (bonus exercise starter)
 ```
 
 ---
