@@ -175,24 +175,24 @@ Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click
 SMTP timeout for 30% of outbound emails, queue growing
 ```
 
-**How to confirm:** Watch the Quarkus terminal logs. You should see three parallel analysis calls with **overlapping timestamps** — this is the key proof that `@ParallelMapperAgent` runs concurrently, not sequentially:
-
+**Expected terminal logs:**
 ```
 ResolutionAgent updating...
+  └─ Action: INVESTIGATE → SMTP timeout affecting 30% of outbound emails...
 ```
 
-Check the UI — incident status should change (e.g., `TRIAGING` or `IN_PROGRESS` depending on the analysis results).
+The action should be `INVESTIGATE` or `TRIAGE` — the parallel analysis flagged this as needing attention. Check the UI — incident status changes to `IN_PROGRESS` or `TRIAGING`. (LLM responses are non-deterministic — the exact action may vary.)
 
-Now process Incident **#6** (search-engine/product-search) with:
+!!! tip "Parallelism proof"
+    Note the wall-clock time from when you clicked "Process" to when `ResolutionAgent updating...` appears (~3–5 seconds). Three parallel LLM calls complete in roughly the time of one. If they ran sequentially, it would take ~3x longer.
+
+Now press `s` to restart (reset the database), then **reload the browser**. Process Incident **#6** (search-engine/product-search) with:
 
 ```
 False alarm, relevance restored after cache refresh
 ```
 
-**How to confirm:** Check the UI — incident status stays `OPEN` (action = `MONITOR`). The parallel analysis determined this is a low-severity, low-impact false alarm.
-
-!!! tip "Parallelism proof"
-    Wall-clock time for 3 parallel analyses ≈ time for 1 call. If they ran sequentially, processing would take ~3x longer. Compare the timestamp of the first log line to `ResolutionAgent updating...` — you'll see the total time is close to a single LLM call, not the sum of three.
+**Expected:** Action is `MONITOR` or `RESOLVE` — the parallel analysis determined this is a low-severity, low-impact false alarm. Status stays `OPEN` or changes to `RESOLVED`.
 
 Stop the solution (`Ctrl+C`) and restart `lab/`:
 
@@ -209,7 +209,7 @@ cd ../../lab
 
 - [ ] `IncidentAnalysisAgent` and `IncidentAnalysisWorkflow` appear in the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"}
 - [ ] No compile errors in the Quarkus terminal after hot reload
-- [ ] Parallel execution tested via solution — overlapping timestamps in logs
+- [ ] Parallel execution tested via solution — wall-clock time confirms concurrency
 - [ ] You can explain `outputKey` and `@Output` from memory
 - [ ] You can explain how dynamic SystemMessage enables one interface for 3 tasks
 
