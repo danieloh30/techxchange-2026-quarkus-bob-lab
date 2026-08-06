@@ -377,7 +377,7 @@ Click **View** on Incident **#1** (payment-gateway/checkout-api, P2) and process
 Complete checkout failure; all payment processing down; customers seeing 500 errors; revenue loss estimated at $50k/hr
 ```
 
-**How to confirm:** UI status changes to `ESCALATED`. Terminal logs show `Action: ESCALATE`, with `ImpactAgent` then `EscalationAgent` invoked by the supervisor. `TriageAgent` is **not** invoked — look for the absence of `TriageTool activated` in the logs.
+**How to confirm:** UI status changes to `ESCALATED`. Terminal logs show `Action: ESCALATE`, with `ImpactAgent` and `EscalationAgent` invoked by the supervisor.
 
 ---
 
