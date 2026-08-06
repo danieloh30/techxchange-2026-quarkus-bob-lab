@@ -1,7 +1,7 @@
 version: 2
 
 updates:
-  # ── lab project (main working copy attendees edit) ─────────────────────────
+  # ── lab project (the main working copy attendees edit) ─────────────────────
   - package-ecosystem: maven
     directory: /lab
     schedule:
