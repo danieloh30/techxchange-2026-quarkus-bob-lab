@@ -111,7 +111,7 @@ Open **[http://localhost:3000](http://localhost:3000){:target="_blank"}** and na
 5. Click **Run query** (blue button, top-right) — you should see a list of traces
 
 !!! tip "Service name not in the dropdown?"
-    If `incident-management` doesn't appear yet, click **Run query** first without selecting a service name — Tempo needs at least one trace to register the service. Process an incident in the UI, then come back and refresh the dropdown.
+    Tempo registers services only after traces arrive. If `incident-management` doesn't appear, make sure you completed Step 2 first (process at least one incident), then refresh the dropdown. It can take a few seconds for traces to propagate.
 
 Click any **Trace ID** link to expand the span waterfall. Look for the `POST /incident-management/process/{id}` trace — it contains the full agent workflow.
 
