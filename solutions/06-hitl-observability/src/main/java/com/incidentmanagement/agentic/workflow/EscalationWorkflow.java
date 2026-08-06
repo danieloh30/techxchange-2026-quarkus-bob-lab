@@ -13,16 +13,18 @@ public interface EscalationWorkflow {
     String evaluateEscalation(
             IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String businessImpact,
+            String supervisorDecision,
             String report);
 
     @ActivationCondition(EscalationProposalAgent.class)
-    static boolean shouldPropose(String businessImpact) {
-        return businessImpact != null && !businessImpact.isEmpty();
+    static boolean shouldPropose(String supervisorDecision) {
+        return supervisorDecision != null
+                && supervisorDecision.toUpperCase().contains("IMPACT");
     }
 
     @ActivationCondition(HumanApprovalAgent.class)
-    static boolean shouldAwaitApproval(String businessImpact) {
-        return businessImpact != null && !businessImpact.isEmpty();
+    static boolean shouldAwaitApproval(String supervisorDecision) {
+        return supervisorDecision != null
+                && supervisorDecision.toUpperCase().contains("IMPACT");
     }
 }
