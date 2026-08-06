@@ -294,7 +294,7 @@ static String request(IncidentInfo incidentInfo, Integer incidentNumber,
 ```
 
 ??? info "Why policy lives in `@SupervisorRequest`"
-    The boolean `escalationRequired` is the only Java logic here — it checks whether the upstream `IncidentAnalysisWorkflow` flagged an escalation case. Everything else is natural-language instructions. To change the supervisor's behavior (add a new sub-agent, change escalation rules), you edit this string. No `if/else` chains, no enum routing tables.
+    The boolean `escalationRequired` is the only Java logic here — it checks whether the earlier `IncidentAnalysisWorkflow` step flagged an escalation case. Everything else is natural-language instructions. To change the supervisor's behavior (add a new sub-agent, change escalation rules), you edit this string. No `if/else` chains, no enum routing tables.
 
 ??? info "Why declare sub-agents in `@SupervisorAgent` but not call them explicitly?"
     The LLM reads the `@SupervisorRequest` prompt and decides which sub-agents to call, in what order, with what parameters. `subAgents` is the capability declaration — it tells the framework what tools to expose. The LLM decides the invocation strategy.
