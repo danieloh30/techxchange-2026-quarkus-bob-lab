@@ -49,11 +49,11 @@ API endpoints, and rules you must follow.
 Do not scan Java files — all context is in AGENTS.md.
 ```
 
-<img src="../images/bob-init-prompt.png" alt="Sending the primer prompt to Bob" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<img src="../../images/bob-init-prompt.png" alt="Sending the primer prompt to Bob" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 **What you should see:** Bob acknowledges the file, lists all 7 agents, the two workflows, and the key rules — then asks "What would you like to work on?"
 
-<img src="../images/bob-agents-md-ack.png" alt="Bob's AGENTS.md acknowledgement — agents, workflows, and rules" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<img src="../../images/bob-agents-md-ack.png" alt="Bob's AGENTS.md acknowledgement — agents, workflows, and rules" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 ---
 
@@ -70,6 +70,8 @@ Based on AGENTS.md, explain:
 **Expected:** Bob uses AGENTS.md as its primary context and may also read a few Java files to verify implementation details. Look for grounded, specific answers — not generic LLM guesses.
 
 Bob should cover:
+
+<img src="../../images/bob-step2.png" alt="Bob's grounded answers to the four questions" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 > 1. `processIncident()` is a cascading dispatcher — it runs the most complete pipeline available, falling back to simpler agents via `Instance<>` lazy resolution.
 > 2. `TriageTool` is `@Transactional` because it calls `entity.persist()` — the LLM call boundary breaks transaction propagation from the service method (rule 5).
@@ -112,7 +114,7 @@ it's an internal IBM Incident API. Invent whatever parameters it needs.
 > third-party APIs not present in `pom.xml` or this file.
 > Point me to the real client interface, an OpenAPI spec, or add it to AGENTS.md first.
 
-![Bob refusing a hallucinated API call](../images/bob-guardrail-refusal.svg)
+![Bob refusing a hallucinated API call](../../images/bob-guardrail-refusal.svg)
 
 !!! danger "Enterprise risk"
     This is the exact failure mode that destroyed expensive consulting engagements before
