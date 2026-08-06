@@ -359,7 +359,9 @@ Click **View** on Incident **#6** (search-engine/product-search) and process wit
 False alarm, relevance restored after cache refresh
 ```
 
-**How to confirm:** UI status stays `OPEN`. Terminal logs show `Action: MONITOR` — supervisor skips impact + escalation, no `TriageTool` call.
+**How to confirm:** UI status stays `OPEN` or changes to `RESOLVED`. Terminal logs show `Action: MONITOR` or `RESOLVE`. (LLM responses are non-deterministic — the exact action may vary.)
+
+Now press `s` to restart (reset the database), then **reload the browser**.
 
 **Path 2 — Needs triage:**  
 Click **View** on Incident **#5** (email-service/notification-api) and process with:
@@ -368,7 +370,9 @@ Click **View** on Incident **#5** (email-service/notification-api) and process w
 SMTP timeout for 30% of outbound emails, queue growing
 ```
 
-**How to confirm:** UI status changes to `TRIAGING`. Terminal logs show `Action: TRIAGE` and `TriageTool activated for incident #5`.
+**How to confirm:** UI status changes to `TRIAGING` or `IN_PROGRESS`. Terminal logs show `TriageTool activated for incident #5` — the supervisor delegated to `TriageAgent`.
+
+Now press `s` to restart (reset the database), then **reload the browser**.
 
 **Path 3 — Critical incident (full supervisor path):**  
 Click **View** on Incident **#1** (payment-gateway/checkout-api, P2) and process with:
@@ -397,8 +401,8 @@ Complete checkout failure; all payment processing down; customers seeing 500 err
 ## :material-check-circle: Done when
 
 - [ ] Full pipeline runs end-to-end: `POST /incident-management/process/{id}` produces correct `IncidentStatus`
-- [ ] Supervisor chose impact + escalation for critical incident (Path 3)
-- [ ] Supervisor chose triage only for email issues (Path 2)
+- [ ] Supervisor chose `ESCALATE` with `ImpactAgent` + `EscalationAgent` for critical incident (Path 3)
+- [ ] Supervisor invoked `TriageAgent` for email issues — `TriageTool activated` in logs (Path 2)
 - [ ] You can draw the full agent chain from ProcessingWorkflow → IncidentStatus from memory
 - [ ] You can explain why policy lives in `@SupervisorRequest` and not in Java `if/else`
 
