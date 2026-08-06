@@ -59,6 +59,9 @@ flowchart TD
     style IMS fill:#E8DCC4,stroke:#6B5B45
 ```
 
+!!! note "Where is `IncidentAnalysisAgent`?"
+    `IncidentAnalysisWorkflow` (the "x3" box) internally fans out three parallel calls to the `IncidentAnalysisAgent` you built in Exercise 3. It's not shown as a separate node because it's encapsulated inside the workflow — the supervisor only sees the aggregated `IncidentAnalysisResults`.
+
 ---
 
 ## Step 1 — `ImpactAgent` (2 min)
