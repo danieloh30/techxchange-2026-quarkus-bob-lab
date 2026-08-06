@@ -159,3 +159,4 @@ cd ../../../lab
 - [ ] You understand the FinOps trade-off: tracing reveals per-agent token cost, but `include-prompt=true` can leak PII
 
 </div>
+
