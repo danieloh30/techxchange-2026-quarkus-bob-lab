@@ -38,17 +38,9 @@ redundant codebase scans.
 
 ## Step 1 — Open IBM Bob (2 min)
 
-1. Open `lab/` in your IDE with Bob enabled.
-2. Set Bob to **approval-before-apply** mode (Plan mode in the Bob sidebar).
+1. Open `lab/` in your IDE with Bob enabled. **Agent** mode is selected by default — no mode change needed.
 
-!!! info "IBM Bob approval-before-apply mode"
-    In Bob's sidebar, click the **mode selector** and choose **Plan**.
-    Bob will produce a diff and wait for your approval before writing any file.
-    This is the approval gate described in rule 8 of `lab/AGENTS.md`.
-
-    ![Bob mode selector — Plan mode selected](../images/bob-mode-selector.svg)
-
-3. Load context with this primer — send it to Bob first:
+2. Load context with this primer — send it to Bob first:
 
 ```text
 Read lab/AGENTS.md before answering anything about this project.
