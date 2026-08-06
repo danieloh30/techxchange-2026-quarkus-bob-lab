@@ -40,7 +40,9 @@ redundant codebase scans.
 
 1. Open `lab/` in your IDE with Bob enabled. **Agent** mode is selected by default — no mode change needed.
 
-2. Load context with this primer — send it to Bob first:
+2. Open [`lab/AGENTS.md`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/AGENTS.md){:target="_blank"} and skim it — this is the governance file Bob reads on every request. Note the agents table, domain types, and the 10 project rules. This is what grounds Bob's answers instead of hallucination.
+
+3. Load context with this primer — send it to Bob first:
 
 ```text
 Read lab/AGENTS.md before answering anything about this project.
