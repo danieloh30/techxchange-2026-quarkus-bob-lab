@@ -1,6 +1,7 @@
 package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.IncidentInfo;
+import com.incidentmanagement.model.IncidentAnalysisResults;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
@@ -41,7 +42,8 @@ public interface EscalationProposalAgent {
         - Priority: P{incidentInfo.priority}
         - Incident Number: {incidentNumber}
         - Current Description: {incidentInfo.description}
-        - Estimated Revenue Impact: {businessImpact}
+        - Impact Analysis: {incidentAnalysisResults.impactAnalysis}
+        - Resolution Analysis: {incidentAnalysisResults.resolutionAnalysis}
         - Incident Report: {report}
 
         Provide your escalation proposal with clear reasoning.
@@ -50,6 +52,6 @@ public interface EscalationProposalAgent {
     String createEscalationProposal(
             IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String businessImpact,
+            IncidentAnalysisResults incidentAnalysisResults,
             String report);
 }
