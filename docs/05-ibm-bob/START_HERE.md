@@ -52,7 +52,7 @@ Do not scan Java files — all context is in AGENTS.md.
 **What you should see:** Bob acknowledges the file, lists the 7 agents from the table,
 confirms the 10 rules, and asks "What do you want to build?"
 
-![Bob's initial AGENTS.md acknowledgement](../images/bob-agents-md-ack.svg)
+![Bob's initial AGENTS.md acknowledgement](../images/bob-init-prompt.png)
 
 ---
 
