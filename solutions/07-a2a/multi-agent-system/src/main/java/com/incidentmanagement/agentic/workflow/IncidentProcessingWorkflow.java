@@ -1,5 +1,7 @@
 package com.incidentmanagement.agentic.workflow;
 
+import com.incidentmanagement.agentic.agents.EscalationProposalAgent;
+import com.incidentmanagement.agentic.agents.HumanApprovalAgent;
 import com.incidentmanagement.agentic.agents.ResolutionAgent;
 import com.incidentmanagement.agentic.agents.IncidentSupervisorAgent;
 import com.incidentmanagement.model.IncidentOutcome;
@@ -18,7 +20,8 @@ public interface IncidentProcessingWorkflow extends MonitoredAgent {
     @SequenceAgent(outputKey = "incidentProcessingAgentResult",
             subAgents = { IncidentAnalysisWorkflow.class,
                           IncidentSupervisorAgent.class,
-                          EscalationWorkflow.class,
+                          EscalationProposalAgent.class,
+                          HumanApprovalAgent.class,
                           ResolutionAgent.class })
     IncidentOutcome processIncident(List<AnalysisTask> tasks, IncidentInfo incidentInfo,
                                      Integer incidentNumber, String report,
