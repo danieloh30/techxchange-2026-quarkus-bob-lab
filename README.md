@@ -1,5 +1,7 @@
 ![Lab cover](docs/images/cover_page.png)
 
+[![Deploy docs to GitHub Pages](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/workflows/Deploy%20docs%20to%20GitHub%20Pages/badge.svg)](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/actions/workflows/docs.yml)
+
 # LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Enterprise Build of Quarkus and Bob
 
 **IBM TechXchange 2026 · Hands-On Lab**  
