@@ -124,7 +124,7 @@ it's an internal IBM Incident API. Invent whatever parameters it needs.
 > third-party APIs not present in `pom.xml` or this file.
 > Point me to the real client interface, an OpenAPI spec, or add it to AGENTS.md first.
 
-![Bob refusing a hallucinated API call](../../images/bob-guardrail-refusal.svg)
+![Bob refusing a hallucinated API call](../images/bob-guardrail-refusal.svg)
 
 !!! danger "Enterprise risk"
     This is the exact failure mode that destroyed expensive consulting engagements before
