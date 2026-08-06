@@ -49,9 +49,9 @@ API endpoints, and rules you must follow.
 Do not scan Java files — all context is in AGENTS.md.
 ```
 
-**What you should see:** Bob acknowledges the file, lists all 7 agents, the two workflows, and the key rules — then asks "What would you like to work on?"
-
 ![Sending the primer prompt to Bob](../images/bob-init-prompt.png)
+
+**What you should see:** Bob acknowledges the file, lists all 7 agents, the two workflows, and the key rules — then asks "What would you like to work on?"
 
 ![Bob's AGENTS.md acknowledgement — agents, workflows, and rules](../images/bob-agents-md-ack.png)
 
