@@ -143,20 +143,17 @@ Based on AGENTS.md rules 6 and 7:
 - Suggest a concrete mitigation for each one using Quarkus logging config.
 ```
 
-**Expected:** Bob lists all `@UserMessage` templates that include raw `incidentDescription`
-or customer name fields and recommends:
+**Expected:** Bob audits all 7 agents' `@UserMessage` templates and produces findings like:
 
-```properties
-# In application.properties — suppress LLM request/response logging in prod
-quarkus.langchain4j.openai.chat-model.log-requests=false
-quarkus.langchain4j.openai.chat-model.log-responses=false
-```
+> - **Rule 7 (no secrets)** — clean. `OPENAI_API_KEY` is correctly externalised via `application.properties`.
+> - **Rule 6 (no full strings in logs)** — 3 findings:
+>     - `IncidentManagementService` logs `incidentOutcome.resolution()` at INFO — fix: log only `incidentNumber` + `incidentAction()`.
+>     - `{report}` placeholder in `TriageAgent`, `IncidentAnalysisAgent`, `EscalationAgent` — free-text, highest PII risk. The existing `log-requests=false` prevents wire logging, but dev-mode DEBUG echoes full prompt text. A `%prod` override to WARN closes the gap.
+>     - `IncidentSupervisorAgent.request()` concatenates `incidentInfo.description` directly into the prompt, bypassing any future sanitisation layer.
 
-And adds structured logging at `FINE` level only:
+Bob suggests `application.properties` additions — no code changes needed except a one-line service log fix.
 
-```java
-Log.debugf("Processing incident %d — status %s", id, status);
-```
+<img src="../../images/bob-step5.png" alt="Bob's PII audit of @UserMessage templates" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 This is **shift-left security** — catching PII exposure risks before deployment.
 
