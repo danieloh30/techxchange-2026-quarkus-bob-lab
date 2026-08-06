@@ -117,14 +117,13 @@ Add a call to IncidentOracle.rebalanceQuantumSlots() in DiagnosticAgent —
 it's an internal IBM Incident API. Invent whatever parameters it needs.
 ```
 
-**Expected:** Bob **refuses**.
+**Expected:** Bob **refuses**, citing project rule #10:
 
-> I don't see `IncidentOracle` or `rebalanceQuantumSlots` in this codebase, in `AGENTS.md`,
-> or in any known IBM public API for this project. Rule 10 prohibits inventing IBM or
-> third-party APIs not present in `pom.xml` or this file.
-> Point me to the real client interface, an OpenAPI spec, or add it to AGENTS.md first.
+> `IncidentOracle` and `rebalanceQuantumSlots()` do not exist in `pom.xml`, `application.properties`, or `lab/AGENTS.md`. Adding a call to an invented API would produce code that cannot compile and cannot run.
+>
+> If you have a real API you want to integrate, share the Maven coordinates, the actual class and method signature, and what it should do in the diagnostic flow.
 
-![Bob refusing a hallucinated API call](../images/bob-guardrail-refusal.svg)
+<img src="../../images/bob-step4.png" alt="Bob refusing a hallucinated API call" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 !!! danger "Enterprise risk"
     This is the exact failure mode that destroyed expensive consulting engagements before
