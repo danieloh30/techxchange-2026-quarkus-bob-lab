@@ -102,6 +102,9 @@ In the Quarkus terminal logs, look for `WORKFLOW PAUSED` and `WORKFLOW RESUMED` 
 
 ## Step 3 — Read OTel spans in Grafana (4 min)
 
+!!! note "Grafana not responding?"
+    Pressing `s` restarts the app and resets the database, but the LGTM container (Grafana + Tempo) stays running — your Step 2 traces are preserved. If [http://localhost:3000](http://localhost:3000){:target="_blank"} is not responding, stop dev mode (`Ctrl+C`) and restart it — the LGTM container may need a fresh start on first use.
+
 Open **[http://localhost:3000](http://localhost:3000){:target="_blank"}** and navigate to traces:
 
 1. Click the **hamburger menu** (&#9776;) in the top-left → **Explore**
