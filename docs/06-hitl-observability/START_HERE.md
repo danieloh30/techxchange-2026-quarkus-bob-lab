@@ -59,6 +59,9 @@ DevServices for Observability started — Grafana: http://localhost:3000
 incident-management started in ~4s
 ```
 
+!!! note "First start may be slow"
+    The LGTM container (Grafana + Loki + Tempo + Mimir) is pulled on first run and can take 1–2 minutes. If `http://localhost:3000` isn't reachable, wait for the `DevServices for Observability started` log line before proceeding. If it doesn't appear, restart dev mode (`Ctrl+C` then `./mvnw quarkus:dev`).
+
 !!! tip "Agentic Dev UI"
     Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the full agent graph. Notice `EscalationProposalAgent` and `HumanApprovalAgent` — the HITL gate shows up as a distinct agent type in the wiring view.
 
