@@ -90,7 +90,7 @@ with the right outputKey values and descriptions.
 Flag any inconsistencies.
 ```
 
-**Expected:** Bob reads all 7 agent files in parallel, cross-references the `## Agents` table in `AGENTS.md`, and produces an audit table like:
+**Expected:** Bob reads all 7 agent files in parallel, cross-references the agents table in `AGENTS.md`, and produces an audit table like:
 
 | # | Interface | AGENTS.md outputKey | Actual outputKey | Match? |
 |---|-----------|---------------------|------------------|--------|
