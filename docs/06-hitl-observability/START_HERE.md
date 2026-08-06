@@ -155,7 +155,7 @@ cd ../../../lab
 - [ ] You can explain `@HumanInTheLoop` vs regular `@Agent` — what makes the workflow pause
 - [ ] HITL gate paused and escalated after clicking **Escalate to Management** → status `ESCALATED`
 - [ ] HITL gate paused and kept at team level after clicking **Keep at Team Level** → status `IN_PROGRESS`
-- [ ] Found `gen_ai.usage.input_tokens` attribute on a trace span in Grafana/Tempo
-- [ ] You can explain `include-prompt=true` trade-off (compliance value vs PII risk)
+- [ ] Grafana/Tempo shows the span waterfall with agent names (e.g., `EscalationProposalAgent`, `completion gpt-4o`) and durations
+- [ ] You understand the FinOps trade-off: tracing reveals per-agent token cost, but `include-prompt=true` can leak PII
 
 </div>
