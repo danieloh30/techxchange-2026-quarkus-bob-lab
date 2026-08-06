@@ -1,6 +1,7 @@
 package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.ApprovalProposal;
+import com.incidentmanagement.model.IncidentAnalysisResults;
 import com.incidentmanagement.model.IncidentInfo;
 import com.incidentmanagement.service.ApprovalService;
 import dev.langchain4j.agentic.declarative.HumanInTheLoop;
@@ -17,7 +18,7 @@ public interface HumanApprovalAgent {
     static String reviewEscalationProposal(
             IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String businessImpact,
+            IncidentAnalysisResults incidentAnalysisResults,
             String escalationProposal,
             String report
     ) {
@@ -36,7 +37,7 @@ public interface HumanApprovalAgent {
             CompletableFuture<ApprovalProposal> approvalFuture =
                     approvalService.createProposalAndWaitForDecision(
                             incidentNumber, incidentInfo.system, incidentInfo.service,
-                            "P" + incidentInfo.priority, businessImpact,
+                            "P" + incidentInfo.priority, incidentAnalysisResults.impactAnalysis(),
                             escalationProposal, null, incidentInfo.description, report
                     );
 
