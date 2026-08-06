@@ -63,3 +63,4 @@ Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the s
 | `solutions/` | Reference solution projects for each exercise — copy files from here if you get stuck |
 | `solutions/08-quarkus-flow/lab/` | Separate starter project for the bonus exercise (not the root `lab/`) |
 
+
