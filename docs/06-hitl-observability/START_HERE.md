@@ -117,14 +117,17 @@ Click any **Trace ID** link to expand the span waterfall. Look for the `POST /in
 
 <img src="../../images/grafana-dashboard.png" alt="Grafana Tempo trace view" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
-Inside the span detail, find:
+In the span waterfall, look for:
 
-| Attribute | What to look for |
-|-----------|-----------------|
-| gen_ai.usage.input_tokens | How many tokens each LLM call consumed |
-| gen_ai.usage.output_tokens | Generated tokens |
-| langchain4j.tool.name | Which tool the LLM invoked |
-| duration | End-to-end latency including all LLM round-trips |
+| Span | What it tells you |
+|------|-------------------|
+| `PlannerAgent.plan` | Orchestration step that plans the workflow |
+| `EscalationProposalAgent` | Time spent generating the escalation proposal |
+| `ResolutionAgent.analyze` | Final resolution analysis |
+| `completion gpt-4o` | Individual LLM call inside each agent |
+| `POST /chat/completions` | Raw HTTP request to the model API |
+
+Click any span to expand its attributes — look for `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, and total `duration` to understand cost and latency per agent.
 
 !!! warning "Production caution"
     `include-prompt=true` exports full prompt text to your tracing backend. This can include PII from `@UserMessage` templates. Disable or redact before production.
