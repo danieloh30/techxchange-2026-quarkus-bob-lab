@@ -142,7 +142,7 @@ Tracing is how you catch that before the bill arrives.
 Stop the solution (`Ctrl+C`) and restart `lab/`:
 
 ```bash
-cd ../../../lab
+cd ../../lab
 ./mvnw quarkus:dev
 ```
 
