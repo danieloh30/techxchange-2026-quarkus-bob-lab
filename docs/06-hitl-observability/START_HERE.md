@@ -70,8 +70,8 @@ Open [`HumanApprovalAgent.java`](https://github.com/danieloh30/techxchange-2026-
 
 | Annotation | Purpose |
 |-----------|---------|
-| `@HumanInTheLoop` | Marks this agent as a human gate — the framework pauses the workflow here |
-| `static` method | Not an LLM call — it's a blocking Java method that waits for human input via `CompletableFuture` |
+| `@HumanInTheLoop` | Human gate — pauses the workflow here |
+| `static` method | Not an LLM call — blocks until human input via `CompletableFuture` |
 
 ??? info "Why a separate proposal agent?"
     `EscalationProposalAgent` creates a structured proposal — the **what** and **why** of the escalation. `HumanApprovalAgent` is the **gate** — it pauses the workflow, presents the proposal to a human via the UI, and blocks until they decide. Separating proposal from approval means you can change escalation criteria (edit `@SystemMessage`) without touching the approval infrastructure.
