@@ -104,6 +104,8 @@ Flag any inconsistencies.
 
 Bob may also flag documentation gaps — e.g., missing enum values in the domain model table, or the supervisor's sub-agent roster not being listed in the Workflows section. These are documentation improvements, not code bugs.
 
+<img src="../../images/bob-step3.png" alt="Bob's audit of AGENTS.md against actual agent files" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+
 ---
 
 ## Step 4 — Guardrail demo (2 min)
