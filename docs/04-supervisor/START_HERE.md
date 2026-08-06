@@ -346,9 +346,9 @@ Save. Quarkus hot-reloads.
 ## Step 6 — Test all three paths (3 min)
 
 !!! tip "Agentic Dev UI"
-    Before testing, open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the full pipeline: `IncidentProcessingWorkflow` → `IncidentSupervisorAgent` (with its 4 sub-agents) → `ResolutionAgent`. This page shows each agent's type (`@SequenceAgent`, `@SupervisorAgent`), `outputKey`, and sub-agent list — a quick sanity check that everything wired correctly after hot reload.
+    Before testing, open the [topology view](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} to see the full pipeline: `IncidentProcessingWorkflow` → `IncidentAnalysisWorkflow` + `IncidentSupervisorAgent` (with its 4 sub-agents) + `ResolutionAgent`. This is the first exercise where a **root agent** appears — the topology visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
 
-    Now open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the first exercise where a **root agent** appears. The topology view visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
+    You can also check the [Agents tab](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} for each agent's type, `outputKey`, and description — a quick sanity check that everything wired correctly after hot reload.
 
 Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}** to test all three paths. After each, check the **Quarkus terminal logs** for tool calls and the **UI** for status changes.
 
