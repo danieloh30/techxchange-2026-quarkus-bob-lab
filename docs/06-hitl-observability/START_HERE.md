@@ -89,7 +89,7 @@ Complete checkout failure, all transactions failing, revenue loss confirmed at $
 **How to confirm:** The UI shows an **"Awaiting Approval"** modal with two buttons. This is the HITL gate — the system has paused and is waiting for a human decision.
 
 - Click **Escalate to Management** → check that the UI status changes to `ESCALATED`
-- Now press `s` in the Quarkus terminal to restart (reset the database). Process Incident **#1** again with the same report → this time click **Keep at Team Level** → check that the UI status changes to `IN_PROGRESS`
+- Now press `s` in the Quarkus terminal to restart (reset the database), then **reload the browser**. Process Incident **#1** again with the same report → this time click **Keep at Team Level** → check that the UI status changes to `IN_PROGRESS`
 
 In the Quarkus terminal logs, look for `WORKFLOW PAUSED` and `WORKFLOW RESUMED` showing the approval decision.
 
