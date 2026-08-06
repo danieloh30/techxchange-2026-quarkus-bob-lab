@@ -152,10 +152,10 @@ cd ../../../lab
 
 ## :material-check-circle: Done when
 
-- [ ] HITL gate blocked escalation on a critical incident
-- [ ] HITL gate allowed escalation after approval
 - [ ] You can explain `@HumanInTheLoop` vs regular `@Agent` — what makes the workflow pause
-- [ ] At least one `gen_ai.usage.input_tokens` span found in Grafana/Tempo
+- [ ] HITL gate paused and escalated after clicking **Escalate to Management** → status `ESCALATED`
+- [ ] HITL gate paused and kept at team level after clicking **Keep at Team Level** → status `IN_PROGRESS`
+- [ ] Found `gen_ai.usage.input_tokens` attribute on a trace span in Grafana/Tempo
 - [ ] You can explain `include-prompt=true` trade-off (compliance value vs PII risk)
 
 </div>
