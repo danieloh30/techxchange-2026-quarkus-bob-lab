@@ -186,8 +186,8 @@ False alarm, search relevance is back to normal after cache refresh
 
 ## :material-check-circle: Done when
 
-- [ ] Tool call visible in logs for critical incident; status = `TRIAGING`
-- [ ] No tool call for false-alarm report; status = `RESOLVED`
+- [ ] Tool call visible in logs for critical incident; status changes to `TRIAGING`
+- [ ] No tool call for false-alarm report; status stays `OPEN` or changes to `RESOLVED`
 - [ ] You can explain from memory: why `@Transactional` on the tool but not the agent
 - [ ] You can explain from memory: what `outputKey` does and what breaks without it
 
