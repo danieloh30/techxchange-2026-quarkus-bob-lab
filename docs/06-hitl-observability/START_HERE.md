@@ -111,7 +111,7 @@ Open **[http://localhost:3000](http://localhost:3000){:target="_blank"}** and na
 5. Click **Run query** (blue button, top-right) — you should see a list of traces
 
 !!! tip "Service name not in the dropdown?"
-    Tempo registers services only after traces arrive. If `incident-management` doesn't appear, go back to the app at [http://localhost:8080](http://localhost:8080){:target="_blank"} and process any incident (e.g., Incident **#5** with `SMTP timeout for 30% of outbound emails`), then refresh the dropdown. It can take a few seconds for traces to propagate.
+    Tempo registers services only after traces arrive. If you completed Step 2, `incident-management` should already appear — just refresh the dropdown. If it still doesn't show, go back to [http://localhost:8080](http://localhost:8080){:target="_blank"}, process any incident (e.g., Incident **#5** with `SMTP timeout for 30% of outbound emails`), then refresh. Traces can take a few seconds to propagate.
 
 Click any **Trace ID** link to expand the span waterfall. Look for the `POST /incident-management/process/{id}` trace — it contains the full agent workflow.
 
