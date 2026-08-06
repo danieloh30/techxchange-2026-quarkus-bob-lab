@@ -67,21 +67,14 @@ Based on AGENTS.md, explain:
 4. What happens if I add @ApplicationScoped to TriageAgent?
 ```
 
-**Expected:** Bob answers precisely using AGENTS.md — no Java file scans.
+**Expected:** Bob uses AGENTS.md as its primary context and may also read a few Java files to verify implementation details. Look for grounded, specific answers — not generic LLM guesses.
 
-Bob should say something like:
+Bob should cover:
 
-> 1. `processIncident()` triggers the `IncidentProcessingWorkflow` (`@SequenceAgent`): 
->    `IncidentAnalysisWorkflow` → `IncidentSupervisorAgent` → `ResolutionAgent`.
-> 2. `TriageTool` is `@Transactional` because it calls `entity.persist()` (rule 5).
-> 3. `outputKey` is how `AgenticScope` routes outputs between steps in a sequence or
->    supervisor workflow — omitting it breaks scope resolution (rule 4).
-> 4. Adding `@ApplicationScoped` violates rule 2. Quarkus generates the CDI proxy 
->    automatically; adding an explicit scope annotation causes a deployment failure.
-
-!!! tip "Bob Coins"
-    Watch token consumption in the Bob sidebar token counter.
-    This is the baseline — ~160 tokens instead of ~800 for a file scan.
+> 1. `processIncident()` is a cascading dispatcher — it runs the most complete pipeline available, falling back to simpler agents via `Instance<>` lazy resolution.
+> 2. `TriageTool` is `@Transactional` because it calls `entity.persist()` — the LLM call boundary breaks transaction propagation from the service method (rule 5).
+> 3. `outputKey` is how `AgenticScope` routes outputs between steps — omitting it drops the result from scope and the next agent gets nothing (rule 4).
+> 4. Adding `@ApplicationScoped` violates rule 2 — Quarkus generates the CDI proxy automatically; a duplicate scope causes `AmbiguousResolutionException`.
 
 ---
 
@@ -162,11 +155,11 @@ This is **shift-left security** — catching PII exposure risks before deploymen
 
 ## :material-check-circle: Done when
 
-- [ ] Bob answered all questions using AGENTS.md (no file scan needed)
+- [ ] Bob answered all questions grounded in AGENTS.md and verified against source files
 - [ ] `lab/AGENTS.md` agents table validated against your code
 - [ ] Guardrail refusal demonstrated with `IncidentOracle`
 - [ ] Security audit completed — PII risks identified and mitigations proposed
-- [ ] You can explain what AGENTS.md saves (~160 vs ~800 tokens per turn)
+- [ ] You can explain what AGENTS.md provides (structured context upfront, so Bob starts with rules and architecture)
 
 </div>
 
