@@ -49,10 +49,11 @@ API endpoints, and rules you must follow.
 Do not scan Java files — all context is in AGENTS.md.
 ```
 
-**What you should see:** Bob acknowledges the file, lists the 7 agents from the table,
-confirms the 10 rules, and asks "What do you want to build?"
+**What you should see:** Bob acknowledges the file, lists all 7 agents, the two workflows, and the key rules — then asks "What would you like to work on?"
 
-![Bob's initial AGENTS.md acknowledgement](../images/bob-init-prompt.png)
+![Sending the primer prompt to Bob](../images/bob-init-prompt.png)
+
+![Bob's AGENTS.md acknowledgement — agents, workflows, and rules](../images/bob-agents-md-ack.png)
 
 ---
 
