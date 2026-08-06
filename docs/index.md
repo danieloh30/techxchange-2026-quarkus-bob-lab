@@ -2,7 +2,7 @@
 
 # LAB-1219 - Building Enterprise-Grade Agentic AI Systems with IBM Enterprise Build of Quarkus and Bob
 
-**IBM TechXchange 2026 · Hands-On Lab · 90 minutes**
+**IBM TechXchange 2026 · Hands-On Lab · 90 min**
 
 ## Prerequisites
 
