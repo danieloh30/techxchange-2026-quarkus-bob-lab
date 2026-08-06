@@ -1,5 +1,6 @@
 package com.incidentmanagement.agentic.agents;
 
+import com.incidentmanagement.model.IncidentAnalysisResults;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
@@ -33,7 +34,8 @@ public interface EscalationAgent {
         - Priority: P{priority}
         - Incident Number: {incidentNumber}
         - Description: {incidentDescription}
-        - Business Impact Assessment: {businessImpact}
+        - Impact Analysis: {incidentAnalysisResults.impactAnalysis}
+        - Resolution Analysis: {incidentAnalysisResults.resolutionAnalysis}
         - Incident Report: {report}
 
         Provide your escalation recommendation (ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE) and explanation.
@@ -42,5 +44,5 @@ public interface EscalationAgent {
            description = "Incident escalation specialist. Determines escalation path based on impact and severity.")
     String processEscalation(String system, String service, Integer priority,
                               Integer incidentNumber, String incidentDescription,
-                              String businessImpact, String report);
+                              IncidentAnalysisResults incidentAnalysisResults, String report);
 }

@@ -44,10 +44,6 @@ public interface IncidentSupervisorAgent {
                         - Invoke DiagnosticAgent if root cause analysis needed
                         - Invoke TriageAgent if re-triage needed
 
-                IMPORTANT: When invoking EscalationAgent:
-                - Pass businessImpact as a STRING with the full assessment
-                - Use the EXACT format from ImpactAgent's response
-
                 Follow the decision logic in your system message carefully.
                 """;
 
