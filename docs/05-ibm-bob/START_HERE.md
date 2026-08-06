@@ -67,16 +67,16 @@ Based on AGENTS.md, explain:
 4. What happens if I add @ApplicationScoped to TriageAgent?
 ```
 
-**Expected:** Bob uses AGENTS.md as its primary context and may also read a few Java files to verify implementation details. Look for grounded, specific answers — not generic LLM guesses.
+**Expected:** Bob uses AGENTS.md as its primary context and reads a few Java files to verify implementation details. Look for grounded, specific answers — not generic LLM guesses.
 
 Bob should cover:
 
-<img src="../../images/bob-step2.png" alt="Bob's grounded answers to the four questions" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
-
-> 1. `processIncident()` is a cascading dispatcher — it runs the most complete pipeline available, falling back to simpler agents via `Instance<>` lazy resolution.
-> 2. `TriageTool` is `@Transactional` because it calls `entity.persist()` — the LLM call boundary breaks transaction propagation from the service method (rule 5).
-> 3. `outputKey` is how `AgenticScope` routes outputs between steps — omitting it drops the result from scope and the next agent gets nothing (rule 4).
+> 1. `processIncident()` is a cascading dispatcher — runs the most complete pipeline available, falling back to simpler agents via `Instance<>` lazy resolution.
+> 2. `TriageTool` is `@Transactional` because `entity.persist()` needs an active transaction — the LLM call boundary breaks propagation from the service method (rule 5).
+> 3. `outputKey` is how `AgenticScope` routes outputs between steps — without it, the result is lost and the next agent gets nothing (rule 4).
 > 4. Adding `@ApplicationScoped` violates rule 2 — Quarkus generates the CDI proxy automatically; a duplicate scope causes `AmbiguousResolutionException`.
+
+<img src="../../images/bob-step2.png" alt="Bob's grounded answers to the four questions" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 ---
 
@@ -90,11 +90,19 @@ with the right outputKey values and descriptions.
 Flag any inconsistencies.
 ```
 
-**Expected:** Bob enumerates the agent stub files, cross-references the `## Agents` table in
-`AGENTS.md`, and flags anything where the `outputKey` or exercise number is wrong.
+**Expected:** Bob reads all 7 agent files in parallel, cross-references the `## Agents` table in `AGENTS.md`, and produces an audit table like:
 
-If you missed an agent in earlier exercises, Bob will tell you exactly which row is stale
-and what the correct `outputKey` should be.
+| # | Interface | AGENTS.md outputKey | Actual outputKey | Match? |
+|---|-----------|---------------------|------------------|--------|
+| 1 | TriageAgent | analysisResult | analysisResult | OK |
+| 2 | DiagnosticAgent | analysisResult | analysisResult | OK |
+| 3 | IncidentAnalysisAgent | incidentAnalysis | incidentAnalysis | OK |
+| 4 | ImpactAgent | businessImpact | businessImpact | OK |
+| 5 | EscalationAgent | escalationAction | escalationAction | OK |
+| 6 | ResolutionAgent | incidentOutcome | incidentOutcome | OK |
+| 7 | IncidentSupervisorAgent | supervisorDecision | supervisorDecision | OK |
+
+Bob may also flag documentation gaps — e.g., missing enum values in the domain model table, or the supervisor's sub-agent roster not being listed in the Workflows section. These are documentation improvements, not code bugs.
 
 ---
 
