@@ -24,7 +24,7 @@ In Exercise 4, every agent ran inside a single process — same JVM, same releas
 
 ## Start (two terminals) (3 min)
 
-Stop any running Quarkus process first (`Ctrl+C`).
+Stop any running Quarkus process first (`Ctrl+C`). Open **two separate terminals** at the repo root and run one command block in each:
 
 === "Terminal 1 — impact assessment service (start first)"
 
