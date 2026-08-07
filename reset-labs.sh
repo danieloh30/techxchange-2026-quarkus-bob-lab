@@ -39,6 +39,17 @@ reset_files() {
     echo "  Reset $count file(s) in $label"
 }
 
+cleanup_artifacts() {
+    local count=0
+    while IFS= read -r -d '' f; do
+        rm -f "$f" && count=$((count + 1))
+    done < <(find solutions/ lab/ -name ".mcp.json" -o -name "AGENTS.md" -o -name "CLAUDE.md" | \
+             grep -v "solutions/05-ibm-bob" | tr '\n' '\0')
+    if [ "$count" -gt 0 ]; then
+        echo "  Removed $count artifact(s) (.mcp.json, AGENTS.md, CLAUDE.md)"
+    fi
+}
+
 usage() {
     echo "Usage: $0 [all|lab|ex08]"
     echo ""
@@ -68,6 +79,8 @@ case "$TARGET" in
         usage
         ;;
 esac
+
+cleanup_artifacts
 
 echo ""
 echo "Done. Hot reload will pick up the changes automatically."
