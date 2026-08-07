@@ -74,7 +74,6 @@ Stop any running Quarkus process (`Ctrl+C`), then:
 
 ```bash
 cd solutions/08-quarkus-flow/lab
-export OPENAI_API_KEY=sk-your-key-here
 ./mvnw quarkus:dev
 ```
 
