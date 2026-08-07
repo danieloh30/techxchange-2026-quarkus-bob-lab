@@ -88,7 +88,7 @@ Wait for `Listening on: http://localhost:8080`.
 
 ### Step 1a — ReportDrafterAgent
 
-Open `src/.../agentic/agents/ReportDrafterAgent.java`. Replace the placeholder `@UserMessage` and `// TODO` comment with:
+Open `src/.../agentic/agents/ReportDrafterAgent.java`. Replace the placeholder `@UserMessage` and `// TODO` comment with the full annotations:
 
 ```java
     @SystemMessage("""
@@ -122,7 +122,7 @@ The `@SystemMessage` defines the agent's role; the `@UserMessage` template maps 
 
 ### Step 1b — ReportCriticAgent
 
-Open `src/.../agentic/agents/ReportCriticAgent.java`. Replace the placeholder `@UserMessage` and `// TODO` comment with:
+Open `src/.../agentic/agents/ReportCriticAgent.java`. Replace the placeholder `@UserMessage` and `// TODO` comment with the full annotations:
 
 ```java
     @SystemMessage("""
@@ -158,7 +158,7 @@ Open `src/.../agentic/workflow/IncidentReportFlow.java`. This is where the **pro
 
 ### Step 2a — Draft agent action
 
-Replace the `// TODO Exercise 08 — Step 2a` block with:
+Uncomment the code block under `// TODO Exercise 08 — Step 2a` — remove the `//` prefixes so it becomes:
 
 ```java
         var draftAction = AgenticServices.agentAction(scope -> {
@@ -179,7 +179,7 @@ Replace the `// TODO Exercise 08 — Step 2a` block with:
 
 ### Step 2b — Critique agent action
 
-Replace the `// TODO Exercise 08 — Step 2b` block with:
+Uncomment the code block under `// TODO Exercise 08 — Step 2b`:
 
 ```java
         var critiqueAction = AgenticServices.agentAction(scope -> {
@@ -198,7 +198,7 @@ Replace the `// TODO Exercise 08 — Step 2b` block with:
 
 ### Step 2c — The loop
 
-Replace the `// TODO Exercise 08 — Step 2c` block with:
+Uncomment the code block under `// TODO Exercise 08 — Step 2c` and **delete the `return Map.of();`** placeholder:
 
 ```java
         UntypedAgent workflow = AgenticServices.loopBuilder()
