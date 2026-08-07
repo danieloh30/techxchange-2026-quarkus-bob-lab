@@ -29,14 +29,14 @@ Stop any running Quarkus process first (`Ctrl+C`).
 === "Terminal 1 — impact assessment service (start first)"
 
     ```bash
-    cd ../solutions/07-a2a/remote-a2a-agent
+    cd solutions/07-a2a/remote-a2a-agent
     ./mvnw quarkus:dev   # port :8888
     ```
 
 === "Terminal 2 — main system"
 
     ```bash
-    cd ../solutions/07-a2a/multi-agent-system
+    cd solutions/07-a2a/multi-agent-system
     ./mvnw quarkus:dev   # port :8080
     ```
 
