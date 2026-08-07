@@ -132,9 +132,6 @@ In the span waterfall, look for:
 
 Click any span to expand its attributes — look for `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, and total `duration` to understand cost and latency per agent.
 
-!!! warning "Production caution"
-    `include-prompt=true` exports full prompt text to your tracing backend. This can include PII from `@UserMessage` templates. Disable or redact before production.
-
 **FinOps thought experiment:** 500 incidents/day × avg 1,500 input tokens × gpt-4o pricing = ~$15/day.  
 An unbounded `@UserMessage` without AGENTS.md discipline can double input tokens → $30/day.  
 Tracing is how you catch that before the bill arrives.
@@ -156,7 +153,7 @@ cd ../../lab
 - [ ] HITL gate paused and escalated after clicking **Escalate to Management** → status `ESCALATED`
 - [ ] HITL gate paused and kept at team level after clicking **Keep at Team Level** → status `IN_PROGRESS`
 - [ ] Grafana/Tempo shows the span waterfall with agent names (e.g., `EscalationProposalAgent`, `completion gpt-4o`) and durations
-- [ ] You understand the FinOps trade-off: tracing reveals per-agent token cost, but `include-prompt=true` can leak PII
+- [ ] You understand the FinOps insight: tracing reveals per-agent token cost so you can catch runaway spending
 
 </div>
 
