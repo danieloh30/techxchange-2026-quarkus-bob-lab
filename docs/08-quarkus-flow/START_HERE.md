@@ -88,7 +88,7 @@ Wait for `Listening on: http://localhost:8080`.
 
 ### Step 1a — ReportDrafterAgent
 
-Open `src/.../agentic/agents/ReportDrafterAgent.java`. Replace the `// TODO Exercise 08 — Step 1a` block with:
+Open `src/.../agentic/agents/ReportDrafterAgent.java`. Replace the placeholder `@UserMessage` and `// TODO` comment with:
 
 ```java
     @SystemMessage("""
@@ -122,7 +122,7 @@ This agent is a standard `@RegisterAiService` bean — the same pattern as Exerc
 
 ### Step 1b — ReportCriticAgent
 
-Open `src/.../agentic/agents/ReportCriticAgent.java`. Replace the `// TODO Exercise 08 — Step 1b` block with:
+Open `src/.../agentic/agents/ReportCriticAgent.java`. Replace the placeholder `@UserMessage` and `// TODO` comment with:
 
 ```java
     @SystemMessage("""

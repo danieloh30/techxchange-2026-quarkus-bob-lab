@@ -12,9 +12,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 public interface ReportCriticAgent {
 
     // TODO Exercise 08 — Step 1b
-    // Paste the @SystemMessage and @UserMessage annotations below.
-    // See docs/08-quarkus-flow/START_HERE.md for the full prompt text.
+    // Replace the placeholder @UserMessage below with the @SystemMessage and @UserMessage
+    // annotations from docs/08-quarkus-flow/START_HERE.md.
 
+    @UserMessage("Evaluate this post-incident report for {system}/{service} ({priority}): {report}")
     ReportCritique critiqueReport(@V("system") String system, @V("service") String service,
                                   @V("priority") String priority, @V("report") String report);
 }
