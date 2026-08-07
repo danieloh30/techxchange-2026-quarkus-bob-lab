@@ -141,7 +141,7 @@ Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click
 Complete service outage, all API endpoints returning 503, cascading failures across dependent services
 ```
 
-**How to confirm:** Check the UI for the final incident status (should reach `ESCALATED`). Then open the [Agentic Dev UI — Execution History](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/execution-history){:target="_blank"} to see the full workflow tree:
+**How to confirm:** Check the UI for the final incident status (should reach `ESCALATED`). Then open the [Agentic Dev UI — Execution History](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"} to see the full workflow tree:
 
 <img src="../../images/agentic-devui-execution.png" alt="Agentic Dev UI execution history showing the full agent workflow" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
