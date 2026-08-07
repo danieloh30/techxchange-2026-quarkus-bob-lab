@@ -9,7 +9,7 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 | Ex 2 | [`02-maintenance-agent/`](02-maintenance-agent/) | `DiagnosticAgent` + `@SequenceAgent` chain |
 | Ex 3 | [`03-parallel-workflow/`](03-parallel-workflow/) | `IncidentAnalysisWorkflow` + `@ParallelMapperAgent` |
 | Ex 4 | [`04-supervisor/`](04-supervisor/) | Complete multi-agent supervisor pipeline |
-| Ex 5 | [`05-ibm-bob/`](05-ibm-bob/) | MCP client with `@McpToolBox` — Bob validates `lab/AGENTS.md` |
+| Ex 5 | [`05-ibm-bob/`](05-ibm-bob/) | `AGENTS.md` + IBM Bob governance |
 | Ex 6 | [`06-hitl-observability/`](06-hitl-observability/) | `@HumanInTheLoop` + OTel |
 | Ex 7 | [`07-a2a/`](07-a2a/) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
 | Ex 8 (bonus) | [`08-quarkus-flow/`](08-quarkus-flow/) | Programmatic loop with `AgenticServices.loopBuilder()` + Quarkus Flow |

@@ -387,7 +387,7 @@ Complete checkout failure; all payment processing down; customers seeing 500 err
 
 ## Supervisor vs conditional routing
 
-| | `@ConditionalAgent` | `@SupervisorAgent` |
+| | `@ConditionalAgent` (not used in this lab) | `@SupervisorAgent` |
 |---|---|---|
 | **Decision logic** | Hardcoded Java predicates | LLM reasoning on natural-language prompt |
 | **Policy change** | Code change + test + redeploy | Edit `@SupervisorRequest` string + hot reload |
@@ -407,3 +407,6 @@ Complete checkout failure; all payment processing down; customers seeing 500 err
 - [ ] You can explain why policy lives in `@SupervisorRequest` and not in Java `if/else`
 
 </div>
+
+!!! note
+    **Keep Quarkus running** — Exercise 5 uses IBM Bob with your current `lab/` project.

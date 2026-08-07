@@ -29,7 +29,7 @@ Start here:
 ```bash
 git clone https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab.git
 cd techxchange-2026-quarkus-bob-lab
-export OPENAI_API_KEY=sk-your-key-here   # or lab-provided endpoint vars
+export OPENAI_API_KEY=sk-your-lab-key-here
 
 # Start your working project for Exercise 1
 cd lab
