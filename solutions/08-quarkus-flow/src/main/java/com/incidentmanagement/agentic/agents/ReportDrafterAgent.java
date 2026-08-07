@@ -2,7 +2,6 @@ package com.incidentmanagement.agentic.agents;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import dev.langchain4j.service.V;
 import io.quarkiverse.langchain4j.RegisterAiService;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -35,7 +34,7 @@ public interface ReportDrafterAgent {
             Reviewer feedback from previous draft:
             {feedback}
             """)
-    String draftReport(@V("system") String system, @V("service") String service,
-                       @V("priority") String priority, @V("description") String description,
-                       @V("status") String status, @V("feedback") String feedback);
+    String draftReport(String system, String service,
+                       String priority, String description,
+                       String status, String feedback);
 }
