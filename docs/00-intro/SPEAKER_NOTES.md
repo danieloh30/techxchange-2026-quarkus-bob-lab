@@ -1,5 +1,9 @@
 # Lab Overview
 
+[:fontawesome-solid-file-pdf: Intro slide deck](../images/lab-1219-intro-deck.pdf){:target="_blank" .md-button } &nbsp; Lab guide short URL: **[bit.ly/lab-1219](https://bit.ly/lab-1219){:target="_blank"}**
+
+---
+
 ## The scenario: Apex Systems
 
 **Apex Systems** is a mid-size enterprise IT services company managing infrastructure across data centers and cloud regions. The NOC (Network Operations Center) receives free-text incident reports from monitoring tools, tickets, and on-call engineers — but today those reports live in chat threads, email chains, and tribal knowledge.
