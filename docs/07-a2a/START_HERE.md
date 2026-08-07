@@ -175,7 +175,7 @@ You haven't built an MCP integration in this lab, but the distinction matters fo
 
 | Factor | Local agent (Ex 4) | Remote A2A agent |
 |--------|-------------|-----------------|
-| **Latency** | In-process | +HTTP round-trip |
+| **Latency** | In-process | HTTP round-trip |
 | **Ownership** | Shared codebase | Independent repo + release |
 | **Scaling** | Scale whole app | Scale impact service independently |
 | **Failure mode** | Shared crash domain | Network partition risk |
