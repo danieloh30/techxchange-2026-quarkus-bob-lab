@@ -86,7 +86,6 @@ nav:
       - "6. Human gate + tracing": 06-hitl-observability/START_HERE.md
       - "7. Remote agents (A2A)": 07-a2a/START_HERE.md
       - "8. Quality loop (bonus)": 08-quarkus-flow/START_HERE.md
-  - Instructor guide: LAB_GUIDE.md
 
 extra_css:
   - stylesheets/extra.css
