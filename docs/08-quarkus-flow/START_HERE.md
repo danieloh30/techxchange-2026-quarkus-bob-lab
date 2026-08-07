@@ -118,7 +118,7 @@ Open `src/.../agentic/agents/ReportDrafterAgent.java`. Replace the placeholder `
             """)
 ```
 
-This agent is a standard `@RegisterAiService` bean — the same pattern as Exercises 1–4. The key difference: it accepts a `feedback` parameter so the loop can feed critic feedback back into the next draft.
+The `@SystemMessage` defines the agent's role; the `@UserMessage` template maps each method parameter to a placeholder. The key difference from earlier exercises: the `feedback` parameter lets the loop feed critic feedback back into the next draft.
 
 ### Step 1b — ReportCriticAgent
 
