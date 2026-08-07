@@ -235,8 +235,8 @@ The button triggers the quality loop. While it runs, **watch the terminal logs**
 
 ```
 Report Draft — iteration 1
-Report Critique — iteration 1: score=8, feedback=The report is solid...
-Report quality loop completed for incident #1 — final score: 8
+Report Critique — iteration 1: score=9, feedback=The report is solid...
+Report quality loop completed for incident #1 — final score: 9
 ```
 
 When the loop finishes, the dashboard shows the generated report with its **score** and **iteration count**.
