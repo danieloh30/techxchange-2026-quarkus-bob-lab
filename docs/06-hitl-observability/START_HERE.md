@@ -124,9 +124,9 @@ In the span waterfall, look for:
 
 | Span | What it tells you |
 |------|-------------------|
-| `PlannerAgent.plan` | Orchestration step that plans the workflow |
+| `IncidentSupervisorAgent` | Supervisor orchestration — which sub-agents it chose |
 | `EscalationProposalAgent` | Time spent generating the escalation proposal |
-| `ResolutionAgent.analyze` | Final resolution analysis |
+| `ResolutionAgent.analyzeForResolution` | Final resolution analysis |
 | `completion gpt-4o` | Individual LLM call inside each agent |
 | `POST /chat/completions` | Raw HTTP request to the model API |
 
