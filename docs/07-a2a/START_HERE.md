@@ -141,13 +141,19 @@ Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click
 Complete service outage, all API endpoints returning 503, cascading failures across dependent services
 ```
 
-**How to confirm:** Check the UI for the final incident status (should reach `ESCALATED`). Then correlate logs across **both** terminal windows:
+**How to confirm:** Check the UI for the final incident status (should reach `ESCALATED`). Then open the [Agentic Dev UI — Execution History](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/execution-history){:target="_blank"} to see the full workflow tree:
 
-- **Terminal 2 — Client (8080):** look for `Agent Invocation: AgentInvocation{agentName='impact-agent$0$1', arguments={system=payment-gateway, ...}}` — confirms the supervisor delegated to the A2A agent
-- **Terminal 1 — Remote (8888):** look for `Remote A2A ImpactAgent called` and the response (e.g., `ImpactAgent response: Estimated Impact: $36,000`)
-- **Terminal 2 — Client (8080):** look for `HITL Tool: Creating escalation approval proposal` — confirms the workflow continued after the A2A round-trip
+<img src="../../images/agentic-devui-execution.png" alt="Agentic Dev UI execution history showing the full agent workflow" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
-The key observation: the same `ImpactAgent` interface runs, but execution happened in a completely separate JVM on port 8888.
+Notice the execution tree: `processIncident` (SEQUENCE) → `analyzeIncident` (PARALLEL, 3 analysis agents) → `superviseIncidentProcessing` (SEQUENCE with `impact-agent`, `processEscalation`) → `createEscalationProposal` → `analyzeForResolution`. Each row shows duration, token count, input, and output.
+
+Also correlate logs across **both** terminal windows:
+
+- **Terminal 2 (8080):** look for `impact-agent` invocation — confirms the supervisor delegated to the A2A agent
+- **Terminal 1 (8888):** look for `Remote A2A ImpactAgent called` and the response (e.g., `Estimated Impact: $36,000`)
+- **Terminal 2 (8080):** look for `HITL Tool: Creating escalation approval proposal` — confirms the workflow continued after the A2A round-trip
+
+The key observation: `impact-agent` appears in the execution tree on port 8080, but it actually ran in a separate JVM on port 8888 via A2A.
 
 ---
 
