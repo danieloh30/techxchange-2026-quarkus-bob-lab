@@ -130,21 +130,41 @@ Save both files. Quarkus hot-reloads automatically.
 Before testing, trace the execution path in your head:
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
-sequenceDiagram
-    participant App as processTriage()
-    participant LLM as LLM
-    participant Tool as TriageTool
+%%{init: {'theme':'neutral','themeVariables': {'lineColor':'#4A4035','primaryColor':'#D4E6F1','primaryBorderColor':'#2E6B8A','secondaryColor':'#FFF8DC','secondaryBorderColor':'#C4A000','tertiaryColor':'#D8F0D8','tertiaryBorderColor':'#3D7A3D'}}}%%
+flowchart LR
+    subgraph call["1 · Agent call"]
+        A(["processTriage()"])
+        B["@UserMessage<br/>incident info + report"]
+    end
 
-    App->>+LLM: @UserMessage (incident info + report)
-    Note right of LLM: Analyzes report
-    LLM->>+Tool: tool_call: requestTriage(#5, ...)
-    Note right of Tool: status → TRIAGING
-    Tool-->>-LLM: "Triage requested for email-service..."
-    LLM-->>-App: → AgenticScope["analysisResult"]
+    subgraph llm["2 · LLM reasoning"]
+        C{"Critical?"}
+    end
+
+    subgraph tool["3a · Tool call"]
+        D(["TriageTool<br/>requestTriage()"])
+        E["status → TRIAGING"]
+    end
+
+    subgraph skip["3b · No tool"]
+        F["TRIAGE_NOT_REQUIRED"]
+        G["status → RESOLVED"]
+    end
+
+    H(["AgenticScope<br/>analysisResult"])
+
+    A --> B --> C
+    C -->|Yes| D --> E --> H
+    C -->|No| F --> G --> H
+
+    style call fill:#D4E6F1,stroke:#2E6B8A
+    style llm fill:#FFE4CC,stroke:#B87333
+    style tool fill:#FFF8DC,stroke:#C4A000
+    style skip fill:#D8F0D8,stroke:#3D7A3D
+    style H fill:#E8DCC4,stroke:#6B5B45
 ```
 
-The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If the report says "false alarm, no action needed", the LLM produces `TRIAGE_NOT_REQUIRED` directly — no tool call.
+The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If the report says "false alarm, no action needed", the LLM returns `TRIAGE_NOT_REQUIRED` directly — no tool call, and the service resolves the incident.
 
 ---
 
