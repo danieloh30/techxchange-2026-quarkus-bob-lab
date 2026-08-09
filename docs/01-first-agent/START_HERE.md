@@ -130,38 +130,27 @@ Save both files. Quarkus hot-reloads automatically.
 Before testing, trace the execution path in your head:
 
 ```mermaid
-%%{init: {'theme':'neutral','themeVariables': {'lineColor':'#4A4035','primaryColor':'#D4E6F1','primaryBorderColor':'#2E6B8A','secondaryColor':'#FFF8DC','secondaryBorderColor':'#C4A000','tertiaryColor':'#D8F0D8','tertiaryBorderColor':'#3D7A3D'}}}%%
-flowchart LR
-    subgraph call["1 · Agent call"]
-        A(["processTriage()"])
-        B["@UserMessage<br/>incident info + report"]
-    end
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+flowchart TD
+    A(["processTriage()"])
+    B{"LLM: Critical?"}
+    C(["TriageTool.requestTriage()"])
+    D["status → TRIAGING"]
+    E["TRIAGE_NOT_REQUIRED"]
+    F["status → RESOLVED"]
+    G(["AgenticScope: analysisResult"])
 
-    subgraph llm["2 · LLM reasoning"]
-        C{"Critical?"}
-    end
+    A -->|"@UserMessage"| B
+    B -->|Yes| C --> D --> G
+    B -->|No| E --> F --> G
 
-    subgraph tool["3a · Tool call"]
-        D(["TriageTool<br/>requestTriage()"])
-        E["status → TRIAGING"]
-    end
-
-    subgraph skip["3b · No tool"]
-        F["TRIAGE_NOT_REQUIRED"]
-        G["status → RESOLVED"]
-    end
-
-    H(["AgenticScope<br/>analysisResult"])
-
-    A --> B --> C
-    C -->|Yes| D --> E --> H
-    C -->|No| F --> G --> H
-
-    style call fill:#D4E6F1,stroke:#2E6B8A
-    style llm fill:#FFE4CC,stroke:#B87333
-    style tool fill:#FFF8DC,stroke:#C4A000
-    style skip fill:#D8F0D8,stroke:#3D7A3D
-    style H fill:#E8DCC4,stroke:#6B5B45
+    style A fill:#D4E6F1,stroke:#2E6B8A
+    style B fill:#FFE4CC,stroke:#B87333
+    style C fill:#FFF8DC,stroke:#C4A000
+    style D fill:#FFF8DC,stroke:#C4A000
+    style E fill:#D8F0D8,stroke:#3D7A3D
+    style F fill:#D8F0D8,stroke:#3D7A3D
+    style G fill:#E8DCC4,stroke:#6B5B45
 ```
 
 The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If the report says "false alarm, no action needed", the LLM returns `TRIAGE_NOT_REQUIRED` directly — no tool call, and the service resolves the incident.
