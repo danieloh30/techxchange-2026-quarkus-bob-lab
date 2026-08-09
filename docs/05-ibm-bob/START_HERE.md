@@ -24,15 +24,21 @@ redundant codebase scans.
 
 === "Without AGENTS.md"
 
-    ```
-    Bob scans 20 Java files → ~800 tokens → risks wrong CDI scope
-    ```
+    | | |
+    |---|---|
+    | **What Bob does** | Scans ~20 Java files to infer project conventions |
+    | **Token cost** | ~800 tokens per request |
+    | **Risk** | May hallucinate imports, miss CDI scopes, invent non-existent APIs |
+    | **Consistency** | Each request may produce different conventions |
 
 === "With AGENTS.md"
 
-    ```
-    Bob reads one file → ~160 tokens → follows all 10 rules from the start
-    ```
+    | | |
+    |---|---|
+    | **What Bob does** | Reads one file with all project rules pre-defined |
+    | **Token cost** | ~160 tokens per request (**5x cheaper**) |
+    | **Risk** | Rules enforced from turn 1 — no guessing |
+    | **Consistency** | Every request follows the same 10 project rules |
 
 ---
 
