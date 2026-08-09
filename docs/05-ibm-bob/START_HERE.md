@@ -27,7 +27,7 @@ redundant codebase scans.
     | | |
     |---|---|
     | **What Bob does** | Scans ~20 Java files to infer project conventions |
-    | **Token cost** | ~800 tokens per request |
+    | **Token cost** | e.g. ~800 tokens per request |
     | **Risk** | May hallucinate imports, miss CDI scopes, invent non-existent APIs |
     | **Consistency** | Each request may produce different conventions |
 
@@ -36,7 +36,7 @@ redundant codebase scans.
     | | |
     |---|---|
     | **What Bob does** | Reads one file with all project rules pre-defined |
-    | **Token cost** | ~160 tokens per request (**5x cheaper**) |
+    | **Token cost** | e.g. ~160 tokens per request (**~5x cheaper**) |
     | **Risk** | Rules enforced from turn 1 — no guessing |
     | **Consistency** | Every request follows the same 10 project rules |
 
@@ -223,9 +223,9 @@ This is **shift-left security** — catching PII exposure risks before deploymen
 
     **AGENTS.md: the token-efficiency lever**
 
-    Without `AGENTS.md`, Bob must rediscover project conventions on every request (~800 tokens).
-    With `AGENTS.md` loaded once: ~160 tokens, all rules followed from the start.
-    Estimated savings: 2,000–5,000 tokens per complex multi-file task.
+    Without `AGENTS.md`, Bob must rediscover project conventions on every request (e.g. ~800 tokens).
+    With `AGENTS.md` loaded once: e.g. ~160 tokens, all rules followed from the start.
+    Estimated savings: e.g. 2,000–5,000 tokens per complex multi-file task. (Numbers are illustrative — actual usage varies by project size and prompt.)
 
     **Bob's SDLC coverage mapped to this lab's Quarkus patterns:**
 
@@ -242,7 +242,7 @@ This is **shift-left security** — catching PII exposure risks before deploymen
 
     | Scenario | Tokens consumed | Risk |
     |----------|----------------|------|
-    | Bob scans 20 Java files | ~800 tokens | May miss CDI scopes, invent imports |
-    | Bob reads `AGENTS.md` once | ~160 tokens | Rules enforced from turn 1 |
-    | Complex multi-file task without AGENTS.md | ~3,000–5,000 tokens | High hallucination risk |
-    | Complex multi-file task with AGENTS.md | ~800–1,200 tokens | Rules enforced, diff requires approval |
+    | Bob scans 20 Java files | e.g. ~800 tokens | May miss CDI scopes, invent imports |
+    | Bob reads `AGENTS.md` once | e.g. ~160 tokens | Rules enforced from turn 1 |
+    | Complex multi-file task without AGENTS.md | e.g. ~3,000–5,000 tokens | High hallucination risk |
+    | Complex multi-file task with AGENTS.md | e.g. ~800–1,200 tokens | Rules enforced, diff requires approval |
