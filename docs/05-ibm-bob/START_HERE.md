@@ -40,6 +40,9 @@ redundant codebase scans.
     | **Risk** | Rules enforced from turn 1 — no guessing |
     | **Consistency** | Every request follows the same 10 project rules |
 
+!!! note "Bob's responses are non-deterministic"
+    Screenshots in this exercise show **one possible response** from IBM Bob. Because LLM outputs vary between runs, your results will differ in wording, detail level, and structure — but the key facts and conclusions should be consistent. Focus on whether Bob's answers are **grounded in AGENTS.md and source files**, not on matching the screenshots exactly.
+
 ---
 
 ## Step 1 — Open IBM Bob (2 min)
@@ -151,19 +154,41 @@ Based on AGENTS.md rules 6 and 7:
 - Suggest a concrete mitigation for each one using Quarkus logging config.
 ```
 
-**Expected:** Bob audits all 7 agents' `@UserMessage` templates and produces findings like:
+**Expected:** Bob audits all 7 agents' `@UserMessage` templates and identifies PII vectors. Key findings to look for:
 
-> - **Rule 7 (no secrets)** — clean. `OPENAI_API_KEY` is correctly externalised via `application.properties`.
-> - **Rule 6 (no full strings in logs)** — 3 findings:
->     - `IncidentManagementService` logs `incidentOutcome.resolution()` at INFO — fix: log only `incidentNumber` + `incidentAction()`.
->     - `{report}` placeholder in `TriageAgent`, `IncidentAnalysisAgent`, `EscalationAgent` — free-text, highest PII risk. The existing `log-requests=false` prevents wire logging, but dev-mode DEBUG echoes full prompt text. A `%prod` override to WARN closes the gap.
->     - `IncidentSupervisorAgent.request()` concatenates `incidentInfo.description` directly into the prompt, bypassing any future sanitisation layer.
-
-Bob suggests `application.properties` additions — no code changes needed except a one-line service log fix.
+> **High-risk fields** — `{report}` (raw caller input) and `{incidentInfo.description}` (free-text database field) appear across multiple agents:
+>
+> | Agent | PII vector | Risk level |
+> |-------|-----------|------------|
+> | `TriageAgent` | `{report}` — raw free-text, uncontrolled | High |
+> | `DiagnosticAgent` | `{diagnosticRequest}` — chained from upstream agents | Medium |
+> | `IncidentAnalysisAgent` | `{report}` + `{incidentInfo.description}` — two vectors | **Highest** |
+> | `ImpactAgent` | `{incidentDescription}` — free-text from caller | High |
+> | `EscalationAgent` | `{report}` + `{incidentDescription}` — longest chain carrying raw input | High |
+> | `ResolutionAgent` | LLM-generated strings only — no raw user input | Low |
+> | `IncidentSupervisorAgent` | `incidentInfo.description` concatenated in `@SupervisorRequest` | High |
+>
+> **Existing safeguard** — `log-requests=false` / `log-responses=false` in `application.properties` prevents full prompts from being logged.
+>
+> **Consolidated mitigation** — Bob suggests `application.properties` additions (no code changes):
+>
+> ```properties
+> # Prod: never log LLM requests/responses (contain raw report and description)
+> %prod.quarkus.langchain4j.log-requests=false
+> %prod.quarkus.langchain4j.log-responses=false
+>
+> # Prod: if Exercise 6 OTel tracing is enabled, suppress prompt/tool content
+> %prod.quarkus.langchain4j.tracing.include-prompt=false
+> %prod.quarkus.langchain4j.tracing.include-tool-arguments=false
+>
+> # Prod: suppress supervisor prompt debug log (contains incidentInfo.description)
+> %prod.quarkus.log.category."dev.langchain4j.agentic.supervisor".level=WARN
+> %prod.quarkus.log.category."dev.langchain4j.agentic".level=WARN
+> ```
 
 <img src="../../images/bob-step5.png" alt="Bob's PII audit of @UserMessage templates" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
-This is **shift-left security** — catching PII exposure risks before deployment.
+This is **shift-left security** — catching PII exposure risks before deployment, using only configuration changes.
 
 ---
 
