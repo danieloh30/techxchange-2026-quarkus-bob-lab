@@ -13,5 +13,8 @@ target/
 
 # MkDocs build output
 site/
-exercises/**/solution/.mcp.json
-exercises/**/solution/CLAUDE.md
+# Bob-generated artifacts (except lab/AGENTS.md which is intentional for Exercise 5)
+solutions/**/.mcp.json
+solutions/**/AGENTS.md
+solutions/**/CLAUDE.md
+!solutions/05-ibm-bob/AGENTS.md
