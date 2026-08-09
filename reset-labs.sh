@@ -43,8 +43,11 @@ cleanup_artifacts() {
     local count=0
     while IFS= read -r -d '' f; do
         rm -f "$f" && count=$((count + 1))
-    done < <(find solutions/ lab/ -name ".mcp.json" -o -name "AGENTS.md" -o -name "CLAUDE.md" | \
-             grep -v "solutions/05-ibm-bob" | tr '\n' '\0')
+    done < <(find solutions/ lab/ \( -name ".mcp.json" -o -name "AGENTS.md" -o -name "CLAUDE.md" \) -print0 | \
+             grep -z -v "solutions/05-ibm-bob")
+    # Restore git-tracked files that were removed (e.g. lab/AGENTS.md)
+    git checkout origin/main -- lab/AGENTS.md 2>/dev/null || true
+    git reset HEAD -- lab/AGENTS.md > /dev/null 2>&1 || true
     if [ "$count" -gt 0 ]; then
         echo "  Removed $count artifact(s) (.mcp.json, AGENTS.md, CLAUDE.md)"
     fi
