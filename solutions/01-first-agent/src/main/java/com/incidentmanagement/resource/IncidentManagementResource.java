@@ -6,7 +6,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
-import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestQuery;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -24,7 +23,7 @@ public class IncidentManagementResource {
 
     @POST
     @Path("/process/{incidentNumber}")
-    public String processIncident(@RestPath Integer incidentNumber, @RestQuery @DefaultValue("") String report) {
+    public String processIncident(Integer incidentNumber, @RestQuery @DefaultValue("") String report) {
         return incidentManagementService.processIncident(incidentNumber, report);
     }
 

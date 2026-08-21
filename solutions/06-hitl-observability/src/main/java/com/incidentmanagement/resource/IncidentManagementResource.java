@@ -9,7 +9,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestQuery;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -29,7 +28,7 @@ public class IncidentManagementResource {
     @POST
     @Path("/process/{incidentNumber}")
     @Blocking
-    public Uni<String> processIncident(@RestPath Integer incidentNumber, @RestQuery @DefaultValue("") String feedback) {
+    public Uni<String> processIncident(Integer incidentNumber, @RestQuery @DefaultValue("") String feedback) {
         return incidentManagementService.processIncident(incidentNumber, feedback);
     }
 
