@@ -47,23 +47,13 @@ public class IncidentManagementService {
         // Update the incident's description with the resolution
         incidentInfo.description = incidentOutcome.resolution();
 
-        // Update the incident status based on the required action
-        switch (incidentOutcome.incidentAction()) {
-            case INVESTIGATE:
-                incidentInfo.status = IncidentStatus.IN_PROGRESS;
-                break;
-            case TRIAGE:
-                incidentInfo.status = IncidentStatus.TRIAGING;
-                break;
-            case ESCALATE:
-                incidentInfo.status = IncidentStatus.ESCALATED;
-                break;
-            case MONITOR:
-                break;
-            case RESOLVE:
-                incidentInfo.status = IncidentStatus.RESOLVED;
-                break;
-        }
+        incidentInfo.status = switch (incidentOutcome.incidentAction()) {
+            case ESCALATE -> IncidentStatus.ESCALATED;
+            case INVESTIGATE -> IncidentStatus.IN_PROGRESS;
+            case TRIAGE -> IncidentStatus.TRIAGING;
+            case MONITOR -> incidentInfo.status;
+            case RESOLVE -> IncidentStatus.RESOLVED;
+        };
 
         // Persist the changes to the database
         incidentInfo.persist();
