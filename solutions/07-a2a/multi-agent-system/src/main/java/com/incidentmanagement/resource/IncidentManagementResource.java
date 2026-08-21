@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.util.Base64;
 
 import org.jboss.resteasy.reactive.RestForm;
-import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -37,7 +36,7 @@ public class IncidentManagementResource {
     @Path("/process/{incidentNumber}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Blocking
-    public Uni<String> processIncident(@RestPath Integer incidentNumber, @RestForm @DefaultValue("") String report, @RestForm FileUpload logImage) {
+    public Uni<String> processIncident(Integer incidentNumber, @RestForm @DefaultValue("") String report, @RestForm FileUpload logImage) {
         ImageContent imageContent = toImageContent(logImage);
         return incidentManagementService.processIncident(incidentNumber, report, imageContent);
     }
