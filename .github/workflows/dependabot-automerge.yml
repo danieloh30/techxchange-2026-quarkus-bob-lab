@@ -25,7 +25,16 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto-merge Dependabot PR
-        run: gh pr merge --squash --auto "$PR_URL"
+        run: |
+          for i in 1 2 3 4 5; do
+            gh pr merge --squash "$PR_URL" && exit 0
+            echo "Merge attempt $i failed, waiting before retry..."
+            sleep $((i * 15))
+            gh pr update-branch "$PR_URL" --rebase 2>/dev/null || true
+            sleep 10
+          done
+          echo "All merge attempts failed"
+          exit 1
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
