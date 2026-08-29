@@ -6,7 +6,7 @@
 
 **IBM TechXchange 2026 · Hands-On Lab**  
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)  
-**Lab site:** https://danieloh30.github.io/techxchange-2026-quarkus-bob-lab/ (short URL: [bit.ly/lab-1219](https://bit.ly/lab-1219))  
+**Lab site:** https://danieloh30.github.io/techxchange-2026-quarkus-bob-lab/ (short URL: [ibm.biz/lab-1219](https://ibm.biz/lab-1219))  
 **Intro deck:** [lab-1219-intro-deck.pdf](docs/images/lab-1219-intro-deck.pdf)
 
 Build a multi-agent incident management system with **IBM Enterprise Build of Quarkus**, **Quarkus LangChain4j**, and **IBM Bob** — covering workflow patterns, supervisor orchestration, human-in-the-loop, observability, and A2A.

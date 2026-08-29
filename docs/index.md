@@ -5,7 +5,7 @@
 **IBM TechXchange 2026 · Hands-On Lab · 90 min**
 
 !!! tip "Quick access"
-    Short URL for this guide: **[bit.ly/lab-1219](https://bit.ly/lab-1219){:target="_blank"}** — share it or scan the QR code from the intro slides.
+    Short URL for this guide: **[ibm.biz/lab-1219](https://ibm.biz/lab-1219){:target="_blank"}** — share it or scan the QR code from the intro slides.
 
     [:fontawesome-solid-file-pdf: Intro slide deck](images/lab-1219-intro-deck.pdf){:target="_blank" .md-button }
 

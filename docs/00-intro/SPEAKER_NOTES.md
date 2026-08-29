@@ -1,6 +1,6 @@
 # Lab Overview
 
-[:fontawesome-solid-file-pdf: Intro slide deck](../images/lab-1219-intro-deck.pdf){:target="_blank" .md-button } &nbsp; Lab guide short URL: **[bit.ly/lab-1219](https://bit.ly/lab-1219){:target="_blank"}**
+[:fontawesome-solid-file-pdf: Intro slide deck](../images/lab-1219-intro-deck.pdf){:target="_blank" .md-button } &nbsp; Lab guide short URL: **[ibm.biz/lab-1219](https://ibm.biz/lab-1219){:target="_blank"}**
 
 ---
 
