@@ -27,7 +27,7 @@ public interface HumanApprovalAgent {
             return "Human Decision: SKIPPED — No escalation proposed";
         }
 
-        Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [P%d]",
+        Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [%s]",
                 incidentNumber, incidentInfo.system, incidentInfo.service, incidentInfo.priority);
         Log.info("WORKFLOW PAUSED - Waiting for human approval decision via UI");
 
@@ -37,7 +37,7 @@ public interface HumanApprovalAgent {
             CompletableFuture<ApprovalProposal> approvalFuture =
                     approvalService.createProposalAndWaitForDecision(
                             incidentNumber, incidentInfo.system, incidentInfo.service,
-                            "P" + incidentInfo.priority, incidentAnalysisResults.impactAnalysis(),
+                            incidentInfo.priority, incidentAnalysisResults.impactAnalysis(),
                             escalationProposal, null, incidentInfo.description, report
                     );
 
