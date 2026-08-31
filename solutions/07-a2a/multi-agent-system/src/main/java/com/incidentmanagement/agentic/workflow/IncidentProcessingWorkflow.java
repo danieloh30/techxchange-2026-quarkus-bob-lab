@@ -18,7 +18,11 @@ import java.util.List;
 public interface IncidentProcessingWorkflow extends MonitoredAgent {
 
     @SequenceAgent(outputKey = "incidentProcessingAgentResult",
-            subAgents = { IncidentAnalysisWorkflow.class,
+            subAgents = {
+                          // TODO (Bonus — Multimodal log analysis): add IncidentLogAnalysisAgent.class
+                          //      as the FIRST sub-agent here so it enriches "report" before the
+                          //      analysis runs. Remember to import it. See 07-a2a/START_HERE.md.
+                          IncidentAnalysisWorkflow.class,
                           IncidentSupervisorAgent.class,
                           EscalationProposalAgent.class,
                           HumanApprovalAgent.class,
