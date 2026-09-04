@@ -62,7 +62,11 @@ Do not scan Java files — all context is in AGENTS.md.
 
 <img src="../../images/bob-init-prompt.png" alt="Sending the primer prompt to Bob" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
-**What you should see:** Bob acknowledges the file, lists all 7 agents, the two workflows, and the key rules — then asks "What would you like to work on?"
+**What you should see:** Bob confirms that it read `AGENTS.md` and loaded the project context. A concise response like this is expected:
+
+> Read. Ready for your question — context loaded: `@Agent` interface model, 7 agents, 2 workflows, domain model, endpoints, and all 10 project rules.
+
+Exact wording and detail may vary; Bob does not need to enumerate every agent or rule at this stage.
 
 <img src="../../images/bob-agents-md-ack.png" alt="Bob's AGENTS.md acknowledgement — agents, workflows, and rules" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
