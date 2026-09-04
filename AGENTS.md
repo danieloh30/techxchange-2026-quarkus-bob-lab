@@ -97,9 +97,7 @@ solutions/
 ├── 02-maintenance-agent/             @SequenceAgent chain               [port 8080]
 ├── 03-parallel-workflow/             IncidentSupervisorAgent             [port 8080]
 ├── 04-supervisor/                    full supervisor stack (Bob lab)     [port 8080]
-├── 05-ibm-bob/
-│   ├── (root)                        MCP client (@McpToolBox)            [port 8080]
-│   └── weather-mcp-server            MCP SSE server                      [port 8081]
+├── 05-ibm-bob/                       docs-only placeholder               [no runtime]
 ├── 06-hitl-observability/            HITL + OTel + LGTM                  [port 8080]
 ├── 07-a2a/
 │   ├── multi-agent-system            A2A client + supervisor             [port 8080]
@@ -108,6 +106,8 @@ solutions/
     ├── (root)                        Programmatic loop solution           [port 8080]
     └── lab/                          Bonus exercise starter (TODO stubs)  [port 8080]
 ```
+
+Exercise 5 is documentation-only and uses `lab/AGENTS.md`; its solution folder contains only a README.
 
 ---
 
