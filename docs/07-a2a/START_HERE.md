@@ -78,9 +78,10 @@ Expected:
 
     <img src="../../images/ImpactAgent.png" alt="ImpactAgent shown as A2AClientAgent in Dev UI" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
-    Check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this is the final evolution of the agent tree. Compare it to Exercise 4: `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
+    After processing an incident, open **Executions** and select **`IncidentProcessingWorkflow`** in the **Root Agent** dropdown. The [Try it](#try-it-3-min) section below walks through execution history and the app's own topology report. Compared with Exercise 4, `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
 
-    <img src="../../images/ImpactAgent_Topology.png" alt="Full agent topology with ImpactAgent as A2A remote node" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+!!! warning "A2A topology display error in quarkus-langchain4j 1.13.1"
+    The Dev UI's [Topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} tab can show `Failed to generate topology: Cannot read the array length because "args" is null` when you select `IncidentProcessingWorkflow`. This is an upstream graph-rendering issue involving the A2A client proxy; the message alone does not mean incident processing failed. After processing an incident, use the app's [system report](http://localhost:8080/incident-management/report){:target="_blank"} to view the topology, and the Dev UI's **Executions** tab to inspect the run.
 
 ---
 
@@ -141,11 +142,32 @@ Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click
 Complete service outage, all API endpoints returning 503, cascading failures across dependent services
 ```
 
-**How to confirm:** The HITL approval modal will appear — click **Escalate to Management** to continue the workflow. Check the UI for the final incident status (should reach `ESCALATED`). Then open the [Agentic Dev UI — Execution History](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"} to see the full workflow tree:
+**How to confirm:** The HITL approval modal will appear — click **Escalate to Management** to continue the workflow. Check the UI for the final incident status (should reach `ESCALATED`), then inspect the run using the views below.
 
-<img src="../../images/agentic-devui-execution.png" alt="Agentic Dev UI execution history showing the full agent workflow" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+### Open Dev UI execution history
+
+1. Open **[Agentic Dev UI → Executions](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}** on the main system (:8080). If you are already on the **Agents** or **Topology** tab, click **Executions** in the top navigation.
+2. In the **Root Agent** dropdown at the top-left, select **`IncidentProcessingWorkflow`**.
+3. Click **Refresh** if the page was open before the incident finished processing.
+4. Expand the session/run and its agent rows to inspect the calls, durations, token counts, inputs, and outputs.
+
+!!! note "Why are there two root agents, and why is the default empty?"
+    Before the optional multimodal bonus, this exercise has two roots: **`IncidentProcessingWorkflow`**, which handles incidents, and **`IncidentLogAnalysisAgent`**, the standalone screenshot-analysis agent that has not yet been added to the workflow. Dev UI lists roots alphabetically and selects `IncidentLogAnalysisAgent` first. Its execution history is empty because processing an incident does not invoke it. Select **`IncidentProcessingWorkflow`** to see your run. Once you wire the bonus agent into the workflow, it becomes a child of that workflow.
+
+### View the app's topology and execution report
+
+Open **[http://localhost:8080/incident-management/report](http://localhost:8080/incident-management/report){:target="_blank"}** to view the app's own report, generated from the workflow's `agentMonitor()`. The **System Topology** view shows `processIncident` at the root, with parallel analysis, the supervisor and remote `impact-agent`, human approval, and resolution below it:
+
+<img src="../../images/agentic-devui-topology.png" alt="App system report showing IncidentProcessingWorkflow topology, the remote impact-agent, and human approval" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+
+Scroll below **System Topology** to **Execution History** in the same report, then expand a session and its agent rows:
+
+<img src="../../images/agentic-devui-execution.png" alt="App report Execution History showing the completed incident workflow and remote impact-agent call" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 Notice the execution tree: `processIncident` (SEQUENCE) → `analyzeIncident` (PARALLEL, 3 analysis agents) → `superviseIncidentProcessing` (SEQUENCE with `impact-agent`, `processEscalation`) → `createEscalationProposal` → `analyzeForResolution`. Each row shows duration, token count, input, and output.
+
+!!! tip "Execution history is kept in memory"
+    Process an incident before inspecting execution history. Restarting or hot-reloading the main app clears the recorded runs; process another incident if the selected workflow's history is empty afterward.
 
 Also correlate logs across **both** terminal windows:
 
@@ -285,7 +307,7 @@ A ready-made sample screenshot ships with the project — a mock observability c
 2. Click **Choose File** and select `solutions/07-a2a/multi-agent-system/sample-data/checkout-api-503-incident.png`.
 3. Leave the report box **empty** (or add a short note) and process the incident.
 
-**How to confirm:** In the [Execution History](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}, the tree now starts with `analyzeIncidentLogs`, and its output `report` contains details that only appear in the image — HikariCP connection-pool exhaustion (50/50, 128 waiting), upstream `payment-processor` timeouts, and the circuit breaker in `OPEN` state. Those observations then flow into severity/impact analysis and the escalation decision.
+**How to confirm:** Open the [Dev UI's Executions page](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"} for **`IncidentProcessingWorkflow`** (select it in **Root Agent** if a dropdown is shown), or scroll to **Execution History** in the [app's system report](http://localhost:8080/incident-management/report){:target="_blank"}. Under `processIncident`, the first step is now `analyzeIncidentLogs`, and its output `report` contains details that only appear in the image — HikariCP connection-pool exhaustion (50/50, 128 waiting), upstream `payment-processor` timeouts, and the circuit breaker in `OPEN` state. Those observations then flow into severity/impact analysis and the escalation decision.
 
 !!! tip "Compare with and without the image"
     Process once with no file and once with the screenshot. Same incident, but the enriched run gives the downstream agents far more to reason about — that's the multimodal payoff.
