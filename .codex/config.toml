@@ -1,0 +1,3 @@
+[mcp_servers.quarkus-agent]
+command = "/Users/danieloh/.sdkman/candidates/jbang/current/bin/jbang"
+args = ["quarkus-agent-mcp@quarkusio"]
