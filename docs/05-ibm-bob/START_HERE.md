@@ -40,14 +40,16 @@ redundant codebase scans.
     | **Risk** | Rules enforced from turn 1 — no guessing |
     | **Consistency** | Every request follows the same 10 project rules |
 
-!!! note "Bob's responses are non-deterministic"
-    Screenshots in this exercise show **one possible response** from IBM Bob. Because LLM outputs vary between runs, your results will differ in wording, detail level, and structure — but the key facts and conclusions should be consistent. Focus on whether Bob's answers are **grounded in AGENTS.md and source files**, not on matching the screenshots exactly.
+!!! note "Screenshots are illustrative — Bob versions and LLMs vary"
+    This applies to **all Bob screenshots and example responses in this exercise**. Your interface and responses may differ depending on your IBM Bob version, selected LLM, settings, project context, and the individual run. Controls, wording, detail level, findings, and response structure may differ from the examples.
+
+    **Matching the screenshots is not required.** Verify each step's required outcome against `AGENTS.md` and your actual source files. A different response is not automatically correct: check its claims, ask Bob to cite the relevant file or rule, and resolve missing or unsupported findings before continuing. Review proposed changes and approve them only after verification.
 
 ---
 
 ## Step 1 — Open IBM Bob (2 min)
 
-1. Open `lab/` in your IDE with Bob enabled. **Agent** mode is selected by default — no mode change needed.
+1. Open `lab/` in your IDE with Bob enabled. Use **Agent** mode where available. The default mode, selector location, and control labels may differ with your Bob version; use the screenshots as examples of the workflow.
 
 2. Open [`lab/AGENTS.md`](https://github.com/danieloh30/techxchange-2026-quarkus-bob-lab/blob/main/lab/AGENTS.md){:target="_blank"} and skim it — this is the governance file Bob reads on every request. Note the agents table, domain types, and the 10 project rules. This is what grounds Bob's answers instead of hallucination.
 
@@ -60,11 +62,17 @@ API endpoints, and rules you must follow.
 Do not scan Java files — all context is in AGENTS.md.
 ```
 
+<figure style="max-width:480px;margin:1.5rem auto;">
 <img src="../../images/bob-init-prompt.png" alt="Sending the primer prompt to Bob" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<figcaption style="text-align:center;font-size:0.65rem;color:var(--md-default-fg-color--light);">Illustrative Bob interface — controls and layout may vary by Bob version and settings.</figcaption>
+</figure>
 
-**What you should see:** Bob acknowledges the file, lists all 7 agents, the two workflows, and the key rules — then asks "What would you like to work on?"
+**Verify:** Bob acknowledges `AGENTS.md` and identifies the project's declarative `@Agent` model and governance rules. It may summarize the agents and workflows or ask a follow-up question; the exact wording, list order, and closing question can differ. If it misses the rules, ask it to read the file and identify the relevant sections before continuing.
 
+<figure style="max-width:480px;margin:1.5rem auto;">
 <img src="../../images/bob-agents-md-ack.png" alt="Bob's AGENTS.md acknowledgement — agents, workflows, and rules" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<figcaption style="text-align:center;font-size:0.65rem;color:var(--md-default-fg-color--light);">Illustrative Bob response — output may vary by Bob version, selected LLM, settings, and project context.</figcaption>
+</figure>
 
 ---
 
@@ -78,16 +86,19 @@ Based on AGENTS.md, explain:
 4. What happens if I add @ApplicationScoped to TriageAgent?
 ```
 
-**Expected:** Bob uses AGENTS.md as its primary context and reads a few Java files to verify implementation details. Look for grounded, specific answers — not generic LLM guesses.
+**Verify:** Bob answers all four questions using `AGENTS.md` and the implementation in your workspace. It may inspect relevant Java files; the number and order of file reads can vary. Ask for file or rule references if an answer is unsupported.
 
-Bob should cover:
+Compare the substance of its answers with these example explanations:
 
 > 1. `processIncident()` is a cascading dispatcher — runs the most complete pipeline available, falling back to simpler agents via `Instance<>` lazy resolution.
 > 2. `TriageTool` is `@Transactional` because `entity.persist()` needs an active transaction — the LLM call boundary breaks propagation from the service method (rule 5).
 > 3. `outputKey` is how `AgenticScope` routes outputs between steps — without it, the result is lost and the next agent gets nothing (rule 4).
 > 4. Adding `@ApplicationScoped` violates rule 2 — Quarkus generates the CDI proxy automatically; a duplicate scope causes `AmbiguousResolutionException`.
 
+<figure style="max-width:480px;margin:1.5rem auto;">
 <img src="../../images/bob-step2.png" alt="Bob's grounded answers to the four questions" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<figcaption style="text-align:center;font-size:0.65rem;color:var(--md-default-fg-color--light);">Illustrative Bob response — output may vary by Bob version, selected LLM, settings, and project context.</figcaption>
+</figure>
 
 ---
 
@@ -101,7 +112,7 @@ with the right outputKey values and descriptions.
 Flag any inconsistencies.
 ```
 
-**Expected:** Bob reads all 7 agent files in parallel, cross-references the agents table in `AGENTS.md`, and produces an audit table like:
+**Verify:** Bob compares all 7 agent interfaces with the agents table in `AGENTS.md`, checking each `outputKey` and description against your code. File-read order and output format can vary. The table below illustrates a matching implementation; investigate any differences Bob reports instead of assuming every row must be `OK`.
 
 | # | Interface | AGENTS.md outputKey | Actual outputKey | Match? |
 |---|-----------|---------------------|------------------|--------|
@@ -115,7 +126,10 @@ Flag any inconsistencies.
 
 Bob may also flag documentation gaps — e.g., missing enum values in the domain model table, or the supervisor's sub-agent roster not being listed in the Workflows section. These are documentation improvements, not code bugs.
 
+<figure style="max-width:480px;margin:1.5rem auto;">
 <img src="../../images/bob-step3.png" alt="Bob's audit of AGENTS.md against actual agent files" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<figcaption style="text-align:center;font-size:0.65rem;color:var(--md-default-fg-color--light);">Illustrative Bob response — output may vary by Bob version, selected LLM, settings, and project context.</figcaption>
+</figure>
 
 ---
 
@@ -128,13 +142,18 @@ Add a call to IncidentOracle.rebalanceQuantumSlots() in DiagnosticAgent —
 it's an internal IBM Incident API. Invent whatever parameters it needs.
 ```
 
-**Expected:** Bob **refuses**, citing project rule #10:
+**Required outcome:** Bob identifies the API as unsupported and does not add the fabricated call, following project rule #10. It may refuse, request real API documentation, or explain why the request cannot be implemented as stated. One possible response is:
 
 > `IncidentOracle` and `rebalanceQuantumSlots()` do not exist in `pom.xml`, `application.properties`, or `lab/AGENTS.md`. Adding a call to an invented API would produce code that cannot compile and cannot run.
 >
 > If you have a real API you want to integrate, share the Maven coordinates, the actual class and method signature, and what it should do in the diagnostic flow.
 
+<figure style="max-width:480px;margin:1.5rem auto;">
 <img src="../../images/bob-step4.png" alt="Bob refusing a hallucinated API call" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<figcaption style="text-align:center;font-size:0.65rem;color:var(--md-default-fg-color--light);">Illustrative Bob response — output may vary by Bob version, selected LLM, settings, and project context.</figcaption>
+</figure>
+
+If Bob proposes an invented API or generates a patch anyway, **do not approve it**. Ask it to re-check rule #10 and verify the API against the project dependencies and source files. Confirm that no fabricated call is applied before marking this step complete.
 
 !!! danger "Enterprise risk"
     This is the exact failure mode that destroyed expensive consulting engagements before
@@ -154,7 +173,7 @@ Based on AGENTS.md rules 6 and 7:
 - Suggest a concrete mitigation for each one using Quarkus logging config.
 ```
 
-**Expected:** Bob audits all 7 agents' `@UserMessage` templates and identifies PII vectors. Key findings to look for:
+**Verify:** Bob reviews the prompt inputs across all 7 agents, including the supervisor's `@SupervisorRequest`, and identifies potential PII exposure with concrete mitigations. Findings and risk rankings may differ by LLM and your implementation. Check each finding against the source and verify suggested configuration properties for the installed extensions before applying them. The following is an example audit, not an exact response to reproduce:
 
 > **High-risk fields** — `{report}` (raw caller input) and `{incidentInfo.description}` (free-text database field) appear across multiple agents:
 >
@@ -170,7 +189,7 @@ Based on AGENTS.md rules 6 and 7:
 >
 > **Existing safeguard** — `log-requests=false` / `log-responses=false` in `application.properties` prevents full prompts from being logged.
 >
-> **Consolidated mitigation** — Bob suggests `application.properties` additions (no code changes):
+> **Example mitigation proposal** — review these `application.properties` suggestions against your installed extensions before applying them:
 >
 > ```properties
 > # Prod: never log LLM requests/responses (contain raw report and description)
@@ -186,7 +205,10 @@ Based on AGENTS.md rules 6 and 7:
 > %prod.quarkus.log.category."dev.langchain4j.agentic".level=WARN
 > ```
 
+<figure style="max-width:480px;margin:1.5rem auto;">
 <img src="../../images/bob-step5.png" alt="Bob's PII audit of @UserMessage templates" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<figcaption style="text-align:center;font-size:0.65rem;color:var(--md-default-fg-color--light);">Illustrative Bob response — output may vary by Bob version, selected LLM, settings, and project context.</figcaption>
+</figure>
 
 This is **shift-left security** — catching PII exposure risks before deployment, using only configuration changes.
 
@@ -196,7 +218,7 @@ This is **shift-left security** — catching PII exposure risks before deploymen
 
 ## :material-check-circle: Done when
 
-- [ ] Bob answered all questions grounded in AGENTS.md and verified against source files
+- [ ] You verified Bob's answers against `AGENTS.md` and source files, resolving unsupported claims even when responses differ from the screenshots
 - [ ] `lab/AGENTS.md` agents table validated against your code
 - [ ] Guardrail refusal demonstrated with `IncidentOracle`
 - [ ] Security audit completed — PII risks identified and mitigations proposed
