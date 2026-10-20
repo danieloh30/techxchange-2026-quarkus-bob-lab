@@ -26,6 +26,15 @@ In Exercise 4, every agent ran inside a single process — same JVM, same releas
 
 Stop any running Quarkus process first (`Ctrl+C`). Open **two separate terminals** at the repo root and run one command block in each:
 
+!!! note "Export your OpenAI API key in each new terminal"
+    Run the following in **both Terminal 1 and Terminal 2** before starting Quarkus. An `export` in your earlier terminal does not automatically carry over to a separately opened terminal.
+
+    ```bash
+    export OPENAI_API_KEY="your-openai-api-key"
+    ```
+
+    Replace the placeholder with the same key you used earlier in the lab.
+
 === "Terminal 1 — impact assessment service (start first)"
 
     ```bash
