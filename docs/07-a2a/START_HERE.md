@@ -87,7 +87,7 @@ Expected:
 
     <img src="../../images/ImpactAgent.png" alt="ImpactAgent shown as A2AClientAgent in Dev UI" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
-    After processing an incident, open **Executions** and select **`IncidentProcessingWorkflow`** in the **Root Agent** dropdown. The [Try it](#try-it-3-min) section below walks through execution history and the app's own topology report. Compared with Exercise 4, `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
+    After processing an incident, open **Executions** and inspect the recorded run for **`IncidentProcessingWorkflow`** (`processIncident`). The [Try it](#try-it-3-min) section below walks through execution history and the app's own topology report. Compared with Exercise 4, `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
 
 ---
 
@@ -152,13 +152,13 @@ Complete service outage, all API endpoints returning 503, cascading failures acr
 
 ### Open Dev UI execution history
 
-1. Open **[Agentic Dev UI → Executions](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}** on the main system (:8080). If you are already on the **Agents** or **Topology** tab, click **Executions** in the top navigation.
-2. In the **Root Agent** dropdown at the top-left, select **`IncidentProcessingWorkflow`**.
-3. Click **Refresh** if the page was open before the incident finished processing.
-4. Expand the session/run and its agent rows to inspect the calls, durations, token counts, inputs, and outputs.
+1. Open **[Agentic Dev UI → Executions](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}** on the main system (:8080).
+2. Locate the incident run you just completed. Look for **`IncidentProcessingWorkflow`** or its entry method, **`processIncident`**, in the recorded execution details.
+3. Reload the page if it was open before the incident finished processing.
+4. Open the recorded run and inspect the available agent calls, durations, token counts, inputs, and outputs. Look for the remote **`impact-agent`** call.
 
-!!! note "Why are there two root agents, and why is the default empty?"
-    Before the optional multimodal bonus, this exercise has two roots: **`IncidentProcessingWorkflow`**, which handles incidents, and **`IncidentLogAnalysisAgent`**, the standalone screenshot-analysis agent that has not yet been added to the workflow. Dev UI lists roots alphabetically and selects `IncidentLogAnalysisAgent` first. Its execution history is empty because processing an incident does not invoke it. Select **`IncidentProcessingWorkflow`** to see your run. Once you wire the bonus agent into the workflow, it becomes a child of that workflow.
+!!! note "Dev UI controls vary by extension version"
+    The execution-history layout and navigation may differ from earlier screenshots. Use the workflow name, entry method, and remote agent call to identify your run. You can also inspect the app's **Execution History** in the system report below.
 
 ### View the app's topology and execution report
 
@@ -173,7 +173,7 @@ Scroll below **System Topology** to **Execution History** in the same report, th
 Notice the execution tree: `processIncident` (SEQUENCE) → `analyzeIncident` (PARALLEL, 3 analysis agents) → `superviseIncidentProcessing` (SEQUENCE with `impact-agent`, `processEscalation`) → `createEscalationProposal` → `analyzeForResolution`. Each row shows duration, token count, input, and output.
 
 !!! tip "Execution history is kept in memory"
-    Process an incident before inspecting execution history. Restarting or hot-reloading the main app clears the recorded runs; process another incident if the selected workflow's history is empty afterward.
+    Process an incident before inspecting execution history. Restarting or hot-reloading the main app clears the recorded runs; process another incident if the workflow's history is empty afterward.
 
 Also correlate logs across **both** terminal windows:
 
@@ -313,7 +313,7 @@ A ready-made sample screenshot ships with the project — a mock observability c
 2. Click **Choose File** and select `solutions/07-a2a/multi-agent-system/sample-data/checkout-api-503-incident.png`.
 3. Leave the report box **empty** (or add a short note) and process the incident.
 
-**How to confirm:** Open the [Dev UI's Executions page](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"} for **`IncidentProcessingWorkflow`** (select it in **Root Agent** if a dropdown is shown), or scroll to **Execution History** in the [app's system report](http://localhost:8080/incident-management/report){:target="_blank"}. Under `processIncident`, the first step is now `analyzeIncidentLogs`, and its output `report` contains details that only appear in the image — HikariCP connection-pool exhaustion (50/50, 128 waiting), upstream `payment-processor` timeouts, and the circuit breaker in `OPEN` state. Those observations then flow into severity/impact analysis and the escalation decision.
+**How to confirm:** Open the [Dev UI's Executions page](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"} and inspect the recorded **`IncidentProcessingWorkflow`** run, or scroll to **Execution History** in the [app's system report](http://localhost:8080/incident-management/report){:target="_blank"}. Under `processIncident`, the first step is now `analyzeIncidentLogs`, and its output `report` contains details that only appear in the image — HikariCP connection-pool exhaustion (50/50, 128 waiting), upstream `payment-processor` timeouts, and the circuit breaker in `OPEN` state. Those observations then flow into severity/impact analysis and the escalation decision.
 
 !!! tip "Compare with and without the image"
     Process once with no file and once with the screenshot. Same incident, but the enriched run gives the downstream agents far more to reason about — that's the multimodal payoff.
