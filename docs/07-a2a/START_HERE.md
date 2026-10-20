@@ -89,9 +89,6 @@ Expected:
 
     After processing an incident, open **Executions** and select **`IncidentProcessingWorkflow`** in the **Root Agent** dropdown. The [Try it](#try-it-3-min) section below walks through execution history and the app's own topology report. Compared with Exercise 4, `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
 
-!!! warning "A2A topology display error in quarkus-langchain4j 1.13.1"
-    The Dev UI's [Topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} tab can show `Failed to generate topology: Cannot read the array length because "args" is null` when you select `IncidentProcessingWorkflow`. This is an upstream graph-rendering issue involving the A2A client proxy; the message alone does not mean incident processing failed. After processing an incident, use the app's [system report](http://localhost:8080/incident-management/report){:target="_blank"} to view the topology, and the Dev UI's **Executions** tab to inspect the run.
-
 ---
 
 ## The A2A architecture (2 min)
