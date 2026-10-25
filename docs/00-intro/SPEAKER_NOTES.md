@@ -93,13 +93,13 @@ Each exercise adds a new capability, guided by a persona facing a real IT operat
 | **5 — AI governance** | **Jordan** — Platform engineer | Must ship governed code; copilots hallucinate | `AGENTS.md` + IBM Bob |
 | **6 — Human gate + tracing** | **Alex** — Compliance officer | P1 incidents need approval + audit trail | HITL + OpenTelemetry |
 | **7 — Remote agents (A2A)** | **Riley** — SRE lead | Impact assessment is a separate team | A2A remote impact agent |
-| **8 — Quality loop (bonus)** | **Jordan** — Platform engineer | Post-incident reports need iterative refinement | `AgenticServices.loopBuilder()` + Quarkus Flow |
+| **8 — Quality loop (bonus)** | **Jordan** — Platform engineer | Post-incident reports need iterative refinement | `@LoopAgent` + `@ExitCondition`; optional builder comparison |
 
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses IBM Bob to govern and validate the system you built.  
 **Exercise 6** codes `EscalationProposalAgent` in `lab/`, then tests the full HITL flow and OTel tracing from the solution.  
 **Exercise 7** runs a pre-built A2A solution to explore remote agent patterns.  
-**Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a programmatic quality loop with Quarkus Flow.
+**Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a declarative quality loop with Quarkus Flow and includes an optional programmatic builder comparison.
 
 ---
 
@@ -124,7 +124,7 @@ After this lab you will be able to:
 - Author an `AGENTS.md` to make IBM Bob cost-efficient on agentic projects
 - Distribute agents across services with **A2A** (`@A2AClientAgent`)
 - Add **human-in-the-loop** gates and read **OpenTelemetry** spans for compliance and FinOps
-- Use **programmatic orchestration** (`AgenticServices.loopBuilder()`) for control flow that annotations can't express
+- Build a bounded **declarative quality loop** (`@LoopAgent` + `@ExitCondition`) and compare it with the programmatic builder
 
 ---
 
@@ -161,5 +161,5 @@ Goal: adaptive multi-agent       → @SupervisorAgent                (Ex 4)
 Goal: AI governance              → AGENTS.md + IBM Bob             (Ex 5)
 Goal: human approval             → @HumanInTheLoop                 (Ex 6)
 Goal: delegate to remote agent   → A2A + @A2AClientAgent           (Ex 7)
-Goal: programmatic quality loop  → AgenticServices.loopBuilder()   (Ex 8)
+Goal: bounded quality loop       → @LoopAgent + @ExitCondition     (Ex 8)
 ```

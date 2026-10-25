@@ -12,7 +12,7 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 | Ex 5 | [`05-ibm-bob/`](05-ibm-bob/) | Documentation-only placeholder; exercise uses `lab/AGENTS.md` + IBM Bob |
 | Ex 6 | [`06-hitl-observability/`](06-hitl-observability/) | `@HumanInTheLoop` + OTel |
 | Ex 7 | [`07-a2a/`](07-a2a/) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
-| Ex 8 (bonus) | [`08-quarkus-flow/`](08-quarkus-flow/) | Programmatic loop with `AgenticServices.loopBuilder()` + Quarkus Flow |
+| Ex 8 (bonus) | [`08-quarkus-flow/`](08-quarkus-flow/) | Declarative `@LoopAgent` + Quarkus Flow; optional builder comparison |
 
 ### Additional reference projects
 

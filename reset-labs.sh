@@ -24,6 +24,7 @@ EX08_FILES=(
     "$EX08_BASE/agents/ReportDrafterAgent.java"
     "$EX08_BASE/agents/ReportCriticAgent.java"
     "$EX08_BASE/workflow/IncidentReportFlow.java"
+    "$EX08_BASE/workflow/IncidentReportWorkflow.java"
 )
 
 reset_files() {
